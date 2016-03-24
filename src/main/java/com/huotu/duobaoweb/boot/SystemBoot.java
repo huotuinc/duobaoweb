@@ -9,7 +9,7 @@ import javax.servlet.Filter;
 /**
  * Created by lgh on 2015/12/29.
  */
-public class SisWebBoot extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class SystemBoot extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{MVCConfig.class,RootConfig.class};
