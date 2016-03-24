@@ -1,9 +1,11 @@
 package com.huotu.duobaoweb.boot;
 
 import org.luffy.lib.libspring.data.ClassicsRepositoryFactoryBean;
+import org.luffy.lib.libspring.logging.LoggingConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -16,6 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({"com.huotu.duobaoweb.service"})
 @EnableJpaRepositories(value = "com.huotu.duobaoweb.repository", repositoryFactoryBeanClass = ClassicsRepositoryFactoryBean.class)
 @ImportResource(value = {"classpath:spring-jpa.xml"})
+@Import(LoggingConfig.class)
 public class RootConfig {
 
 
