@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -8,9 +8,9 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta name="description" content=""/>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}" />
-    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}" />
+    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"  th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css"  th:href="@{/resources/css/dbdb.css}"/>
     <title>用1元买iphone 6S</title>
 </head>
 
@@ -57,8 +57,8 @@
         </button>
     </div>
     <div class="syabk" style="display:block">
-        <button class="buttonan huang tit_rem_big_s" type="button">
-            查看我的参与
+        <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
+            <a href="personal/list.html" th:href="@{getMyInvolvedRecord}">查看我的参与</a>
         </button>
     </div>
 

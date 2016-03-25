@@ -26,6 +26,7 @@ public abstract class AbstractStaticResourceService implements StaticResourceSer
 
     protected URI uriPrefix;
     protected URI fileHome;
+
     @Autowired
     private VFSHelper vfsHelper;
 

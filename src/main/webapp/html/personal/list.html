@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -7,15 +7,15 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="description" content="" />
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css"/>
-<link rel="stylesheet" type="text/css" href="../../resources/css/common.css"/>
-<link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css"/>
+  <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css"
+        th:href="@{/resources/css/commfont.css}"/>
+  <link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}"/>
+  <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
 <title>夺宝记录</title>
 </head>
  
 <body>
 <div class="commfont">
- <!---筛选--->
   <div style="margin-bottom:4px;">
     <ul class="float-ul flex-ul">
       <li>
@@ -40,9 +40,9 @@
       </li>
     </ul>
   </div> 
-  
   <div>
-   <!---进行中正未揭晓--->
+
+   <!-- 进行中正未揭晓 -->
   <div class="all">
       <div class="right">
         <div class="right_in">
@@ -67,7 +67,7 @@
           <p style=" clear:both"></p>
           <div>
             <span style="float:left;margin:4px 0px">本次参与：<i style=" color:#FF7E00">100</i>人次</span><span style="float:right;margin:4px 0px">
-            <a href="dbhm.html" style="color:#009BFF;">查看我的号码</a>
+            <a href="dbhm.html" th:href="@{getMyRaiderNumbers}" style="color:#009BFF;">查看我的号码</a>
             </span>
           </div>
           <p style=" clear:both"></p>
@@ -80,10 +80,10 @@
         </div>
       </div>
       <div class="left">
-        <img src="../../resources/images/dsds.jpg" style="width:80px" />
+        <img src="../../resources/images/dsds.jpg" th:src="@{/resources/images/dsds.jpg}" style="width:80px" />
       </div>
     </div>    
-    <!---进行中正在揭晓--->
+    <!-- 进行中正在揭晓 -->
     <div class="all">
       <div class="right">
         <div class="right_in">
@@ -127,7 +127,7 @@
         <img src="../../resources/images/dsds.jpg" style="width:80px" />
       </div>
     </div>
-    <!---揭晓--->
+    <!-- 揭晓 -->
     <div class="all">
       <div class="right">
         <div class="right_in">
@@ -168,7 +168,7 @@
         <img src="../../resources/images/dsds.jpg" style="width:80px" />
       </div>
     </div>
-    <!---中奖--->
+    <!-- 中奖 -->
      <div class="all">
       <div class="right">
         <div class="right_in">
@@ -182,8 +182,8 @@
               <p>幸运号：<i style=" color:#FF7E00">436321</i></p>
               <p>揭晓时间：2015/12/12 13:00:00</p>
            <p class="qrqr">
-           <a href="#" class="zuijia" style="display: block">完善领奖信息</a>
-           <a href="#" class="zuijia" style="display: block">查看派发信息</a></p>
+           <a href="#" th:href="@{getOneLotteryInfo}" class="zuijia" style="display: block">完善领奖信息</a>
+           <a href="#" th:href="@{getOneLotteryInfo}" class="zuijia" style="display: block">查看派发信息</a></p>
            </div>
         </div>
       </div>

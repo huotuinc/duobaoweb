@@ -1,5 +1,7 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.duobaoweb.service.UserBuyFlowService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value="/web")
 @Controller
 public class PersonalController {
+    @Autowired
+    UserBuyFlowService userBuyFlowService;
 
     /**
      * 查看我的参与记录
+     * 查找夺宝记录
      * @param model
      * @param userId 用户ID
      * @return String
@@ -21,7 +26,7 @@ public class PersonalController {
      */
     @RequestMapping("/getMyInvolvedRecord")
     public String getMyInvolvedRecord(Model model,Long userId) throws Exception{
-        return "";
+        return "/html/personal/list";
     }
 
     /**
@@ -34,7 +39,7 @@ public class PersonalController {
      */
     @RequestMapping("/getMyRaiderNumbers")
     public String getMyRaiderNumbers(Model model,Long userId, Long issueId) throws Exception {
-        return "";
+        return "/html/personal/dbhm";
     }
 
     /**
@@ -47,7 +52,7 @@ public class PersonalController {
      */
     @RequestMapping("/getOneLotteryInfo")
     public String getOneLotteryInfo(Model model,Long userId, Long issueId)  throws Exception {
-        return "";
+        return "/html/personal/zj";
     }
 
 

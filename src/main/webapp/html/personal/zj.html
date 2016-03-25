@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -7,9 +7,9 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="description" content="" />
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css"/>
-<link rel="stylesheet" type="text/css" href="../../resources/css/common.css"/>
-<link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/common.css"  th:href="@{/resources/css/common.css}"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css"  th:href="@{/resources/css/dbdb.css}"/>
 <title>中奖确认</title>
 </head>
  
@@ -39,9 +39,7 @@
     </div>
     </div>
     
-    <!----进度----->
-    
-    
+    <!-- 进度 -->
     <div style="display:block">
     <p class="h10"></p>
      <P class="tit_rem_big zjjdizhi">地址信息</P>
@@ -54,7 +52,7 @@
      
      </div>
      
-     <!----地址----->
+     <!-- 地址 -->
      
      <div style="display:block">     
      <p class="h10"></p>
@@ -88,7 +86,7 @@
    <p class="clear"></p>
    </div>
    
-   <!----奖品----->
+   <!-- 奖品 -->
    <p class="h10"></p>
 </div>
 </body>
