@@ -33,10 +33,6 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
-
-
-
-
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
