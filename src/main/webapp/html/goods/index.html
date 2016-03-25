@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -9,18 +8,17 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta name="description" content=""/>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="../resources/css/commfont.css"/>
-    <link rel="stylesheet" type="text/css" href="../resources/css/common.css"/>
-    <link rel="stylesheet" type="text/css" href="../resources/css/dbdb.css"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}" />
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}" />
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}" />
     <title>用1元买iphone 6S</title>
 </head>
 
 <body>
 
-<div class="commfont">error.html
-
+<div class="commfont">
     <div style="position:relative;">
-        <img src="images/dsds.jpg" style="width:100%"/>
+        <img src="/resources/images/dsds.jpg" th:src="@{/resources/images/dsds.jpg}" style="width:100%"/>
         <div class="meitou">
             <div class="endtime">
                 <p class=" tit_rem_big">
@@ -32,6 +30,7 @@
 
     <p class="syjg"><span>原价：</span><span class="red huadiao">￥<b>332.00</b></span>/￥1.00<a href="#"><span
             class="fr bai">商品详情&nbsp;»</span></a></p>
+
 
     <P class="h10"></P>
 
@@ -50,7 +49,7 @@
 
     <div class="syabk" style="display:block">
         <div id="mcover" onclick="document.getElementById('mcover').style.display='';" style="display: none;">
-            <img src="images/mengbanzi.png"/>
+            <img src="/resources/images/mengbanzi.png" th:src="@{/resources/images/mengbanzi.png}"/>
         </div>
         <button class="buttonan lv tit_rem_big_s" type="button"
                 onclick="document.getElementById('mcover').style.display='block';">
@@ -58,8 +57,8 @@
         </button>
     </div>
     <div class="syabk" style="display:block">
-        <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
-            <a href="personal/list.html">查看我的参与</a>
+        <button class="buttonan huang tit_rem_big_s" type="button">
+            查看我的参与
         </button>
     </div>
 

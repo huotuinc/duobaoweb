@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 //@EnableTransactionManagement(mode = AdviceMode.PROXY)
-@ComponentScan({"com.huotu.duobaoweb.service"})
+@ComponentScan({"com.huotu.duobaoweb.service","com.huotu.duobaoweb.controller"})
 @EnableJpaRepositories(value = "com.huotu.duobaoweb.repository", repositoryFactoryBeanClass = ClassicsRepositoryFactoryBean.class)
 @ImportResource(value = {"classpath:spring-jpa.xml"})
 @Import(LoggingConfig.class)
