@@ -43,12 +43,12 @@ public interface UserBuyFlowService {
 
 
     /**
-     * 获取用户的夺宝列表
-     * @param user
+     * 中奖列表
+     * @param userId
      * @param lastTime
      * @return AppUserBuyFlowModel[]
      */
-    UserBuyFlowModel[] findByUser(User user, Long lastTime) throws  Exception;
+    UserBuyFlowModel[] findByUser(Long userId, Long lastTime) throws  Exception;
 
 
     /**

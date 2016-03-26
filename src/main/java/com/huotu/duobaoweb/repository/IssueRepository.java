@@ -1,17 +1,16 @@
 package com.huotu.duobaoweb.repository;
 
-import com.huotu.duobaoweb.entity.UserBuyFlow;
+
+import com.huotu.duobaoweb.entity.Issue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-
-
 /**
- * Created by xhk on 2016/1/22.
+ * Created by admin on 2016/1/21.
  */
 @Repository
-public interface UserBuyFlowRepository extends JpaRepository<UserBuyFlow,Long>, JpaSpecificationExecutor<UserBuyFlow> {
+public interface IssueRepository extends JpaRepository<Issue, Long>, JpaSpecificationExecutor<Issue> {
 
 
 }

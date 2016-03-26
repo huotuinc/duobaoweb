@@ -148,7 +148,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
 
 
     @Override
-    public UserBuyFlowModel[] findByUser(User user, Long lastTime) throws Exception {
+    public UserBuyFlowModel[] findByUser(Long userId, Long lastTime) throws Exception {
         StringBuilder hql = new StringBuilder();
         Query query = null;
         String hq = "select uby from UserBuyFlow uby,Issue i where i.id=uby.issue.id and i.awardingUser.id=?1 and uby.user.id=?2 ";
@@ -159,8 +159,8 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
             hql.append("  order by uby.time desc");
         }
         query = entityManager.createQuery(hql.toString());
-        query.setParameter(1, user.getId());
-        query.setParameter(2, user.getId());
+        query.setParameter(1, userId);
+        query.setParameter(2, userId);
         if (lastTime>0) {
             query.setParameter(3, lastTime);
         }

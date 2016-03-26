@@ -1,6 +1,7 @@
 package com.huotu.duobaoweb.repository;
 
-import com.huotu.duobaoweb.entity.UserBuyFlow;
+
+import com.huotu.duobaoweb.entity.UserNumber;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -8,10 +9,12 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * Created by xhk on 2016/1/22.
+ * 用户号码Repository
+ * Created by lhx on 2016/1/19.
  */
+
 @Repository
-public interface UserBuyFlowRepository extends JpaRepository<UserBuyFlow,Long>, JpaSpecificationExecutor<UserBuyFlow> {
+public interface UserNumberRepository extends JpaRepository<UserNumber, Long>, JpaSpecificationExecutor<UserNumber> {
 
 
 }
