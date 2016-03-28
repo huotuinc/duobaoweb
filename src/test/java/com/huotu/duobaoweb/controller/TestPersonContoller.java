@@ -1,7 +1,10 @@
-package com.huotu.duobaoweb;
+package com.huotu.duobaoweb.controller;
 
 import com.huotu.duobaoweb.base.BaseTest;
 import com.huotu.duobaoweb.boot.RootConfig;
+import com.huotu.duobaoweb.entity.Goods;
+import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.Orders;
 import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.repository.UserRepository;
 import com.huotu.duobaoweb.service.StaticResourceService;
@@ -9,11 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
@@ -54,8 +59,27 @@ public class TestPersonContoller extends BaseTest {
     }
 
     @Test
+    @Rollback(false)
     public void initData(){
-        User user = userRepository.findByUsername(mockUsername);
+        User user = userRepository.findOne(2L);
+        Goods good2 = saveGodds();
+        for (int i = 1; i < 15; i++) {
+            if (i % 2 == 0) {
+                Orders orders = saveOrders(user, i);
+                Issue issue = saveIssue(good2,user,i);
+                saveOrderItem(orders,issue);
+                saveUserNumber(user,issue,i);
+                saveUserBuyFlow(user,issue);
+            } else {
+                Orders orders = saveOrders(user, i);
+                Issue issue = saveIssue(good2,user,i);
+                saveOrderItem(orders, issue);
+                saveUserNumber(user, issue,i);
+                saveUserBuyFlow(user, issue);
+            }
+        }
+
+
     }
 
 }

@@ -3,10 +3,12 @@ package com.huotu.duobaoweb.controller;
 import com.huotu.duobaoweb.entity.Delivery;
 import com.huotu.duobaoweb.model.DeliveryModel;
 import com.huotu.duobaoweb.model.RaiderListModel;
+import com.huotu.duobaoweb.model.RaiderNumbersModel;
 import com.huotu.duobaoweb.model.UserBuyFlowModel;
 import com.huotu.duobaoweb.repository.UserRepository;
 import com.huotu.duobaoweb.service.DeliveryService;
 import com.huotu.duobaoweb.service.UserBuyFlowService;
+import com.huotu.duobaoweb.service.UserNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,9 @@ public class PersonalController {
     @Autowired
     DeliveryService deliveryService;
 
+    @Autowired
+    UserNumberService userNumberService;
+
     /**
      * 查看我的参与记录
      * 查找夺宝记录
@@ -37,10 +42,10 @@ public class PersonalController {
      */
     @RequestMapping(value = "/getMyInvolvedRecord" , method = RequestMethod.GET)
     public String getMyInvolvedRecord(Model model,Long userId,Integer type,Long lastTime) throws Exception{
-//        RaiderListModel[] raiderListModels =  userBuyFlowService.findByUserIdAndType(userId, type, lastTime);
-//        model.addAttribute("list",raiderListModels);
+        RaiderListModel[] raiderListModels =  userBuyFlowService.findByUserIdAndType(userId, type, lastTime);
+        model.addAttribute("list",raiderListModels);
         model.addAttribute("type",type);
-        return "/html/personal/list";
+        return "/html/personal/raiderList";
     }
 
     /**
@@ -53,17 +58,20 @@ public class PersonalController {
      */
     @RequestMapping(value = "/getMyRaiderNumbers" , method = RequestMethod.GET)
     public String getMyRaiderNumbers(Model model,Long userId, Long issueId) throws Exception {
-        return "/html/personal/dbhm";
+        RaiderNumbersModel raiderNumbersModel = userNumberService.getMyRaiderNumbers(userId, issueId);
+        model.addAttribute("raiderNumbersModel",raiderNumbersModel);
+        return "/html/personal/duobaoNumber";
     }
 
 
     @RequestMapping(value = "/getMyLotteryList" , method = RequestMethod.GET)
     public String getMyLotteryList(Model model, Long userId, Long lastTime) throws Exception {
-//        UserBuyFlowModel[] lotteryList = userBuyFlowService.findByUser(userId, lastTime);
-//        model.addAttribute("list",lotteryList);
+        UserBuyFlowModel[] lotteryList = userBuyFlowService.findByUser(userId, lastTime);
         model.addAttribute("type",3);
-        return "/html/personal/list";
+        model.addAttribute("list",lotteryList);
+        return "/html/personal/raiderList";
     }
+
     /**
      * 中奖详细信息确认
      * @param model
@@ -76,7 +84,7 @@ public class PersonalController {
     public String getOneLotteryInfo(Model model,Long userId, Long issueId)  throws Exception {
 //        DeliveryModel deliveryModel = deliveryService.findByIssueId(issueId);
 //        model.addAttribute("deliveryModel",deliveryModel);
-        return "/html/personal/zj";
+        return "/html/personal/lotteryInfo";
     }
 
 

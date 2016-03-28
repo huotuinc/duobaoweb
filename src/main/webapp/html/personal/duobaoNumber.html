@@ -27,19 +27,19 @@
 <div class="commfont">
 
     <!--top-->
-    <div class="jssz" style="background-color:#f6f6f6; border-top:1px solid #ddd; ">
-        <p class="jsszp tit_rem_big" style="line-height:1.5rem">天梭（TISSOT）手表 力洛克系列 机械情侣表男表手表 力洛克系列 机械情侣表男表 </p>
+    <div class="jssz" style="background-color:#f6f6f6; border-top:1px solid #ddd; " th:object="${raiderNumbersModel}">
+        <p class="jsszp tit_rem_big" style="line-height:1.5rem" th:text="*{goodsTitle}">天梭（TISSOT）手表 力洛克系列 机械情侣表男表手表 力洛克系列 机械情侣表男表 </p>
 
-        <p style="margin-top:10px">期号：301089007 </p>
+        <p style="margin-top:10px" th:text="*{'期号：'+issueId}">期号：301089007 </p>
 
-        <p>参与了<i style=" color:#ef6314;">5</i>人次，以下是所有夺宝号码 </p>
+        <p>参与了<i style=" color:#ef6314;" th:text="*{amount}">5</i>人次，以下是所有夺宝号码 </p>
     </div>
     <div style="padding:10px;">
-        <p style="  margin:0 auto;">15264000 15264000 15264000 15264000 15264000 15264000
-        15264000 15264000 15264000</p>
+        <p style="margin:0 auto;">
+            <span th:each="num:${numbers}" th:text="${num}"> 15264000 </span>
+        </p>
     </div>
     <!--top END-->
-
 
 </div>
 </body>
