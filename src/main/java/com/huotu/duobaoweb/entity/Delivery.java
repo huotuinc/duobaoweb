@@ -1,9 +1,10 @@
 package com.huotu.duobaoweb.entity;
 
-
 import com.huotu.duobaoweb.common.CommonEnum;
+import com.huotu.duobaoweb.entity.pk.DeliveryPK;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,23 +17,21 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@IdClass(value = DeliveryPK.class)
 public class Delivery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    /**
-     * 发货状态
-     */
-    private CommonEnum.DeliveryStatus deliveryStatus;
-
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private Issue issue;
 
 
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private User user;
+
+    /**
+     * 发货状态
+     */
+    private CommonEnum.DeliveryStatus deliveryStatus;
 
     /**
      * 收货人

@@ -1,10 +1,6 @@
 package com.huotu.duobaoweb.controller;
 
-import com.huotu.duobaoweb.entity.Delivery;
-import com.huotu.duobaoweb.model.DeliveryModel;
-import com.huotu.duobaoweb.model.RaiderListModel;
-import com.huotu.duobaoweb.model.UserBuyFlowModel;
-import com.huotu.duobaoweb.repository.UserRepository;
+
 import com.huotu.duobaoweb.service.DeliveryService;
 import com.huotu.duobaoweb.service.UserBuyFlowService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 个人系统模块
  * Created by lhx on 2016/3/25.
  */
-@RequestMapping(value="/web")
+@RequestMapping(value="/personal")
 @Controller
 public class PersonalController {
 

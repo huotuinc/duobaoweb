@@ -1,11 +1,10 @@
 package com.huotu.duobaoweb.controller;
 
-import jdk.nashorn.internal.runtime.ECMAException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.Lob;
+
 import java.util.Map;
 
 /**

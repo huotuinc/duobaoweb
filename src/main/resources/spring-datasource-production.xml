@@ -7,7 +7,7 @@
 
         <property name="dataSource">
             <bean class="org.springframework.jndi.JndiObjectFactoryBean">
-                <property name="jndiName" value="jdbc/duobao"></property>
+                <property name="jndiName" value="jdbc/duobaoweb"></property>
                 <property name="resourceRef" value="true"></property>
             </bean>
         </property>

@@ -24,4 +24,14 @@ public interface UserRepository extends JpaRepository<User, Long>, ClassicsRepos
      */
     User findByUsername(String username);
 
+
+
+    /**
+     * 根据微信openid获取用户数据
+     *
+     * @param weixinOpenId
+     * @return
+     */
+    User findByWeixinOpenId(String weixinOpenId);
+
 }

@@ -20,7 +20,7 @@
 
         <property name="jpaPropertyMap">
             <map>
-                <entry key="javax.persistence.jdbc.url" value="jdbc:mysql://192.168.1.254:3306/duobao2?useUnicode=true&amp;characterEncoding=UTF8"/>
+                <entry key="javax.persistence.jdbc.url" value="jdbc:mysql://192.168.1.254:3306/duobaoweb?useUnicode=true&amp;characterEncoding=UTF8"/>
                 <entry key="javax.persistence.jdbc.user" value="dbuser"/>
                 <entry key="javax.persistence.jdbc.password" value="ddbbuusseerr" />
                 <entry key="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
