@@ -1,6 +1,5 @@
 package com.huotu.duobaoweb.service;
 
-import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.entity.UserBuyFlow;
 import com.huotu.duobaoweb.model.BuyListModel;
 import com.huotu.duobaoweb.model.RaiderListModel;

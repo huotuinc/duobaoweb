@@ -49,7 +49,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 hql.append("  order by ubf.time desc");
             }
         } else if (type == 1) {
-            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1 and ubf.issue.status!=com.huotu.duobao.model.common.CommonEnum.IssueStatus.drawed";
+            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1 and ubf.issue.status!=com.huotu.duobaoweb.common.CommonEnum.IssueStatus.drawed";
             hql.append(hq);
             if (lastTime > 0) {
                 hql.append(" and ubf.time<?2 order by ubf.time desc");
@@ -57,7 +57,15 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 hql.append(" order by ubf.time desc");
             }
         } else if (type == 2) {
-            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1  and ubf.issue.status=com.huotu.duobao.model.common.CommonEnum.IssueStatus.drawed";
+            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1  and ubf.issue.status=com.huotu.duobaoweb.common.CommonEnum.IssueStatus.drawed";
+            hql.append(hq);
+            if (lastTime > 0) {
+                hql.append(" and ubf.time<?2 order by ubf.time desc");
+            } else {
+                hql.append("  order by ubf.time desc");
+            }
+        }else if (type == 3) {
+            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1  and ubf.issue.status=com.huotu.duobaoweb.common.CommonEnum.IssueStatus.drawed ";
             hql.append(hq);
             if (lastTime > 0) {
                 hql.append(" and ubf.time<?2 order by ubf.time desc");
@@ -71,6 +79,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
         if (lastTime > 0) {
             query.setParameter(2, lastTime);
         }
+
         query.setMaxResults(10);
         userBuyFlows = query.getResultList();
         RaiderListModel[] raiderListModels = null;
@@ -89,7 +98,6 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 appMyRaiderListModel.setAttendAmount(userBuyFlow.getAmount());
                 appMyRaiderListModel.setStatus(userBuyFlow.getIssue().getStatus().getValue());
                 appMyRaiderListModel.setTime(new Date(userBuyFlow.getTime()));
-
                 if (type == 2) {
                     //============封装以开奖记录的额外数据============
                     appMyRaiderListModel.setWinner(userBuyFlow.getIssue().getAwardingUser() == null ? "" : userBuyFlow.getIssue().getAwardingUser().getRealName());
