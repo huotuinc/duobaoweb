@@ -140,5 +140,9 @@ public class Goods {
      */
     private Long viewAmount;
 
+    /**
+     * 商家Id
+     */
+    private Long merchantId;
 
 }

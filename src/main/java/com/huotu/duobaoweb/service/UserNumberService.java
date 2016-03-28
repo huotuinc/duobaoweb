@@ -1,7 +1,10 @@
 package com.huotu.duobaoweb.service;
 
 
+import com.huotu.duobaoweb.entity.UserNumber;
 import com.huotu.duobaoweb.model.RaiderNumbersModel;
+
+import java.util.List;
 
 
 /**
@@ -17,5 +20,15 @@ public interface UserNumberService {
      * @throws Exception
      */
     RaiderNumbersModel getMyRaiderNumbers(Long userId, Long issueId) throws Exception;
+
+
+    /**
+     * 全站前50参与记录
+     * @param date 日期
+     * @return
+     */
+    List<UserNumber> getLotteryBeforeTop50(Long date);
+
+
 
 }

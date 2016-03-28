@@ -30,9 +30,10 @@ public class Address {
     @Column(length = 11)
     private String mobile;
     /**
-     * 城市
+     * 城市（浙江省|杭州市|滨江区）
      */
-    private Integer cityId;
+    @Column(length = 50)
+    private String cityName;
     /**
      * 详细地址
      */

@@ -124,4 +124,9 @@ public class User implements Serializable {
      * 对应商城的Id
      */
     private Long mallUserId;
+
+    /**
+     * 商城Id
+     */
+    private Long merchantId;
 }
