@@ -1,7 +1,7 @@
 package com.huotu.duobaoweb.cache;
 
 
-import com.huotu.duobao.model.api.AppWinningInfoModel;
+import com.huotu.duobaoweb.model.AppWinningInfoModel;
 import com.whalin.MemCached.MemCachedClient;
 
 import java.util.Date;

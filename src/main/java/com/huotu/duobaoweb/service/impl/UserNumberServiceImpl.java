@@ -54,5 +54,10 @@ public class UserNumberServiceImpl implements UserNumberService {
         return raiderNumbersModel;
     }
 
+    @Override
+    public List<UserNumber> getLotteryBeforeTop50(Long date) {
+        return null;
+    }
+
 
 }

@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" content="" />
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+
+    <script type="text/javascript" src="../../resources/js/jquery-1.7.2.min.js"
+            th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" src="../../resources/js/shopping.js"
+            th:src="@{/resources/js/shopping.js}"></script>
+
+    <script type="text/javascript" src="../../resources/js/jquery.utils.js"
+            th:src="@{/resources/js/jquery.utils.js}"></script>
+    <link href="../../resources/js/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+
+
+<title>参与购买</title>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var minNum=function(){
+            var perMoney =/*[[${shoppingCarts.perMoney}]]*/'';
+            var buyNum=Number($("#buyNum").val());
+            buyNum=buyNum-1;
+            if(0>=buyNum){
+                buyNum=1;
+            }
+            var lastMoney=perMoney*buyNum;
+            $("#buyNum").attr("value",buyNum);
+            $("#buyMoney").attr("value",lastMoney);
+            $("#buyNum").html(buyNum);
+            $("#buyMoneySh").text(lastMoney);
+
+        }
+        var addNum=function(){
+            var perMoney =/*[[${shoppingCarts.perMoney}]]*/'';
+            var leftNumber=/*[[${shoppingCarts.leftNumber}]]*/'';
+            var buyNum=Number($("#buyNum").val());
+            buyNum=buyNum+1;
+            if(buyNum>=leftNumber){
+                buyNum=leftNumber;
+            }
+            var lastMoney=perMoney*buyNum;
+            $("#buyNum").attr("value",buyNum);
+            $("#buyMoney").attr("value",lastMoney);
+            $("#buyNum").html(buyNum);
+            $("#buyMoneySh").text(lastMoney);
+        }
+
+        var balance=function(){
+            var cartId =/*[[${shoppingCarts.cartId}]]*/'';
+            var buyNum=$("#buyNum").val();
+            turnToBalance(cartId,buyNum);
+        }
+
+        /*]]>*/
+
+    </script>
+</head>
+ 
+<body style="background-color:#f5f5f5">
+<div class="commfont" th:object="${shoppingCarts}">
+    <input type="hidden" id="cartId" name="cartId" th:value="*{cartId}"/>
+    <div class="all">
+      <div class="right">
+        <div class="right_in">
+          <p style="margin-bottom:4px" class="tit_rem_big">
+            <a href="#" th:text="*{detail}">【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</a>
+          </p>
+          
+           
+          <div class="hui">
+     <span style="float:left" th:text="*{needNumber}">总需：328932</span>,<span>剩余&nbsp;<i style=" color:#009BFF" th:text="*{leftNumber}">328</i>人次</span>
+          </div>
+         
+          
+          <p style=" clear:both"></p>          
+          <div style=" display:block" >           
+          <div class="detail_standard_wx">
+          <div class="sku_wrap">
+          <div class="sku sku_num">
+                        <h3>参与人次：</h3>
+                        <div class="num_wrap">
+                            <span class="minus minus_disabled" id="minusNum" onclick="minNum()"></span>
+                            <input class="num input_clear" id="buyNum" name="buyNum" type="tel" th:value="*{buyNum}"/>
+                            <span class="plus" id="addNum" onclick="addNum()"></span>
+                            <input type="hidden" id="hiddenStore" value="3349" />
+                            <input type="hidden" id="hiddenBuyNum" value="0" />
+                            <input type="hidden" id="hiddenMemberBuyLimit" value="1000000" />
+                           
+
+                        </div>
+                        
+                    </div></div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="left">
+        <img src="images/dsds.jpg" th:src="*{imgUrl}" style="width:80px" />
+      </div>
+    </div>
+    
+    <p style="height:54px;"></p>
+  <!--支付--> 
+<div style="display:block; position:fixed;bottom:0px; z-index:99999; width:100%; ">
+ 
+  <div style="padding:8px 10px; background-color:#fff; border-top:1px solid #ddd">  
+  <div style="float:left">
+  <p class=" tit_rem_big">支付总计：<span style=" color:#FF3F00"><b id="buyMoneySh" name="buyMoneySh" th:text="*{buyMoney}">0元</b></span></p>
+  <input name="buyMoney" id="buyMoney" type="hidden" th:value="*{buyMoney}"/>
+      <p class="tit_rem hui">夺宝有风险，参与需谨慎</p>
+  </div>
+  <div style="position:absolute; right:10px;bottom:10px"><a href="#" class="zuijia tit_rem_big" style="padding:5px 10px" onclick="balance()">结算</a></div>
+  <P class="clear"></P>
+   
+  </div></div>
+<!--支付end--> 
+</div> 
+</body>
+</html>

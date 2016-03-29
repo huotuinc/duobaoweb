@@ -2,16 +2,17 @@ package com.huotu.duobaoweb.service.impl;
 
 import com.huotu.common.base.DateHelper;
 import com.huotu.common.base.HttpHelper;
-import com.huotu.duobaoweb.common.*;
+import com.huotu.duobaoweb.common.CommonEnum;
+import com.huotu.duobaoweb.common.LotteryCode;
+import com.huotu.duobaoweb.common.SysRegex;
 import com.huotu.duobaoweb.entity.*;
-import com.huotu.duobaoweb.entity.Goods;
-import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.exceptions.CrabLotteryCodeRepeatException;
 import com.huotu.duobaoweb.exceptions.InterrelatedException;
 import com.huotu.duobaoweb.exceptions.LotteryCodeError;
-
 import com.huotu.duobaoweb.repository.*;
-import com.huotu.duobaoweb.service.*;
+import com.huotu.duobaoweb.service.CacheService;
+import com.huotu.duobaoweb.service.RaidersCoreService;
+import com.huotu.duobaoweb.service.UserNumberService;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -65,8 +65,6 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
     @Autowired
     private DeliveryRepository deliveryRepository;
 
-    @Autowired
-    private PayService payService;
 
     @Autowired
     private OrdersRepository ordersRepository;
@@ -101,7 +99,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         }
 
         //todo 从数据中心获取库存量
-        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up) && goods.getStock() > 0) {
+        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up) ) {//todo 由于代码运行不起来,被删掉 by xhk :&& goods.getStock() > 0
 
             //处理下期的情况
             Issue nextIssue = new Issue();
@@ -117,7 +115,8 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             nextIssue = issueRepository.saveAndFlush(nextIssue);
 
             goods.setIssue(nextIssue);
-            goods.setStock(goods.getStock() - 1);
+            //todo 由于代码运行不起来下面这行注释掉 by xhk
+            //goods.setStock(goods.getStock() - 1);
             goodsRepository.save(goods);
 
             //创建抽奖号码

@@ -29,7 +29,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         DeliveryModel deliveryModel = null;
         if (delivery!=null){
             deliveryModel = new DeliveryModel();
-            deliveryModel.setPid(delivery.getId());
+            //todo 由于程序运行不起来注释了下面的代码 by xhk
+            //deliveryModel.setPid(delivery.getId());
             deliveryModel.setDeliveryStatus(delivery.getDeliveryStatus().getValue());
             deliveryModel.setDetails(delivery.getDetails());
             deliveryModel.setReceiver(delivery.getReceiver());

@@ -192,7 +192,8 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 userBuyFlowModel.setLuckyNumber(userBuyFlow.getIssue().getLuckyNumber());
                 userBuyFlowModel.setPid(userBuyFlow.getId());
                 userBuyFlowModel.setDeliveryStatus(delivery.getDeliveryStatus().getValue());
-                userBuyFlowModel.setDeliveryId(delivery.getId());
+                //todo 由于程序运行不起来。注释了下面语句 by xhk
+                //userBuyFlowModel.setDeliveryId(delivery.getId());
                 userBuyFlowModel.setTime(userBuyFlow.getTime());
                 appUserBuyFlowModels[i] = userBuyFlowModel;
             }
