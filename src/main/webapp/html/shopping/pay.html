@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -7,31 +7,33 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="description" content="" />
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="css/commfont.css"/>
-<link rel="stylesheet" type="text/css" href="css/common.css"/>
-<link rel="stylesheet" type="text/css" href="css/dbdb.css"/>
- 
+
+    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
 
 
-<title>支付结果</title>
- 
 
+    <title>支付结果</title>
+    <script type="text/javascript" th:inline="javascript">
+
+    </script>
 </head>
 
 <body style="background-color:#f5f5f5;" >
-<div class="commfont">
+<div class="commfont" th:object="${payModel}">
  
 
  
 <div class="zfdd">
 <span style="float:left">结算合计</span>
  
-<span style="float:right;" class="ddd_red"><B>10元</B></span>
+<span style="float:right;" class="ddd_red"><B th:text="*{payMoney}">10</B>元</span>
 
 </div>
 <div style=" padding:10px 10px; background-color:#fff; clear:both">
  
-<p style="padding:4px 0px; color:#999"><span>【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</span><span>颜色随机</span></p>
+<p style="padding:4px 0px; color:#999"><span th:text="*{detail}">【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</span><span>颜色随机</span></p>
 </div> 
 <p class="zfdd_h"></p>
  
@@ -39,13 +41,13 @@
 <div class="zfdd">
 <span style="float:left">支付方式</span>
  
-<span style="float:right;" class="ddd_red"><B>10元</B></span>
+<span style="float:right;" class="ddd_red"><B th:text="*{payMoney}">10</B>元</span>
 </div>
 
 <div class="weui_cells weui_cells_checkbox" style="background-color:#FFFFFF;">
      
         <label class="weui_cell weui_check_label kl">
- <div class="weui_cell_hd"><input type="checkbox" name="checkbox1" class="weui_check" />
+ <div class="weui_cell_hd"><input type="radio" name="payType" value="1" checked="true" class="weui_check"/>
           <i class="weui_icon_checked"></i>
         </div>
         <div class="weui_cell_bd weui_cell_primary ">
@@ -64,29 +66,18 @@
      
         <label class="weui_cell weui_check_label">
   <div class="weui_cell_hd">
-          <input type="checkbox" name="checkbox1" class="weui_check" />
+          <input type="radio" name="payType"  class="weui_check"  value="2" />
           <i class="weui_icon_checked"></i>
         </div>
         <div class="weui_cell_bd weui_cell_primary ">
           <div style="float:left;" >
-   网易宝
+   支付宝
           </div>   
         </div>
         </label>
       </div>
       <div class="weui_cells weui_cells_checkbox">
-     
-        <label class="weui_cell weui_check_label">
-    <div class="weui_cell_hd">
-          <input type="checkbox" name="checkbox1" class="weui_check" />
-          <i class="weui_icon_checked"></i>
-        </div>
-        <div class="weui_cell_bd weui_cell_primary ">
-          <div style="float:left;" >
-  其他
-          </div>   
-        </div>
-        </label>
+
         
       </div>
 
@@ -94,7 +85,7 @@
 <!--按钮-->   
 <div class="dddds" >
 <p style="margin:0px 10px;">
-<a  href="#" class="ljcy tit_rem_big">立即参与</a></p>
+<a  href="#" class="ljcy tit_rem_big" onclick="pay()">立即参与</a></p>
 <p></p>
  </div> 
  <!--按钮end--> 

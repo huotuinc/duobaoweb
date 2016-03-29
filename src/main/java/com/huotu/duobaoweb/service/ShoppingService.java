@@ -1,8 +1,13 @@
 package com.huotu.duobaoweb.service;
 
 import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.Orders;
 import com.huotu.duobaoweb.entity.User;
+import com.huotu.duobaoweb.model.PayInfoModel;
+import com.huotu.duobaoweb.model.PayModel;
 import com.huotu.duobaoweb.model.ShoppingCartsModel;
+
+import java.net.URISyntaxException;
 
 /**
  * Created by xhk on 2016/3/25.
@@ -27,5 +32,27 @@ public interface ShoppingService {
      * @param userId
      * @return
      */
-    ShoppingCartsModel getShoppingCartsModel(Long userId);
+    ShoppingCartsModel getShoppingCartsModel(Long userId) throws URISyntaxException;
+
+
+    /**
+     * 结算
+     * @param cartId
+     * @param buyNum
+     * @return
+     */
+    PayModel balance(Long cartId, Integer buyNum);
+
+    /**
+     * 得到微信支付的url
+     * @return
+     */
+    String getWeixinPayUrl(Orders orders);
+
+    /**
+     * 生成订单
+     * @param payInfoModel
+     * @return
+     */
+    Orders createOrders(PayInfoModel payInfoModel);
 }
