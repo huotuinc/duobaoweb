@@ -4,8 +4,14 @@ import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.entity.*;
 import com.huotu.duobaoweb.repository.*;
 import com.huotu.duobaoweb.service.StaticResourceService;
+import org.junit.Before;
+import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
@@ -48,6 +54,20 @@ public class BaseTest {
     @Autowired
     UserNumberRepository userNumberRepository;
 
+
+    protected WebDriver driver;
+
+    @Autowired
+    WebApplicationContext context;
+
+    /**
+     * 初始化webdriver
+     */
+    @Before
+    public void init() {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        driver = MockMvcHtmlUnitDriverBuilder.mockMvcSetup(mockMvc).build();
+    }
 
 
     /**
@@ -121,6 +141,7 @@ public class BaseTest {
 
     /**
      * 添加个商品
+     *
      * @return 返回添加后的商品
      */
     public Goods saveGodds() {
@@ -173,6 +194,7 @@ public class BaseTest {
 
     /**
      * 添加用户中奖号码
+     *
      * @param user
      * @param issue
      * @param i
@@ -240,7 +262,6 @@ public class BaseTest {
         userBuyFlow.setAmount(10L);
         return userBuyFlowRepository.saveAndFlush(userBuyFlow);
     }
-
 
 
 }

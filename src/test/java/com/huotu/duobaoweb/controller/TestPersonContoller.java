@@ -59,28 +59,26 @@ public class TestPersonContoller extends BaseTest {
     }
 
     @Test
-    @Rollback(false)
     public void initData(){
-        User user = userRepository.findOne(2L);
-        Goods good2 = saveGodds();
-        for (int i = 1; i < 15; i++) {
-            if (i % 2 == 0) {
-                Orders orders = saveOrders(user, i);
-                Issue issue = saveIssue(good2,user,i);
-                saveOrderItem(orders,issue);
-                saveUserNumber(user,issue,i);
-                saveUserBuyFlow(user,issue);
-            } else {
-                Orders orders = saveOrders(user, i);
-                Issue issue = saveIssue(good2,user,i);
-                saveOrderItem(orders, issue);
-                saveUserNumber(user, issue,i);
-                saveUserBuyFlow(user, issue);
-            }
-        }
-
-
+//        User user = userRepository.findOne(2L);
+//        Goods good2 = saveGodds();
+//        for (int i = 1; i < 15; i++) {
+//            if (i % 2 == 0) {
+//                Orders orders = saveOrders(user, i);
+//                Issue issue = saveIssue(good2,user,i);
+//                saveOrderItem(orders,issue);
+//                saveUserNumber(user,issue,i);
+//                saveUserBuyFlow(user,issue);
+//            } else {
+//                Orders orders = saveOrders(user, i);
+//                Issue issue = saveIssue(good2,user,i);
+//                saveOrderItem(orders, issue);
+//                saveUserNumber(user, issue,i);
+//                saveUserBuyFlow(user, issue);
+//            }
+//        }
     }
+
 
 
 }

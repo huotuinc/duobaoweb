@@ -68,8 +68,8 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
     private DeliveryRepository deliveryRepository;
 
 
-    @Autowired
-    private GoodsRestRepository goodsRestRepository;
+//    @Autowired
+//    private GoodsRestRepository goodsRestRepository;
 
     @Autowired
     private CacheService cacheService;
