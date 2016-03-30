@@ -4,14 +4,15 @@ import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.entity.*;
 import com.huotu.duobaoweb.repository.*;
 import com.huotu.duobaoweb.service.StaticResourceService;
-import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by lhx on 2016/3/25.
@@ -151,7 +152,7 @@ public class BaseTest {
                 issue.setLuckyNumber(20160121l + i);
 
             } else {
-                issue.setStatus(CommonEnum.IssueStatus.drawing);
+                issue.setStatus(CommonEnum.IssueStatus.going);
             }
         }
         issue.setToAmount(20l);

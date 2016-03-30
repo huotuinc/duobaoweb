@@ -48,7 +48,7 @@ public class ShoppingController {
      *@param userId 用户id
      * @return
      */
-    @RequestMapping(value ="/joinToCarts",method = RequestMethod.POST)
+    @RequestMapping(value ="/joinToCarts",method = RequestMethod.GET)
     @ResponseBody
     public ResultModel joinToCarts(String issueId,Long userId,Long buyNum){
         ResultModel resultModel=new ResultModel();

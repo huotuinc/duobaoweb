@@ -53,7 +53,7 @@ public class ShoppingServiceImpl implements ShoppingService{
         if(buyNum==null){
             shoppingCart.setBuyAmount(issue.getDefaultAmount());
         }else {
-            //Èç¹û¹ºÂòµÄÊıÁ¿´óÓÚÊ£ÓàÁ¿Ôò¹ºÂòÊıÁ¿µ÷ÕûÎªÊ£ÓàÁ¿
+            //å¦‚æœè´­ä¹°çš„æ•°é‡å¤§äºå‰©ä½™é‡åˆ™è´­ä¹°æ•°é‡è°ƒæ•´ä¸ºå‰©ä½™é‡
             Long left=issue.getToAmount()-issue.getBuyAmount();
             shoppingCart.setBuyAmount(left<buyNum?left:buyNum);
         }
@@ -72,7 +72,7 @@ public class ShoppingServiceImpl implements ShoppingService{
         ShoppingCart shoppingCart=shoppingCartRepository.findOneByUserId(userId);
         ShoppingCartsModel shoppingCartsModel = new ShoppingCartsModel();
         if(shoppingCart!=null&&shoppingCart.getIssue().getStatus()!= CommonEnum.IssueStatus.going){
-            //Èç¹û¹ºÎï³µÖĞµÄĞÅÏ¢ÒÑ¹ıÆÚÔòÉ¾³ı¹ºÎï³µÖĞµÄĞÅÏ¢
+            //å¦‚æœè´­ç‰©è½¦ä¸­çš„ä¿¡æ¯å·²è¿‡æœŸåˆ™åˆ é™¤è´­ç‰©è½¦ä¸­çš„ä¿¡æ¯
             shoppingCartRepository.clearShoppingCarts(userRepository.findOne(userId));
             return null;
         }
@@ -82,10 +82,10 @@ public class ShoppingServiceImpl implements ShoppingService{
             shoppingCartsModel.setNeedNumber(shoppingCart.getIssue().getToAmount());
             shoppingCartsModel.setPerMoney(shoppingCart.getIssue().getPricePercentAmount().doubleValue());
             shoppingCartsModel.setLeftNumber(left);
-            //µÃµ½Í¼Æ¬¾ø¶ÔµØÖ·
+            //å¾—åˆ°å›¾ç‰‡ç»å¯¹åœ°å€
             String url=staticResourceService.getResource(shoppingCart.getIssue().getGoods().getDefaultPictureUrl()).toString();
             shoppingCartsModel.setImgUrl(url);
-            //Èç¹û¹ºÂòÁ¿´óÓÚ¿â´æÁ¿£¬Ä¬ÈÏµ÷ÕûÎª¿â´æÁ¿
+            //å¦‚æœè´­ä¹°é‡å¤§äºåº“å­˜é‡ï¼Œé»˜è®¤è°ƒæ•´ä¸ºåº“å­˜é‡
             shoppingCartsModel.setBuyNum(shoppingCart.getBuyAmount()>left?left:shoppingCart.getBuyAmount());
 
             shoppingCartsModel.setDetail(shoppingCart.getIssue().getGoods().getTitle());
@@ -102,19 +102,19 @@ public class ShoppingServiceImpl implements ShoppingService{
             return null;
         }
         if(shoppingCart.getIssue().getStatus()!= CommonEnum.IssueStatus.going){
-            //Èç¹ûÆÚºÅÒÑ¾­±»ÂòÂúÔò½«¹ºÎï³µÉ¾³ı
+            //å¦‚æœæœŸå·å·²ç»è¢«ä¹°æ»¡åˆ™å°†è´­ç‰©è½¦åˆ é™¤
             shoppingCartRepository.delete(shoppingCart);
             return null;
         }else{
             payModel.setDetail(shoppingCart.getIssue().getGoods().getTitle());
             Long left=shoppingCart.getIssue().getToAmount()-shoppingCart.getIssue().getBuyAmount();
             if(left<shoppingCart.getBuyAmount()) {
-                //Èç¹ûÊ£ÓàÁ¿²»×ã£¬¹ºÂòÁ¿³¬¹ıÁËÊ£ÓàÁ¿£¬Ôò½«¹ºÎï³µµÄÊıÁ¿¸ü¸ÄÎªÊ£ÓàÁ¿
+                //å¦‚æœå‰©ä½™é‡ä¸è¶³ï¼Œè´­ä¹°é‡è¶…è¿‡äº†å‰©ä½™é‡ï¼Œåˆ™å°†è´­ç‰©è½¦çš„æ•°é‡æ›´æ”¹ä¸ºå‰©ä½™é‡
                 shoppingCart.setBuyAmount(left);
                 shoppingCart=shoppingCartRepository.saveAndFlush(shoppingCart);
                 payModel.setPayMoney(left * shoppingCart.getIssue().getPricePercentAmount().doubleValue());
             }else{
-                //Õı³£µÄ½áËã
+                //æ­£å¸¸çš„ç»“ç®—
                 payModel.setPayMoney(shoppingCart.getBuyAmount()*shoppingCart.getIssue().getPricePercentAmount().doubleValue());
             }
             return payModel;
@@ -126,13 +126,13 @@ public class ShoppingServiceImpl implements ShoppingService{
         String appid = WeixinUtils.getAppID();
         String backUri =commonConfigService.getWebUrl()+ "web/payCallbackWeixin";
         System.out.println(backUri);
-        //ÊÚÈ¨ºóÒªÌø×ªµÄÁ´½ÓËùĞèµÄ²ÎÊıÒ»°ãÓĞ»áÔ±ºÅ£¬½ğ¶î£¬¶©µ¥ºÅÖ®Àà£¬
-        //×îºÃ×Ô¼º´øÉÏÒ»¸ö¼ÓÃÜ×Ö·û´®½«½ğ¶î¼ÓÉÏÒ»¸ö×Ô¶¨ÒåµÄkeyÓÃMD5Ç©Ãû»òÕß×Ô¼ºĞ´µÄÇ©Ãû,
-        //±ÈÈç Sign = %3D%2F%CS%
+        //æˆæƒåè¦è·³è½¬çš„é“¾æ¥æ‰€éœ€çš„å‚æ•°ä¸€èˆ¬æœ‰ä¼šå‘˜å·ï¼Œé‡‘é¢ï¼Œè®¢å•å·ä¹‹ç±»ï¼Œ
+        //æœ€å¥½è‡ªå·±å¸¦ä¸Šä¸€ä¸ªåŠ å¯†å­—ç¬¦ä¸²å°†é‡‘é¢åŠ ä¸Šä¸€ä¸ªè‡ªå®šä¹‰çš„keyç”¨MD5ç­¾åæˆ–è€…è‡ªå·±å†™çš„ç­¾å,
+        //æ¯”å¦‚ Sign = %3D%2F%CS%
         backUri = backUri+"?orderNo="+orders.getId();
-        //URLEncoder.encode ºó¿ÉÒÔÔÚbackUri µÄurlÀïÃæ»ñÈ¡´«µİµÄËùÓĞ²ÎÊı
+        //URLEncoder.encode åå¯ä»¥åœ¨backUri çš„urlé‡Œé¢è·å–ä¼ é€’çš„æ‰€æœ‰å‚æ•°
         backUri = URLEncoder.encode(backUri);
-        //scope ²ÎÊıÊÓ¸÷×ÔĞèÇó¶ø¶¨£¬ÕâÀïÓÃscope=snsapi_base ²»µ¯³öÊÚÈ¨Ò³ÃæÖ±½ÓÊÚÈ¨Ä¿µÄÖ»»ñÈ¡Í³Ò»Ö§¸¶½Ó¿ÚµÄopenid
+        //scope å‚æ•°è§†å„è‡ªéœ€æ±‚è€Œå®šï¼Œè¿™é‡Œç”¨scope=snsapi_base ä¸å¼¹å‡ºæˆæƒé¡µé¢ç›´æ¥æˆæƒç›®çš„åªè·å–ç»Ÿä¸€æ”¯ä»˜æ¥å£çš„openid
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
                 "appid=" + appid+
                 "&redirect_uri=" +
@@ -147,10 +147,10 @@ public class ShoppingServiceImpl implements ShoppingService{
         if(shoppingCart==null||
                 shoppingCart.getIssue().getStatus()!= CommonEnum.IssueStatus.going||
                 shoppingCart.getIssue().getToAmount()<(shoppingCart.getIssue().getBuyAmount()+shoppingCart.getBuyAmount())){
-            //Èç¹ûÎïÆ·¹ıÆÚ,»òÕßÊıÁ¿´íÎó£¬Ôò·µ»Ønull
+            //å¦‚æœç‰©å“è¿‡æœŸ,æˆ–è€…æ•°é‡é”™è¯¯ï¼Œåˆ™è¿”å›null
             return null;
         }else{
-            //Õı³£Éú³É¶©µ¥
+            //æ­£å¸¸ç”Ÿæˆè®¢å•
             Orders orders=new Orders();
             orders.setUser(shoppingCart.getUser());
             orders.setTime(new Date());
@@ -167,7 +167,7 @@ public class ShoppingServiceImpl implements ShoppingService{
             ordersItem.setOrder(orders);
             ordersItem=ordersItemRepository.saveAndFlush(ordersItem);
 
-            //Í¬Ê±É¾³ı¹ºÎï³µ
+            //åŒæ—¶åˆ é™¤è´­ç‰©è½¦
             shoppingCartRepository.clearShoppingCarts(shoppingCart.getUser());
 
             return orders;

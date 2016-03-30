@@ -14,21 +14,21 @@ import java.net.URISyntaxException;
  */
 public interface ShoppingService {
     /**
-     * Ìí¼Óµ½¹ºÎï³µ
+     * æ·»åŠ åˆ°è´­ç‰©è½¦
      * @param issue
      * @param user
      */
     void joinToShoppingCarts(Issue issue, User user,Long buyNum);
 
     /**
-     * Çå¿Õ¹ºÎï³µ
+     * æ¸…ç©ºè´­ç‰©è½¦
      * @param user
      */
     void clearShoppingCarts(User user);
 
 
     /**
-     * µÃµ½¼Ó¹ºÎï³µmodel
+     * å¾—åˆ°åŠ è´­ç‰©è½¦model
      * @param userId
      * @return
      */
@@ -36,7 +36,7 @@ public interface ShoppingService {
 
 
     /**
-     * ½áËã
+     * ç»“ç®—
      * @param cartId
      * @param buyNum
      * @return
@@ -44,13 +44,13 @@ public interface ShoppingService {
     PayModel balance(Long cartId, Integer buyNum);
 
     /**
-     * µÃµ½Î¢ĞÅÖ§¸¶µÄurl
+     * å¾—åˆ°å¾®ä¿¡æ”¯ä»˜çš„url
      * @return
      */
     String getWeixinPayUrl(Orders orders);
 
     /**
-     * Éú³É¶©µ¥
+     * ç”Ÿæˆè®¢å•
      * @param payInfoModel
      * @return
      */
