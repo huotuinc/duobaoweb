@@ -54,8 +54,7 @@ public class Goods {
      * 单次购买最低量
      * 前台条件：商品总需人次/(单次购买最低量/每人次单价) 为整数
      */
-    @Column(precision = 20, scale = 2)
-    private BigDecimal stepAmount;
+    private Long stepAmount;
 
     /**
      * 购买时缺省人次

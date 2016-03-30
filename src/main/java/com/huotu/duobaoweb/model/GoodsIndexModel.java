@@ -1,7 +1,8 @@
 package com.huotu.duobaoweb.model;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -9,8 +10,14 @@ import java.util.Date;
  * 活动商品首页model
  * Created by zhang on 2016/3/25.
  */
-public class WebGoodsIndexModel {
+@Getter
+@Setter
+public class GoodsIndexModel {
 
+    /**
+     * 商品Id
+     */
+    private Long id;
 
     /**
      * 图片URL
@@ -30,12 +37,12 @@ public class WebGoodsIndexModel {
     /**
      * 活动开始时间
      */
-    private Date startTime;
+    private Long startTime;
 
     /**
      * 活动结束时间
      */
-    private Date endTime;
+    private Long endTime;
 
     /**
      * 参与人数
@@ -43,9 +50,18 @@ public class WebGoodsIndexModel {
     private Long joinCount;
 
     /**
-     * 当前用户Id
+     * 获取是否登录
      */
-    private Long userId;
+    private boolean logined;
 
+    /**
+     * 当前用户是否参与
+     */
+    private boolean joined;
+
+    /**
+     * 当前用户是否参与的期号
+     */
+    private Long issueId;
 
 }

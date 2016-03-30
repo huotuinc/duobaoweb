@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" content="" />
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+<link rel="stylesheet" type="text/css" href="css/common.css" th:href="@{/resources/css/common.css}"/>
+<link rel="stylesheet" type="text/css" href="css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+<script type="text/javascript" src="js/TouchSlide.1.1.js" th:src="@{/resources/js/TouchSlide.1.1.js}"></script>
+<title>奖品详情</title>
+</head>
+
+<body>
+<form method="post" id="form1" th:object="${goodsDetailModel}">
+<div class="superli clearfix editing">
+  <div class="control-group">
+    <div id="focus-duobao" class="focus-duobao">
+      <div class="hd">
+        <ul>
+        </ul>
+      </div>
+      <div class="bd">
+        <ul th:if="*{pictureUrls.size() ne 0}">
+          <li th:each="pictureUrl:*{pictureUrls}">
+            <img src="images/dsds.jpg" th:src="${pictureUrl}" />
+          </li>
+        </ul>
+      </div>
+    </div>
+    <p style="clear:both"></p>
+  </div>
+</div>
+<script type="text/javascript">
+				TouchSlide({
+					slideCell:"#focus-duobao",
+					titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+					mainCell:".bd ul",
+					effect:"leftLoop",
+					interTime:15000,
+					pnLoop:true,
+					autoPlay:true,//自动播放
+					autoPage:true //自动分页
+				});
+			</script>
+<div class="commfont">
+  <div class="right_inn">
+    <!--进行中点击显示隐藏-->
+    <span th:if="*{status eq 0}"  class="jxz tit_rem_ban"> 进行中 </span>
+    <!--进行中点击显示隐藏-->
+
+    <!--倒计时点击显示隐藏-->
+    <span th:if="*{status eq 1}" class="jxz tit_rem_ban" style="background-color:#FFD700; border:1px solid #FFD700;"> 倒计时 </span>
+    <!--倒计时点击显示隐藏-->
+
+    <!--  已揭晓点击显示隐藏-->
+    <span th:if="*{status eq 2}" class="jxz tit_rem_ban" style="background-color:#1AC412; border:1px solid #1AC412;"> 已揭晓 </span>
+    <!--  已揭晓点击显示隐藏-->
+    
+    <span class="tit_rem_big" th:text="*{title}">
+    </span>
+
+    <!-- 进行中时显示-->
+    <div th:if="*{status eq 0}">
+    <div class="left_ss">
+      <div class="left_in_ss">
+        <p class=" huii"> 参与期号：<span th:text="*{issueId}"></span> </p>
+        <div class="jdtboxx offf" style="display:block">
+          <div id="progress" class="jdtboxx2 on">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="huii">
+      <span style="float:left"> 总需：<span th:text="*{toAmount}"></span> </span>
+      <span style="float:right;"> 剩余&nbsp;<i style=" color:#009BFF"><span th:text="*{remainAmount}"></span></i>
+      </span>
+    </div>
+    <p style=" clear:both">
+    </p>
+  </div>
+  </div>
+  <!-- 进行中end-->
+
+  <!--倒计时-->
+  <div th:if="*{status eq 1}"  class="right_inn  djs">
+    <p>期号：<span th:text="*{issueId}"></span></p>
+    <p>
+      <span>揭晓倒计时：<i class="tit_rem_big_big"><span id="toAwardTime"></span></i></span>
+    </p>
+  </div>
+  <!--倒计时end-->
+
+  <!--已揭晓-->
+  <div th:if="*{status eq 2}" class="yjx">
+    <div class="yjx_a">
+      <div class="zjj_alll">
+        <div class="zjj_all_rightt">
+          <div class="zjj_all_right_inn">
+            <p style="margin-bottom:4px">
+              <a href="#">获奖者：<span th:text="*{awardUserName}">点点滴滴</span></a>
+            </p>
+            <div class="zjj_all_left_s">
+              <div class="zjj_all_left_in_s">
+                <p class=" hui">（<span th:text="*{awardUserCityName}">杭州市</span>&nbsp;IP<span th:text="*{awardUserIp}">172.0.0.1</span>）</p>
+                <p class=" hui">期号：<span th:text="*{issueId}"></span></p>
+                <p class="hui">本期参与：<i style="color:#ff3f00;"><span th:text="*{awardUserJoinCount}">30</span></i>人次</p>
+                <p class="hui">揭晓时间：<span th:text="*{#dates.format(awardTime, 'yyyy-MM-dd HH:mm:ss')}">2015-12-11 14:30:00</span></p>
+              </div>
+            </div>
+            <p class="clear"></p>
+          </div>
+        </div>
+        <div class="zjj_all_leftt">
+          <img src="images/moren.png" th:src="@{/resources/images/moren.png}" style="width:60px; border-radius:50px;"  />
+        </div>
+        <p class="clear"></p>
+      </div>
+      <div class="yjx_c">
+        <span class="yjx_cleft">幸运号：<i class="tit_rem_big_big"><span th:text="*{luckNumber}">32890</span></i></span>
+        <a href="#" th:href="@{/goods/getCountResultByIssueId(id=*{issueId})}"><span class="yjx_cright tit_rem" >计算详情</span></a>
+      </div>
+    </div>
+  </div>
+  <!--已揭晓end-->
+
+  <!--参与-->
+  <div th:if="*{joinCount ne 0}" class="right_inn  xs_all tit_rem">
+    <p>您参与了：<i class="xs">1人次</i> 夺宝号码：10000000058</p>
+  </div>
+  <!--参与end-->
+
+  <!--没参与-->
+  <div th:if="*{joinCount eq 0}" class="right_inn xs_all tit_rem">
+    <p style="color:#aaa;">您还没有参与本次夺宝哦</p>
+  </div>
+  <!--没参与end-->
+
+  <!--全额购买-->
+  <div style="display:block; ">
+    <p class="hhhh"></p>
+    <div style="padding:10px">
+      <div style="float:left">
+        <p class="tit_rem_big">全价购买</p>
+        <p class="tit_rem hui">无需等待，直接获得商品！</p>
+      </div>
+      <div style="float: right">
+        <a href="#" class="zuijia">结算</a>
+      </div>
+      <P class="clear"></P>
+      <p style="color:#FF3F00;" class="tit_rem_big_big">￥<b><span th:text="*{fullPrice}"></span></b></p>
+    </div>
+  </div>
+  <!--全额购买end-->
+
+  <div class="jpxq">
+    <p class="hhhh"></p>
+    <ul>
+      <li >
+        <a href="#">
+        <span class="fl">图文详情</span>
+        <span class="fr"><img src="images/db003.png" th:src="@{/resources/images/db003.png}"/></span>
+        </a>
+        <span style="color:#ACACAC;" class="tit_rem fr">建议在wifi下查看</span>
+      </li>
+      <li >
+        <a href="#">
+        <span class="fl">参与记录</span>
+        <span class="fr"><img src="images/db003.png" th:src="@{/resources/images/db003.png}" /></span>
+        </a>
+      </li>
+    </ul>
+    <p class="hhhh"></p>
+  </div>
+
+  <!--参与纪录-->
+  <div style="display:block">
+    <P class="sy" ><span class="fl">所有参与纪录</span><span th:if="*{firstBuyTime ne null}" class="hui fr "><span th:text="*{#dates.format(firstBuyTime, 'yyyy-MM-dd HH:mm:ss')}">2016-12-12 12:12:12</span>开始</span></P>
+    <P class="clear"></P>
+    <div class="zjjl-all-lq tit_rem">
+      <div style="background-color: #f5f5f5; padding:10px">
+        <p class="shijian tit_rem">2016-01-16</p>
+      </div>
+      <div class="zjjl-right-lq">
+        <div id="buyList" class="zjjl-right_in-lq"></div>
+      </div>
+      <div id="joinUserHead" class="zjjl-left_s-lq" style="overflow: hidden;">
+
+      </div>
+      <p class="clear"></p>
+    </div>
+  </div>
+  <!--参与纪录end-->
+  <div style="height:50px">
+    &nbsp;
+  </div>
+
+  <!--遮罩显示的时候，body加样式overflow:hidden页面底层禁止滚动-->
+  <div id="shade" style="background-color:rgba(0,0,0,0.4); width:100%; height:100%; position:fixed;top:0px; z-index:99998; display: none">
+  </div>
+  <!--遮罩-->
+  <div class="dw">
+    <!--弹出-->
+    <div id="popup" style="display:none" >
+      <div class="wx-fm">
+        <p class="wx-fm-title" style="background-color:#eee; text-align:left; padding-left:10px">人次期数选择</p>
+        <div class="js-wx-cancel publish-cancel">
+          <a href="javascript:cancel()" style="display:block">
+            <div class="cancel-img">
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="detail_standard_wx" style="margin:0px 10px; padding:15px 0px 8px 0px">
+        <div class="sku_wrap">
+          <div class="sku sku_num">
+            <h3>参与人次：</h3>
+            <div class="num_wrap">
+              <span class="minus minus_disabled" id="minusNum"></span>
+              <input class="num input_clear" id="buyNum" type="tel" value="10" th:value="*{defaultAmount}"/>
+              <span class="plus" id="addNum"></span>
+              <input type="hidden" id="hiddenStore" value="3349" />
+              <input type="hidden" id="hiddenBuyNum" value="0" />
+              <input type="hidden" id="hiddenMemberBuyLimit" value="1000000" />
+            </div>
+
+            <!--倍数时显示-->
+            <p th:if="*{stepAmount ne 1}" class="tit_rem" style="display:block; color:#f0373c; clear:both; margin-left:75px">参与人次需是<span th:text="*{stepAmount}">10</span>倍数</p>
+            <!--倍数时显示-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--弹出-->
+
+    <div style="margin:0px 10px; padding:8px 0px">
+      <a id="join" href="javascript:join()" class="ljcy tit_rem_big"  style="display:block">立即参与</a>
+      <a id="buy"  href="#" class="ljcy tit_rem_big" style="display:none">夺宝购买</a>
+    </div>
+  </div>
+  <!--按钮end-->
+</div>
+</form>
+
+<script type="text/javascript" th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+  var toAwardTime;
+  var status;
+  var goodsId;
+  var issueId;
+  var lastId = 0;
+  var flag = true;
+
+  $(function(){
+    $(window).scroll(function(){
+      var scrollTop = $(this).scrollTop();
+      var scrollHeight = $(document).height();
+      var windowHeight = $(this).height();
+      if(scrollTop + windowHeight == scrollHeight){
+        if(flag){
+          loadBuyList();
+        }
+      }
+    });
+
+
+    //1.获取商品详情model
+    var goodsDetailModel = /*[[${goodsDetailModel}]]*/'';
+
+    //2.获取商品进度
+    var progress = goodsDetailModel.progress;
+
+    //3.为进度条赋值
+    $("#progress").css("width", progress + "%");
+
+    goodsId = goodsDetailModel.id;
+    issueId = goodsDetailModel.issueId;
+
+
+    //获取商品单次购买最低量
+    var stepAmount = parseInt(goodsDetailModel.stepAmount);
+
+    //获取商品剩余量
+    var remainAmount = parseInt(goodsDetailModel.remainAmount);
+
+    //为"-"按钮添加一个点击事件
+    $("#minusNum").click(function(){
+      //获取当前的购买量
+      var buyAmount = parseInt($("#buyNum").val());
+
+      if(buyAmount > stepAmount){
+        buyAmount -= stepAmount;
+      }else{
+         alert("亲,最少需要购买" + stepAmount + "次!!");
+      }
+
+      $("#buyNum").val(buyAmount);
+    })
+
+    //为"+"按钮添加一个点击事件
+    $("#addNum").click(function(){
+      //获取当前的购买量
+      var buyAmount = parseInt($("#buyNum").val());
+
+      if(remainAmount > buyAmount){
+        buyAmount += stepAmount;
+      }else{
+        alert("亲,目前只剩"+remainAmount+"次了哦!!");
+      }
+
+      $("#buyNum").val(buyAmount);
+    })
+
+    //获取商品状态
+    status = goodsDetailModel.status;
+
+    //如果商品正在进行倒计时
+    if(status == 1){
+      //获取离开奖的时间
+      toAwardTime = goodsDetailModel.toAwardTime;
+
+      setInterval("show_time()", 10);
+    }
+
+  })
+
+  //倒计时
+  function show_time() {
+    toAwardTime -= 10;
+    if (toAwardTime > 0) {
+      var str = "";
+      var hour = Math.floor(toAwardTime / (3600 * 1000));
+      if(10 >hour) hour = "0" + hour;
+      str = hour + ":";
+      var minute = Math.floor(toAwardTime % (3600 * 1000) / (60 * 1000));
+      if(10 > minute) minute = "0" + minute;
+      str = str + minute + ":";
+      var second = Math.floor(toAwardTime % (3600 * 1000) % (60 * 1000) / 1000)
+      if(10 > second) second = "0" + second;
+      str = str + second + ":";
+      var millSecond = Math.floor(toAwardTime / 10 % 100);
+      if(10 > millSecond) millSecond = "0" + millSecond;
+      str = str + millSecond;
+      $("#toAwardTime").text(str)
+    } else {
+      $("#toAwardTime").text("00:00:00:00")
+    }
+  }
+
+  //立即参与
+  function join(){
+    if(status == 0){
+      //隐藏立即参与按钮
+      $("#join").css("display", "none");
+
+      //显示夺宝购买按钮
+      $("#buy").css("display", "block");
+
+      //显示遮罩
+      $("#shade").css("display", "block");
+
+      //显示弹出页面
+      $("#popup").css("display","block");
+
+      //页面底层禁止滚动
+      $("body").css("overflow","hidden")
+    }else{
+        var curUrl = window.location.href;
+        var index = curUrl.lastIndexOf("/");
+        curUrl = curUrl.substring(0, index + 1);
+        curUrl = curUrl + "detailByGoodsId?id=" + goodsId;
+        window.location.href = curUrl;
+    }
+  }
+
+  //取消参与
+  function cancel(){
+    //隐藏立即参与按钮
+    $("#join").css("display", "block");
+
+    //显示夺宝购买按钮
+    $("#buy").css("display", "none");
+
+    //显示遮罩
+    $("#shade").css("display", "none");
+
+    //显示弹出页面
+    $("#popup").css("display","none");
+
+    //页面底层禁止滚动
+    $("body").css("overflow","scroll");
+  }
+
+  //加载参与记录
+  function loadBuyList(){
+    flag = false;
+    $.ajax({
+      url:"getBuyListByIssueId",
+      data:{"id":issueId, "lastId" : lastId},
+      type:"post",
+      dataType:"json",
+      success:function(data){
+        if(data.buyListModelList.length > 0){
+          for(var i =0; data.buyListModelList.length > i; ++i){
+             var awardUserName = data.buyListModelList[i].nickName;
+             var awardUserCityName = data.buyListModelList[i].city;
+             var awardUserIp = data.buyListModelList[i].ip;
+             var awardJoinCount = data.buyListModelList[i].attendAmount;
+             var awardDate = data.buyListModelList[i].date;
+             var userHead= data.buyListModelList[i].userHeadUrl;
+             addBuyList(awardUserName, awardUserCityName, awardUserIp, awardJoinCount, awardDate, userHead);
+
+            if(i == data.buyListModelList.length - 1){
+              lastId = awardDate;
+            }
+          }
+        }
+        flag = true;
+      },
+      error:function(data){
+        flag = true;
+        $.jBox.tip("异常");
+      }
+    })
+  }
+
+
+  /**
+   * 时间对象的格式化;
+   */
+  Date.prototype.format = function(format) {
+    /*
+     * eg:format="yyyy-MM-dd hh:mm:ss";
+     */
+    var o = {
+      "M+" : this.getMonth() + 1, // month
+      "d+" : this.getDate(), // day
+      "h+" : this.getHours(), // hour
+      "m+" : this.getMinutes(), // minute
+      "s+" : this.getSeconds(), // second
+      "q+" : Math.floor((this.getMonth() + 3) / 3), // quarter
+      "S" : this.getMilliseconds()
+      // millisecond
+    }
+
+    if (/(y+)/.test(format)) {
+      format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4
+              - RegExp.$1.length));
+    }
+
+    for (var k in o) {
+      if (new RegExp("(" + k + ")").test(format)) {
+        format = format.replace(RegExp.$1, RegExp.$1.length == 1
+                ? o[k]
+                : ("00" + o[k]).substr(("" + o[k]).length));
+      }
+    }
+    return format;
+  }
+
+
+
+  function addBuyList(awardUserName, awardUserCityName, awardUserIp, awardJoinCount, awardDate, userHead){
+    var html = '<div><img src="'+userHead+'" class="tututu" /></div>';
+    $("#joinUserHead").append(html);
+
+     var html = '<div class="clear moren sycy">';
+     html = html + '<p class="ddii td5t">'+awardUserName+'</p>';
+     html = html + '<p class="hui">（'+awardUserCityName+'&nbsp;IP'+awardUserIp+'）</p>';
+     awardDate = new Date(awardDate).format("yyyy-MM-dd hh:mm:ss");
+     html = html + '<p class="td5t">参与了<i style="color:#ff3f00;">'+awardJoinCount+'</i>人次 <i class="hui">'+awardDate+'</i></p>';
+     html += '</div>';
+     $("#buyList").append(html);
+  }
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,10 +1,13 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.duobaoweb.service.GoodsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,6 +17,9 @@ import java.util.Map;
 @Controller
 public class GoodsController {
 
+    @Autowired
+    private GoodsService goodsService;
+
     /**
      * 跳转到商品活动的首页
      * @param goodsId
@@ -22,23 +28,77 @@ public class GoodsController {
      * @throws Exception
      */
    @RequestMapping("/index")
-   public String jumpToGoodsActivityIndex(@RequestParam("id")Long goodsId, Map<String, Object> map) throws Exception{
+   public String jumpToGoodsActivityIndex(@RequestParam(value = "id", required = false)Long goodsId, Map<String, Object> map) throws Exception{
+        goodsService.jumpToGoodsActivityIndex(goodsId, map);
         return "/html/goods/index";
     }
 
 
     /**
-     *跳转到商品详情
+     * 通过商品Id跳转到商品详情
      * @param goodsId
      * @param map
      * @return
      * @throws Exception
      */
-   @RequestMapping
-   public String jumpToGoodsActivityDetail(@RequestParam("id")Long goodsId, Map<String, Object> map) throws Exception{
-       return "/html/goods.detail";
+   @RequestMapping("/detailByGoodsId")
+   public String jumpToGoodsActivityDetailByGoodsId(@RequestParam(value = "id", required = false)Long goodsId, Map<String, Object> map) throws Exception{
+       goodsService.jumpToGoodsActivityDetailByGoodsId(goodsId, map);
+       return "/html/goods/detail";
+   }
+
+    /**
+     * 通过期号跳转到商品详情
+     * @param issueId
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/detailByIssueId")
+    public String jumpToGoodsActivityDetailByIssueId(@RequestParam(value = "id", required = false)Long issueId, Map<String, Object> map) throws Exception{
+        goodsService.jumpToGoodsActivityDetailByIssueId(issueId, map);
+        return "/html/goods/detail";
+    }
+
+    /**
+     * 跳转到商品图文详情
+     * @param goodsId
+     * @param map
+     * @return
+     * @throws Exception
+     */
+   @RequestMapping("/imageTextDetail")
+   public String jumpToImageTextDetail(@RequestParam(value = "id", required = false)Long goodsId, Map<String, Object> map) throws Exception{
+       return "/html/goods/imageTextDetail";
+   }
+
+    /**
+     * 获取某一期的参与记录
+     * @param issueId  期号
+     * @param lastId   排序依据(购买时间)
+     * @return
+     * @throws Exception
+     */
+   @RequestMapping("/getBuyListByIssueId")
+   @ResponseBody
+   public Map<String,Object> getBuyListByIssueId(@RequestParam(value = "id", required = false) Long issueId, Long lastId) throws Exception{
+         Map<String, Object> map = new HashMap<>();
+         goodsService.getBuyListByIssueId(issueId, lastId, map);
+         return map;
    }
 
 
+    /**
+     * 获取计算详情
+     * @param issueId
+     * @param map
+     * @return
+     * @throws Exception
+     */
+   @RequestMapping("/getCountResultByIssueId")
+   public String getCountResultByIssueId(@RequestParam(value = "id", required = false) Long issueId, Map<String, Object> map) throws Exception{
+       goodsService.getCountResultByIssueId(issueId, map);
+       return "/html/goods/countResult";
+   }
 
 }
