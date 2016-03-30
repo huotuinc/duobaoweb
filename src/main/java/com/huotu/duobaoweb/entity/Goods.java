@@ -17,6 +17,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@Cacheable(value = false)
 public class Goods {
 
     @Id
@@ -76,11 +77,11 @@ public class Goods {
      */
     @Column(precision = 20, scale = 2)
     private BigDecimal pricePercentAmount;
-    /**
-     * 介绍
-     */
-    @Lob
-    private String introduction;
+//    /**
+//     * 介绍
+//     */
+//    @Lob
+//    private String introduction;
 
     /**
      * 状态

@@ -164,6 +164,12 @@
             <artifactId>Memcached-Java-Client</artifactId>
             <version>3.0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.huotu.huobanplus</groupId>
+            <artifactId>common-client</artifactId>
+            <version>1.4.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

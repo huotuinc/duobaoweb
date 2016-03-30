@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Cacheable(value = false)
 public class ShoppingCart {
 
     @Id

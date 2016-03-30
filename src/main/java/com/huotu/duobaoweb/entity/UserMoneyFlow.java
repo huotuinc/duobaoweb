@@ -15,6 +15,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@Cacheable(value = false)
 public class UserMoneyFlow {
 
     @Id

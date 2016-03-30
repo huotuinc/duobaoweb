@@ -17,6 +17,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@Cacheable(value = false)
 @IdClass(value = DeliveryPK.class)
 public class Delivery {
 

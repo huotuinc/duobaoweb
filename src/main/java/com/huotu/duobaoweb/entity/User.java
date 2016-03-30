@@ -17,12 +17,13 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(
+@Cacheable(value = false)
+@Table(name = "users",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})},
         indexes = {@Index(columnList = "token")
         }
 )
-public class User implements Serializable {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

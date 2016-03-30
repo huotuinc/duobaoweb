@@ -13,6 +13,7 @@ import com.huotu.duobaoweb.repository.*;
 import com.huotu.duobaoweb.service.CacheService;
 import com.huotu.duobaoweb.service.RaidersCoreService;
 import com.huotu.duobaoweb.service.UserNumberService;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 /**
  * 夺宝核心服务代码
@@ -67,14 +69,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
 
 
     @Autowired
-    private OrdersRepository ordersRepository;
-
-    @Autowired
-    private OrdersItemRepository ordersItemRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    private GoodsRestRepository goodsRestRepository;
 
     @Autowired
     private CacheService cacheService;
@@ -98,8 +93,10 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             issueRepository.save(issue);
         }
 
+//        Long stock = goodsRestRepository.
+
         //todo 从数据中心获取库存量
-        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up) ) {//todo 由于代码运行不起来,被删掉 by xhk :&& goods.getStock() > 0
+        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up)) {//todo 由于代码运行不起来,被删掉 by xhk :&& goods.getStock() > 0
 
             //处理下期的情况
             Issue nextIssue = new Issue();

@@ -4,6 +4,7 @@ import com.huotu.duobaoweb.entity.pk.CachedIssueLeaveNumberPK;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -15,6 +16,7 @@ import javax.persistence.IdClass;
 @Entity
 @Getter
 @Setter
+@Cacheable(value = false)
 @IdClass(value = CachedIssueLeaveNumberPK.class)
 public class CachedIssueLeaveNumber {
 
