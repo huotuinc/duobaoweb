@@ -1,7 +1,11 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.Orders;
 import com.huotu.duobaoweb.entity.User;
+import com.huotu.duobaoweb.model.PayInfoModel;
+import com.huotu.duobaoweb.model.PayModel;
 import com.huotu.duobaoweb.model.ResultModel;
 import com.huotu.duobaoweb.model.ShoppingCartsModel;
 import com.huotu.duobaoweb.repository.IssueRepository;
@@ -13,6 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * Created by xhk on 2016/3/25.
@@ -31,10 +39,13 @@ public class ShoppingController {
     @Autowired
     private ShoppingService shoppingService;
 
+    @Autowired
+    private HttpServletResponse response;
+
     /**
-     * ¼ÓÈë¹ºÎï³µ
-     *@param issueId ÆÚºÅid
-     *@param userId ÓÃ»§id
+     * åŠ å…¥è´­ç‰©è½¦
+     *@param issueId æœŸå·id
+     *@param userId ç”¨æˆ·id
      * @return
      */
     @RequestMapping(value ="/joinToCarts",method = RequestMethod.POST)
@@ -42,33 +53,37 @@ public class ShoppingController {
     public ResultModel joinToCarts(String issueId,Long userId,Long buyNum){
         ResultModel resultModel=new ResultModel();
         if(issueId==null){
-            resultModel.setMessage("Ìí¼Óµ½¹ºÎï³µÊ§°Ü£¡");
+            resultModel.setMessage("æ·»åŠ åˆ°è´­ç‰©è½¦å¤±è´¥ï¼");
             resultModel.setCode(404);
             return resultModel;
         }
         Issue issue=issueRepository.findOne(Long.parseLong(issueId));
         if(issue==null){
-            resultModel.setMessage("ÉÌÆ·ÒÑ¾­¹ıÆÚ£¬ÇëÖØĞÂ¹ºÂò£¡");
+            resultModel.setMessage("å•†å“ä¸å­˜åœ¨ï¼Œè¯·é‡æ–°è´­ä¹°ï¼");
+            resultModel.setCode(404);
+            return resultModel;
+        }else if(issue.getStatus()!= CommonEnum.IssueStatus.going){
+            resultModel.setMessage("å•†å“å·²è¿‡æœŸï¼Œè¯·é‡æ–°è´­ä¹°ï¼");
             resultModel.setCode(404);
             return resultModel;
         }
 
         User user=userRepository.findOne(userId);
         if(user==null){
-            resultModel.setMessage("ÓÃ»§²»ºÏ·¨£¬ÇëÖØĞÂ½øÈë£¡");
+            resultModel.setMessage("ç”¨æˆ·ä¸åˆæ³•ï¼Œè¯·é‡æ–°è¿›å…¥ï¼");
             resultModel.setCode(404);
             return resultModel;
         }
 
         shoppingService.joinToShoppingCarts(issue,user,buyNum);
 
-        resultModel.setMessage("Ìí¼Ó³É¹¦£¡");
+        resultModel.setMessage("æ·»åŠ æˆåŠŸï¼");
         resultModel.setCode(200);
         return resultModel;
     }
 
     /**
-     *µÃµ½¹ºÎï³µÁĞ±í
+     *å¾—åˆ°è´­ç‰©è½¦åˆ—è¡¨
      * @return
      */
     public String getCartsList(){
@@ -76,13 +91,13 @@ public class ShoppingController {
     }
 
     /**
-     * µÃµ½¹ºÎï³µ
+     * å¾—åˆ°è´­ç‰©è½¦
      * @return
      */
     @RequestMapping(value="/showShoppingCarts",method = RequestMethod.GET)
-    public String showShoppingCarts(Model model,Long userId){
+    public String showShoppingCarts(Model model,Long userId) throws URISyntaxException {
         ShoppingCartsModel shoppingCartsModel=shoppingService.getShoppingCartsModel(userId);
-        //Èç¹û²»´æÔÚ£¬ÔòÈÃÇ°¶Ë²»ÏÔÊ¾¹ºÎï³µ£¬Í¬Ê±Ö§¸¶±äÎª0
+        //å¦‚æœä¸å­˜åœ¨ï¼Œåˆ™è®©å‰ç«¯ä¸æ˜¾ç¤ºè´­ç‰©è½¦ï¼ŒåŒæ—¶æ”¯ä»˜å˜ä¸º0
         if(shoppingCartsModel==null){
             model.addAttribute("notShow", "1");
             shoppingCartsModel=new ShoppingCartsModel();
@@ -93,21 +108,36 @@ public class ShoppingController {
         return "html/shopping/cartsList";
     }
     /**
-     * ½áËã¹ºÎï³µ
+     * ç»“ç®—è´­ç‰©è½¦
      * @return
      */
     @RequestMapping(value="/balance",method = RequestMethod.GET)
-    public String balance(Long cartId,Integer buyNum){
-
-        return "html/shopping/pay";
+    public String balance(Model model,Long cartId,Integer buyNum){
+        PayModel payModel=shoppingService.balance(cartId, buyNum);
+        if(payModel!=null) {
+            model.addAttribute("payModel", payModel);
+            return "html/shopping/pay";
+        }else{
+            model.addAttribute("overTime", "1");
+            return "html/shopping/cartsList";
+        }
     }
 
     /**
-     * Ö§¸¶
+     * æ”¯ä»˜
      * @return
      */
-    public String pay(){
-
+    @RequestMapping(value="/pay",method = RequestMethod.GET)
+    public String pay(Model model,PayInfoModel payInfoModel) throws IOException {
+        //ç”Ÿæˆè®¢å•
+        Orders orders=shoppingService.createOrders(payInfoModel);
+        if(orders==null){
+            //å¦‚æœè®¢å•ç”Ÿæˆå¤±è´¥åˆ™è·³è½¬åˆ°è´­ç‰©è½¦æç¤ºå•†å“å·²ç»è¿‡æœŸ
+            model.addAttribute("overTime", "1");
+            return "html/shopping/cartsList";
+        }
+        String url=shoppingService.getWeixinPayUrl(orders);
+        response.sendRedirect(url);
         return null;
     }
 }
