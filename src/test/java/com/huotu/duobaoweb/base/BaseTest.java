@@ -1,18 +1,32 @@
 package com.huotu.duobaoweb.base;
 
+import com.huotu.duobaoweb.boot.RootConfig;
 import com.huotu.duobaoweb.common.CommonEnum;
+import com.huotu.duobaoweb.controller.page.AbstractPage;
 import com.huotu.duobaoweb.entity.*;
 import com.huotu.duobaoweb.repository.*;
+import com.huotu.duobaoweb.service.RaidersCoreService;
 import com.huotu.duobaoweb.service.StaticResourceService;
+import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.Resource;
+import javax.persistence.EntityManagerFactory;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -54,8 +68,17 @@ public class BaseTest {
     @Autowired
     UserNumberRepository userNumberRepository;
 
+    @Autowired
+    RaidersCoreService raidersCoreService;
 
     protected WebDriver driver;
+
+    @Resource(name = "entityManagerFactory")
+    protected EntityManagerFactory entityManagerFactory;
+
+    @Resource(name = "transactionManager")
+    protected JpaTransactionManager transactionManager;
+
 
     @Autowired
     WebApplicationContext context;
@@ -67,6 +90,19 @@ public class BaseTest {
     public void init() {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         driver = MockMvcHtmlUnitDriverBuilder.mockMvcSetup(mockMvc).build();
+    }
+
+    /**
+     * 初始化逻辑页面
+     *
+     * @param <T>   该页面相对应的逻辑页面
+     * @param clazz 该页面相对应的逻辑页面的类
+     * @return 页面实例
+     */
+    public <T extends AbstractPage> T initPage(Class<T> clazz) {
+        T page = PageFactory.initElements(driver, clazz);
+        page.validate();
+        return page;
     }
 
 
@@ -136,6 +172,89 @@ public class BaseTest {
                 return number;
             }
         }
+    }
+
+    /**
+     * 生成商品
+     *
+     * @param amount          人次量
+     * @param goodsRepository
+     * @param issueRepository
+     * @return
+     */
+    public Goods generateGoods(Long amount, GoodsRepository goodsRepository, IssueRepository issueRepository) {
+        return generateGoods(amount, false, goodsRepository, issueRepository);
+    }
+
+    /**
+     * 生成商品
+     *
+     * @param amount          人次量
+     * @param userSimulated   是否启用模拟用户
+     * @param goodsRepository
+     * @param issueRepository
+     * @return
+     */
+    public Goods generateGoods(Long amount, Boolean userSimulated, GoodsRepository goodsRepository, IssueRepository issueRepository) {
+        Goods goods = new Goods();
+        goods.setStatus(CommonEnum.GoodsStatus.up);
+        goods.setToAmount(amount);
+        goods.setDefaultAmount(10L);
+        goods.setPricePercentAmount(new BigDecimal(1));
+        goods = goodsRepository.saveAndFlush(goods);
+        raidersCoreService.generateIssue(goods);
+
+
+        return goods;
+    }
+
+    /***
+     * 创建已购买的订单
+     *
+     * @param user
+     * @param issue
+     * @param amount
+     * @param ordersRepository
+     * @param ordersItemRepository
+     * @param issueRepository
+     * @return
+     */
+    public Orders generateOrdersWithPayed(User user, Issue issue, Long amount
+            , OrdersRepository ordersRepository, OrdersItemRepository ordersItemRepository
+            , IssueRepository issueRepository) {
+        Date date = new Date();
+
+        BigDecimal money = issue.getPricePercentAmount().multiply(new BigDecimal(amount));
+
+        Orders orders = new Orders();
+        orders.setId(raidersCoreService.createOrderNo(date, user.getId()));
+        orders.setTime(date);
+        orders.setStatus(CommonEnum.OrderStatus.payed);
+        orders.setUser(user);
+        orders.setPayType(CommonEnum.PayType.remain);
+        orders.setMoney(money);
+        orders.setOrderType(CommonEnum.OrderType.raiders);
+        orders.setPayTime(date);
+        orders.setTotalMoney(money);
+        orders = ordersRepository.saveAndFlush(orders);
+
+        OrdersItem ordersItem = new OrdersItem();
+        ordersItem.setStatus(CommonEnum.OrderStatus.payed);
+        ordersItem.setAmount(amount);
+        ordersItem.setIssue(issue);
+        ordersItem.setOrder(orders);
+        ordersItemRepository.saveAndFlush(ordersItem);
+
+        issue.setBuyAmount(issue.getBuyAmount() + amount);
+        issue = issueRepository.saveAndFlush(issue);
+        //创建抽奖号码
+        raidersCoreService.generateUserNumber(user, issue, amount, orders);
+
+        if (issue.getBuyAmount() >= issue.getToAmount()) {
+            raidersCoreService.generateIssue(issue.getGoods());
+        }
+
+        return orders;
     }
 
 

@@ -348,8 +348,10 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         List<UserNumber> userNumbers = userNumberService.getLotteryBeforeTop50(lotteryTime.getTime());
 //        Long numberA = userNumbers.stream().mapToLong(x -> x.getNumber()).sum();
         Long numberA = 0L;
-        for (UserNumber userNumber : userNumbers) {
-            numberA += countNumberA(new Date(userNumber.getTime()));
+        if(userNumbers!=null) {
+            for (UserNumber userNumber : userNumbers) {
+                numberA += countNumberA(new Date(userNumber.getTime()));
+            }
         }
 
         //获取要开奖的期号
