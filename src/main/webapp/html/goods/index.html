@@ -8,75 +8,123 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta name="description" content=""/>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
-    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"  th:href="@{/resources/css/common.css}"/>
-    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css"  th:href="@{/resources/css/dbdb.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css"
+          th:href="@{/resources/css/commfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"
+          th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
     <title>用1元买iphone 6S</title>
 </head>
 
 <body>
 
-<div class="commfont">
-    <div style="position:relative;">
-        <img src="/resources/images/dsds.jpg" th:src="@{/resources/images/dsds.jpg}" style="width:100%"/>
-        <div class="meitou">
-            <div class="endtime">
-                <p class=" tit_rem_big">
-                    剩余&nbsp;<i>1&nbsp;</i>&nbsp;天&nbsp;<i>10</i>&nbsp;时&nbsp;<i>45</i>&nbsp;分&nbsp;<i>07</i>&nbsp;秒&nbsp;结束
-                </p>
+<form method="post" id="form1" th:object="${goodsIndexModel}">
+    <div class="commfont">
+        <div style="position:relative;">
+            <img src="/resources/images/dsds.jpg" th:src="*{defaultPictureUrl}" style="width:100%"/>
+
+            <div class="meitou">
+                <div class="endtime">
+                    <p class=" tit_rem_big">
+                        剩余&nbsp;<i><span id="day"></span>&nbsp;</i>&nbsp;天&nbsp;<i><span id="hour"></span></i>&nbsp;时&nbsp;<i><span
+                            id="minute"></span></i>&nbsp;分&nbsp;<i><span id="second"></span></i>&nbsp;秒&nbsp;结束
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <p class="syjg"><span>原价：</span><span class="red huadiao">￥<b>332.00</b></span>/￥1.00<a href="#"><span
-            class="fr bai">商品详情&nbsp;»</span></a></p>
-
-
-    <P class="h10"></P>
-
-    <p class="sycy">已有<span class="red tit_rem_big_big">32839</span>人正在参与</p>
-
-    <div class="syabk" style="display:block">
-        <button class="buttonan tit_rem_big_s" type="button">
-            继续购买
-        </button>
-    </div>
-    <div class="syabk" style="display:block">
-        <button class="buttonan tit_rem_big_s" type="button">
-            参与1元夺宝
-        </button>
-    </div>
-
-    <div class="syabk" style="display:block">
-        <div id="mcover" onclick="document.getElementById('mcover').style.display='';" style="display: none;">
-            <img src="/resources/images/mengbanzi.png" th:src="@{/resources/images/mengbanzi.png}"/>
-        </div>
-        <button class="buttonan lv tit_rem_big_s" type="button"
-                onclick="document.getElementById('mcover').style.display='block';">
-            分享<span>&nbsp;/&nbsp;</span>收藏活动
-        </button>
-    </div>
-    <div class="syabk" style="display:block">
-        <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
-            <a href="personal/list.html" th:href="@{/web/getMyInvolvedRecord(userId=2,type=0,lastTime=0)}">查看我的参与</a>
-        </button>
-    </div>
-
-    <div class="xq">
-        <div class="mid tit_rem_big ">
-            <span>活动提示</span>
-        </div>
-        <p style="line-height:20px; padding:10px 20px; color:#777" class="tit_rem">
-            ⑴.确保你能查看中奖信息，请务必<span style=" text-decoration: underline; color:#FF1E22">收藏</span>本活动页面以及关注公众号。<br/>
-            ⑵.夺宝所有商品均从正规渠道采购，100%正品，可享受厂家提供的全国联保服务。<br/>
-            ⑶.遇到售后问题可通过公众号联系客户。<br/>
-            ⑷.商家保留法律范围内允许的对活动的解释权。
+        <p class="syjg"><span>原价：</span><span class="red huadiao">￥<b><span
+                th:text="*{costPrice}"></span></b></span>/￥<span th:text="*{currentPrice}"></span>
+                 <a href="goods/detail.html" th:href="@{/goods/detail}"><span class="fr bai">商品详情&nbsp;»</span></a>
         </p>
+
+        <P class="h10"></P>
+
+        <p class="sycy">已有<span class="red tit_rem_big_big"><span th:text="*{joinCount}"></span></span>人正在参与</p>
+
+        <div th:if="*{joined}" class="syabk" style="display:block">
+            <button class="buttonan tit_rem_big_s" type="button">
+                <a href="goods/detail.html" th:href="@{/goods/detailByIssueId(id=*{issueId})}">继续购买</a>
+            </button>
+        </div>
+        <div th:if="*{!joined}" class="syabk" style="display:block">
+            <button class="buttonan tit_rem_big_s" type="button">
+                <a href="goods/detail.html" th:href="@{/goods/detailByGoodsId(id=*{id})}">参与1元夺宝</a>
+            </button>
+        </div>
+
+        <div class="syabk" style="display:block">
+            <div id="mcover" onclick="document.getElementById('mcover').style.display='';" style="display: none;">
+                <img src="/resources/images/mengbanzi.png" th:src="@{/resources/images/mengbanzi.png}"/>
+            </div>
+            <button class="buttonan lv tit_rem_big_s" type="button"
+                    onclick="document.getElementById('mcover').style.display='block';">
+                分享<span>&nbsp;/&nbsp;</span>收藏活动
+            </button>
+        </div>
+        <div th:if="*{logined}" class="syabk" style="display:block">
+            <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
+                <a href="personal/list.html" th:href="@{/web/getMyInvolvedRecord?type=0}">查看我的参与</a>
+            </button>
+        </div>
+
+        <div class="xq">
+            <div class="mid tit_rem_big ">
+                <span>活动提示</span>
+            </div>
+            <p style="line-height:20px; padding:10px 20px; color:#777" class="tit_rem">
+                ⑴.确保你能查看中奖信息，请务必<span style=" text-decoration: underline; color:#FF1E22">收藏</span>本活动页面以及关注公众号。<br/>
+                ⑵.夺宝所有商品均从正规渠道采购，100%正品，可享受厂家提供的全国联保服务。<br/>
+                ⑶.遇到售后问题可通过公众号联系客户。<br/>
+                ⑷.商家保留法律范围内允许的对活动的解释权。
+            </p>
+        </div>
+
+        <P class="h10"></P>
     </div>
+</form>
 
-    <P class="h10"></P>
+<script type="text/javascript" th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
 
+    //1.获取商品首页model
+    var goodsIndexModel = /*[[${goodsIndexModel}]]*/'';
 
-</div>
+    //2.获取商品活动结束时间
+    var endTime = goodsIndexModel.endTime;
+
+    //3.获取当前时间
+    var curTime = new Date().getTime();
+
+    //4.获取当前时间和活动结束时间之间相差的秒数
+    var diffSecond = Math.ceil(endTime - curTime) / 1000;
+
+    //5.启动倒计时
+    setInterval("show_time()", 1000);
+
+    function show_time() {
+        diffSecond--;
+        if (diffSecond > 0) {
+            var day = Math.floor(diffSecond / (3600 * 24));
+            $("#day").text(day + "");
+            var hour = Math.floor(diffSecond % (3600 * 24) / 3600);
+            if(10 > hour)hour = "0" + hour;
+            $("#hour").text(hour + "");
+            var minute = Math.floor(diffSecond % (3600) / 60);
+            if(10 > minute) minute = "0" + minute;
+            $("#minute").text(minute + "");
+            var second = Math.floor(diffSecond % 60);
+            if(10 > second) second = "0" + second;
+            $("#second").text(second + "");
+        } else {
+            $("#day").text("0");
+            $("#hour").text("00");
+            $("#minute").text("00");
+            $("#second").text("00");
+        }
+    }
+
+</script>
+
 </body>
 </html>
