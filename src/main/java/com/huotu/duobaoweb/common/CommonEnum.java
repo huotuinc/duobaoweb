@@ -300,42 +300,6 @@ public interface CommonEnum {
 
 
     /**
-     * 红包状态
-     */
-    enum RedPacketsStatus implements ICommonEnum {
-        unused(0, "未使用"),
-        using(1, "使用中"),
-        used(2, "已使用"),
-        expire(3, "过期");
-
-        private int value;
-
-        private String name;
-
-        RedPacketsStatus(int value, String name) {
-            this.value = value;
-            this.name = name;
-        }
-
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
-    /**
      * 发货状态
      */
     enum DeliveryStatus implements ICommonEnum {
@@ -376,107 +340,23 @@ public interface CommonEnum {
         }
     }
 
-    /**
-     * 红包类型
-     */
-    enum RedPacketType implements ICommonEnum {
-        put(0, "充值红包"),
-        deducation(1, "抵扣红包");
-
-        private int value;
-
-        private String name;
-
-        RedPacketType(int value, String name) {
-            this.value = value;
-            this.name = name;
-        }
-
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
-    enum RedPactketsDistributeType implements ICommonEnum {
-        BuyAndDeliver(0, "购买并转发"),
-        send(1, "领取"),
-        put(2, "充值"),
-        lottery(3, "抽奖"),
-        register(4,"注册");
-
-        private int value;
-
-        private String name;
-
-        RedPactketsDistributeType(int value, String name) {
-            this.value = value;
-            this.name = name;
-        }
-
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-    }
 
     /**
-     * 推送消息类型
+     * 订单购买失败状态
      */
-    enum PushMessageType implements ICommonEnum {
-
-        /**
-         * 2:红包
-         * <p>红包</p>
-         */
-        RedPackets(2,"红包"),
-        /**
-         * 3:版本更新
-         * <p>携带数据为版本更新摘要</p>
-         */
-        Version(3, "版本更新"),
-        /**
-         * 4:任务推送
-         * <p>任务ID</p>
-         */
-        Task(4, "任务推送"),
-        /**
-         * 5:消息提醒
-         * <p>提示阅读消息，携带数据为空</p>
-         */
-        RemindMessage(5, "消息提醒"),
-        /**
-         * 6:通知
-         * <p>携带数据为纯文本消息</p>
-         */
-        Notify(6, "通知");
+    enum UserBuyFailStatus implements ICommonEnum {
+        undo(0, "未处理"),
+        doed(1, "已处理");
 
         private int value;
+
+        private String name;
+
+        UserBuyFailStatus(int value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+
 
         public int getValue() {
             return value;
@@ -491,48 +371,6 @@ public interface CommonEnum {
         }
 
         public void setName(String name) {
-            this.name = name;
-        }
-
-        private String name;
-
-        PushMessageType(int value, String name) {
-            this.value = value;
-            this.name = name;
-        }
-
-
-    }
-
-    /**
-     * 购买并转发类型
-     */
-    enum BuyAndTurnType {
-        none(0, "默认"),
-        buy(1, "购买"),
-        turn(2, "转发");
-        private int value;
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        private String name;
-
-        BuyAndTurnType(int value, String name) {
-            this.value = value;
             this.name = name;
         }
     }

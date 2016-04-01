@@ -78,6 +78,11 @@ public class PersonalControllerTest extends BaseTest {
 
     }
 
+
+    /**
+     *
+     * @throws Exception
+     */
     @Test
     public void testGetMyRaiderNumbers() throws Exception {
 
