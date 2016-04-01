@@ -12,41 +12,46 @@ public class ShoppingCartsModel {
 
 
     /**
-     * ¹ºÎï³µid
+     * è´­ç‰©è½¦id
      */
     private Long cartId;
     /**
-     * ÉÌÆ·ÏêÇé
+     * å•†å“è¯¦æƒ…
      */
     private String detail;
 
     /**
-     * ×ÜĞèÊıÁ¿
+     * æ€»éœ€æ•°é‡
      */
     private Long needNumber;
 
     /**
-     * Ê£ÓàÊıÁ¿
+     * å‰©ä½™æ•°é‡
      */
     private Long leftNumber;
 
     /**
-     * ¹ºÂòÁ¿
+     * è´­ä¹°é‡
      */
     private Long buyNum;
 
     /**
-     *¹ºÂò½ğ¶î
+     * å•ä½å¢å‡çš„æ•°é‡
+     */
+    private Long stepNum;
+
+    /**
+     *è´­ä¹°é‡‘é¢
      */
     private Double buyMoney;
 
     /**
-     * µ¥¼Û
+     * å•ä»·
      */
     private Double perMoney;
 
     /**
-     * ¹ºÎï³µÍ¼Æ¬Â·¾¶
+     * è´­ç‰©è½¦å›¾ç‰‡è·¯å¾„
      */
     private String imgUrl;
 }

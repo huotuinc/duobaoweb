@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -52,6 +54,7 @@ public class TestShoppingController extends BaseTest {
     }
 
     @Test
+    @Rollback(false)
     public void testSaveIssue(){
 
         String name=UUID.randomUUID().toString().replace("-","");
@@ -65,6 +68,12 @@ public class TestShoppingController extends BaseTest {
         user=userRepository.saveAndFlush(user);
         Goods goods=this.saveGodds();
         Issue issue=this.saveIssue(goods,user,1);
+    }
+
+    @Test
+    public void testRepository(){
+        List<User> user=userRepository.findAll();
+        System.out.print(user.get(0).getId()+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
 }

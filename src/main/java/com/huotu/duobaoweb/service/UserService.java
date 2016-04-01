@@ -7,4 +7,10 @@ package com.huotu.duobaoweb.service;
 public interface UserService {
 
 
+    /**
+     * 由于未登陆直接返回首页
+     * @param issueId
+     * @return
+     */
+    String getIndexUrl(Long issueId);
 }

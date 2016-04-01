@@ -11,20 +11,32 @@
     <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
     <link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}"/>
     <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
-
+    <script type="text/javascript" src="../../resources/js/shopping.js"
+            th:src="@{/resources/js/shopping.js}"></script>
 
 
     <title>支付结果</title>
     <script type="text/javascript" th:inline="javascript">
 
+        var pay=function(){
+            var payMoney=/*[[${payModel.payMoney}]]*/'';
+            var detail=/*[[${payModel.detail}]]*/'';
+            var cartsId=/*[[${payModel.cartsId}]]*/'';
+            var payType=$('#payType').val();
+            var type=/*[[${payModel.type}]]*/'';
+            payToService(payMoney,detail,cartsId,payType,type);
+        }
     </script>
 </head>
 
 <body style="background-color:#f5f5f5;" >
 <div class="commfont" th:object="${payModel}">
- 
+    <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
+    <input type="hidden" id="issueId" name="issueId" th:value="${issueId}"/>
+    <input type="hidden" id="customerId" name="customerId" th:value="${customerId}"/>
+    <input type="hidden" name="cartsId" th:value="*{cartsId}"/>
+    <input type="hidden" name="type" th:value="*{type}"/>
 
- 
 <div class="zfdd">
 <span style="float:left">结算合计</span>
  

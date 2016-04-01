@@ -21,5 +21,6 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long>,Jp
     @Query("select oi from OrdersItem as oi where oi.order.user.id = ?1 and oi.issue.goods.id=?2  and oi.issue.id = ?3 and oi.issue.status=com.huotu.duobaoweb.common.CommonEnum.IssueStatus.drawed")
     List<OrdersItem> findByUserIdAndIssuId(Long userId, Long gooodId, Long issueId);
 
-
+    @Query("select oi from OrdersItem as oi where oi.order.id = ?1")
+    OrdersItem findByOrderId(String id);
 }

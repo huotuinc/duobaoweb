@@ -20,6 +20,8 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
 
-
-
+    @Override
+    public String getIndexUrl(Long issueId) {
+        return "111";
+    }
 }

@@ -47,7 +47,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(webInterceptor).addPathPatterns("/goods/*").addPathPatterns("/personal/*");
+        registry.addInterceptor(webInterceptor).addPathPatterns("/goods/*").addPathPatterns("/personal/*").addPathPatterns("/shopping/*");
     }
 
     @Override
