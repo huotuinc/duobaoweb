@@ -6,6 +6,8 @@ import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.common.LotteryCode;
 import com.huotu.duobaoweb.common.SysRegex;
 import com.huotu.duobaoweb.entity.*;
+import com.huotu.duobaoweb.entity.Goods;
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.exceptions.CrabLotteryCodeRepeatException;
 import com.huotu.duobaoweb.exceptions.InterrelatedException;
 import com.huotu.duobaoweb.exceptions.LotteryCodeError;
@@ -13,6 +15,7 @@ import com.huotu.duobaoweb.repository.*;
 import com.huotu.duobaoweb.service.CacheService;
 import com.huotu.duobaoweb.service.RaidersCoreService;
 import com.huotu.duobaoweb.service.UserNumberService;
+import com.huotu.huobanplus.common.entity.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -68,8 +72,8 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
     private DeliveryRepository deliveryRepository;
 
 
-//    @Autowired
-//    private GoodsRestRepository goodsRestRepository;
+    @Autowired
+    private GoodsRestRepository goodsRestRepository;
 
     @Autowired
     private CacheService cacheService;
@@ -84,7 +88,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
      * @return 期号
      */
     @Transactional
-    public Issue generateIssue(Goods goods) {
+    public Issue generateIssue(Goods goods) throws IOException {
 
         //改变上期的状态
         Issue issue = goods.getIssue();
@@ -93,10 +97,10 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             issueRepository.save(issue);
         }
 
-//        Long stock = goodsRestRepository.
+        com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
 
-        //todo 从数据中心获取库存量
-        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up)) {//todo 由于代码运行不起来,被删掉 by xhk :&& goods.getStock() > 0
+
+        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up) && (mallGoods.getStock() == -1 || mallGoods.getStock() > 1)) {
 
             //处理下期的情况
             Issue nextIssue = new Issue();
@@ -112,9 +116,11 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             nextIssue = issueRepository.saveAndFlush(nextIssue);
 
             goods.setIssue(nextIssue);
-            //todo 由于代码运行不起来下面这行注释掉 by xhk
+
             //goods.setStock(goods.getStock() - 1);
             goodsRepository.save(goods);
+
+            mallGoods.setStock(mallGoods.getStock()-1);
 
             //创建抽奖号码
             List<CachedIssueLeaveNumber> cachedIssueLeaveNumberList = new ArrayList<>();
@@ -348,7 +354,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         List<UserNumber> userNumbers = userNumberService.getLotteryBeforeTop50(lotteryTime.getTime());
 //        Long numberA = userNumbers.stream().mapToLong(x -> x.getNumber()).sum();
         Long numberA = 0L;
-        if(userNumbers!=null) {
+        if (userNumbers != null) {
             for (UserNumber userNumber : userNumbers) {
                 numberA += countNumberA(new Date(userNumber.getTime()));
             }

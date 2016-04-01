@@ -4,10 +4,15 @@ import com.huotu.duobaoweb.boot.RootConfig;
 import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.controller.page.AbstractPage;
 import com.huotu.duobaoweb.entity.*;
+import com.huotu.duobaoweb.entity.Goods;
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.repository.*;
+import com.huotu.duobaoweb.service.CommonConfigService;
 import com.huotu.duobaoweb.service.RaidersCoreService;
 import com.huotu.duobaoweb.service.StaticResourceService;
+import com.huotu.huobanplus.common.entity.*;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -28,6 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -71,13 +77,19 @@ public class BaseTest {
     @Autowired
     RaidersCoreService raidersCoreService;
 
+    @Autowired
+    CommonConfigService commonConfigService;
+
+    @Autowired
+    GoodsRestRepository goodsRestRepository;
+
     protected WebDriver driver;
 
-    @Resource(name = "entityManagerFactory")
-    protected EntityManagerFactory entityManagerFactory;
-
-    @Resource(name = "transactionManager")
-    protected JpaTransactionManager transactionManager;
+//    @Resource(name = "entityManagerFactory")
+//    protected EntityManagerFactory entityManagerFactory;
+//
+//    @Resource(name = "transactionManager")
+//    protected JpaTransactionManager transactionManager;
 
 
     @Autowired
@@ -182,7 +194,7 @@ public class BaseTest {
      * @param issueRepository
      * @return
      */
-    public Goods generateGoods(Long amount, GoodsRepository goodsRepository, IssueRepository issueRepository) {
+    public Goods generateGoods(Long amount, GoodsRepository goodsRepository, IssueRepository issueRepository) throws IOException {
         return generateGoods(amount, false, goodsRepository, issueRepository);
     }
 
@@ -195,17 +207,33 @@ public class BaseTest {
      * @param issueRepository
      * @return
      */
-    public Goods generateGoods(Long amount, Boolean userSimulated, GoodsRepository goodsRepository, IssueRepository issueRepository) {
+    public Goods generateGoods(Long amount, Boolean userSimulated, GoodsRepository goodsRepository, IssueRepository issueRepository) throws IOException {
         Goods goods = new Goods();
         goods.setStatus(CommonEnum.GoodsStatus.up);
         goods.setToAmount(amount);
         goods.setDefaultAmount(10L);
         goods.setPricePercentAmount(new BigDecimal(1));
+        goods.setMerchantId(Long.parseLong(commonConfigService.getMallCustomerId()));
+
+        com.huotu.huobanplus.common.entity.Goods mallGoods = generateMallGoods();
+        goods.setToMallGoodsId(mallGoods.getId());
+
         goods = goodsRepository.saveAndFlush(goods);
         raidersCoreService.generateIssue(goods);
 
 
         return goods;
+    }
+
+    public com.huotu.huobanplus.common.entity.Goods generateMallGoods() throws IOException {
+        com.huotu.huobanplus.common.entity.Goods goods = new com.huotu.huobanplus.common.entity.Goods();
+        goods.setStock(100);
+        goods.setCreateTime(new Date());
+        goods.setScenes(4);
+        goods.setDisabled(false);
+        goods.setMarketPrice(100);
+        goods.setPrice(100);
+        return goodsRestRepository.insert(goods);
     }
 
     /***
@@ -221,7 +249,7 @@ public class BaseTest {
      */
     public Orders generateOrdersWithPayed(User user, Issue issue, Long amount
             , OrdersRepository ordersRepository, OrdersItemRepository ordersItemRepository
-            , IssueRepository issueRepository) {
+            , IssueRepository issueRepository) throws IOException {
         Date date = new Date();
 
         BigDecimal money = issue.getPricePercentAmount().multiply(new BigDecimal(amount));

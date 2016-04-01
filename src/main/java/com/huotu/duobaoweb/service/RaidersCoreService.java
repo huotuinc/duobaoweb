@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public interface RaidersCoreService {
     @Transactional
-    Issue generateIssue(Goods goods);
+    Issue generateIssue(Goods goods) throws IOException;
 
     @Transactional
     boolean generateUserNumber(User user, Issue issue, Long amount, Orders orders);

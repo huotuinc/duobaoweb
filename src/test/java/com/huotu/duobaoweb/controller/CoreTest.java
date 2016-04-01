@@ -3,24 +3,18 @@ package com.huotu.duobaoweb.controller;
 import com.huotu.duobaoweb.base.BaseTest;
 import com.huotu.duobaoweb.boot.MVCConfig;
 import com.huotu.duobaoweb.boot.RootConfig;
-import com.huotu.duobaoweb.controller.page.GetMyRaiderNumbersPage;
 import com.huotu.duobaoweb.entity.Goods;
 import com.huotu.duobaoweb.entity.Issue;
 import com.huotu.duobaoweb.entity.User;
-import com.huotu.duobaoweb.entity.UserNumber;
 import com.huotu.duobaoweb.repository.*;
-
 import com.huotu.duobaoweb.service.CacheService;
 import com.huotu.duobaoweb.service.RaidersCoreService;
-import com.huotu.duobaoweb.service.StaticResourceService;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,9 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-
 /**
- * Created by lgh on 2016/3/30.
+ * 核心部分测试
+ * Created by lgh on 2016/4/1.
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @WebAppConfiguration
@@ -40,7 +34,7 @@ import java.util.UUID;
 @ContextConfiguration(classes = {RootConfig.class, MVCConfig.class, BaseClientSpringConfig.class})//
 @ActiveProfiles("development")
 @Transactional
-public class PersonalControllerTest extends BaseTest {
+public class CoreTest extends BaseTest {
 
     private Log log = LogFactory.getLog(PersonalControllerTest.class);
 
@@ -74,13 +68,7 @@ public class PersonalControllerTest extends BaseTest {
     private Issue currentIssue;
 
     @Test
-    public void testGetMyInvolvedRecord() throws Exception {
-
-    }
-
-    @Test
-    public void testGetMyRaiderNumbers() throws Exception {
-
+    public void drawLottery() throws Exception {
         //模拟数据
         Long goodsAmount = 10L;
         //创建商品
@@ -89,21 +77,31 @@ public class PersonalControllerTest extends BaseTest {
 
         //创建用户
         currentUser = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
+        User userB = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
+        User userC = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
+        User userD = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
+        User userE = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
         //创建订单
-        generateOrdersWithPayed(currentUser, goods.getIssue(), goodsAmount, ordersRepository, ordersItemRepository, issueRepository);
+        generateOrdersWithPayed(currentUser, goods.getIssue(), 1L, ordersRepository, ordersItemRepository, issueRepository);
+        generateOrdersWithPayed(userB, goods.getIssue(), 1L, ordersRepository, ordersItemRepository, issueRepository);
+        generateOrdersWithPayed(userC, goods.getIssue(), 1L, ordersRepository, ordersItemRepository, issueRepository);
+        generateOrdersWithPayed(userD, goods.getIssue(), 1L, ordersRepository, ordersItemRepository, issueRepository);
+        generateOrdersWithPayed(userE, goods.getIssue(), 1L, ordersRepository, ordersItemRepository, issueRepository);
 
-        // 页面测试
-        GetMyRaiderNumbersPage page = new GetMyRaiderNumbersPage();
-        page.to(driver, currentUser.getId(), currentIssue.getId());
-    }
+        Assert.assertEquals("缓存中的数量", 5, cachedIssueLeaveNumberRepository.findAllByIssueId(currentIssue.getId()).size());
+        Assert.assertEquals("缓存中的数量", 5, cacheService.getLotteryNumber(currentIssue.getId()).size());
 
-    @Test
-    public void testGetMyLotteryList() throws Exception {
+        Issue issue = issueRepository.getOne(currentIssue.getId());
+        Assert.assertEquals("期号还没有开奖", true, issue.getAwardingUser() == null);
 
-    }
+        generateOrdersWithPayed(currentUser, goods.getIssue(), 5L, ordersRepository, ordersItemRepository, issueRepository);
+        Assert.assertEquals("缓存中的数量", 0, cachedIssueLeaveNumberRepository.findAllByIssueId(currentIssue.getId()).size());
+        Assert.assertEquals("缓存中的数量", 0, cacheService.getLotteryNumber(currentIssue.getId()).size());
 
-    @Test
-    public void testGetOneLotteryInfo() throws Exception {
-
+        //进行抽奖
+        raidersCoreService.drawLottery();
+        issue = issueRepository.getOne(currentIssue.getId());
+        log.info("中奖号码为" + issue.getLuckyNumber().toString());
+        log.info("中奖用户为" + issue.getAwardingUser().getId());
     }
 }
