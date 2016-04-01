@@ -84,4 +84,10 @@ public interface RaidersCoreService {
      */
     Long getAwardingTime(Calendar calendar, Calendar awardingCalendar);
 
+
+    /**
+     * 处理用户购买失败
+     */
+    void doUserBuyFail();
+
 }

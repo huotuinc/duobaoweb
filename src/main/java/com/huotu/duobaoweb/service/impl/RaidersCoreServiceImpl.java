@@ -13,6 +13,7 @@ import com.huotu.duobaoweb.exceptions.InterrelatedException;
 import com.huotu.duobaoweb.exceptions.LotteryCodeError;
 import com.huotu.duobaoweb.repository.*;
 import com.huotu.duobaoweb.service.CacheService;
+import com.huotu.duobaoweb.service.PayService;
 import com.huotu.duobaoweb.service.RaidersCoreService;
 import com.huotu.duobaoweb.service.UserNumberService;
 import com.huotu.huobanplus.common.entity.*;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -78,6 +80,18 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
     @Autowired
     private CacheService cacheService;
 
+    @Autowired
+    private UserBuyFailRepository userBuyFailRepository;
+
+    @Autowired
+    private PayService payService;
+
+    @Autowired
+    private OrdersItemRepository ordersItemRepository;
+
+    @Autowired
+    private OrdersRepository ordersRepository;
+
 
     /**
      * 产生新期号
@@ -120,7 +134,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             //goods.setStock(goods.getStock() - 1);
             goodsRepository.save(goods);
 
-            mallGoods.setStock(mallGoods.getStock()-1);
+            mallGoods.setStock(mallGoods.getStock() - 1);
 
             //创建抽奖号码
             List<CachedIssueLeaveNumber> cachedIssueLeaveNumberList = new ArrayList<>();
@@ -643,4 +657,40 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         return result / 1000;
     }
 
+    @Override
+    @Scheduled(cron = "0 0/5 * * * *")
+    @Transactional
+    public void doUserBuyFail() {
+        List<UserBuyFail> list = userBuyFailRepository.findAllByStatus(CommonEnum.UserBuyFailStatus.undo);
+        list.forEach(this::doUserBuyFailItem);
+    }
+
+    private void doUserBuyFailItem(UserBuyFail userBuyFail) {
+        Issue issue = userBuyFail.getGoods().getIssue();
+        //在新的期号数量够的情况下进行购买
+        if (issue.getToAmount() - issue.getBuyAmount() >= userBuyFail.getAmount()) {
+            Date date = new Date();
+            String tradeNo = createOrderNo(date, userBuyFail.getUser().getId());
+
+            Orders userOrder = new Orders();
+            userOrder.setId(tradeNo);
+            userOrder.setUser(userBuyFail.getUser());
+            userOrder.setOrderType(CommonEnum.OrderType.raiders);
+            userOrder.setTotalMoney(userBuyFail.getMoney());
+            userOrder.setMoney(userBuyFail.getMoney());
+            userOrder.setPayType(userBuyFail.getSourceOrders().getPayType());
+            userOrder.setStatus(CommonEnum.OrderStatus.paying);
+            userOrder.setTime(date);
+            userOrder = ordersRepository.saveAndFlush(userOrder);
+
+            OrdersItem ordersItem = new OrdersItem();
+            ordersItem.setOrder(userOrder);
+            ordersItem.setIssue(issue);
+            ordersItem.setStatus(CommonEnum.OrderStatus.paying);
+            ordersItem.setAmount(userBuyFail.getAmount());
+            ordersItemRepository.saveAndFlush(ordersItem);
+            //todo
+            //        payService.doPay(tradeNo, totalMoney.floatValue(), "", CommonEnum.PayType.simulate);
+        }
+    }
 }

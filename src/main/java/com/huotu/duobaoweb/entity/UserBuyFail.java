@@ -31,6 +31,12 @@ public class UserBuyFail {
     private User user;
 
     /**
+     * 购买的对应的商品
+     */
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    private Goods goods;
+
+    /**
      * 购买的期号
      */
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
@@ -45,6 +51,12 @@ public class UserBuyFail {
      * 金钱
      */
     private BigDecimal money;
+
+    /**
+     * 来源订单
+     */
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private Orders sourceOrders;
 
     /**
      * 购买的时间
