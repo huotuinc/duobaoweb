@@ -202,7 +202,8 @@ public interface CommonEnum {
         raiders(0, "夺宝"),
         put(1, "充值"),
         change(2, "部分夺宝，部分充值"),
-        simulate(3, "模拟购买");
+        simulate(3, "模拟购买"),
+        allpay(4,"全额购买");
 
         private int value;
 

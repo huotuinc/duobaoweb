@@ -7,15 +7,28 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="description" content="" />
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
-<link rel="stylesheet" type="text/css" href="css/common.css" th:href="@{/resources/css/common.css}"/>
-<link rel="stylesheet" type="text/css" href="css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}"/>
+<link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+  <script type="text/javascript" src="../../resources/js/jquery-1.7.2.min.js"
+          th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
 <script type="text/javascript" src="js/TouchSlide.1.1.js" th:src="@{/resources/js/TouchSlide.1.1.js}"></script>
+  <script type="text/javascript" src="../../resources/js/jquery.utils.js"
+          th:src="@{/resources/js/jquery.utils.js}"></script>
+  <link href="../../resources/js/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+        th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
+  <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
+          th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+  <script type="text/javascript" src="../../resources/js/shopping.js"
+          th:src="@{/resources/js/shopping.js}"></script>
 <title>奖品详情</title>
 </head>
 
 <body>
 <form method="post" id="form1" th:object="${goodsDetailModel}">
+  <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
+  <input type="hidden" id="issueId" name="issueId" th:value="${issueId}"/>
+  <input type="hidden" id="customerId" name="customerId" th:value="${customerId}"/>
 <div class="superli clearfix editing">
   <div class="control-group">
     <div id="focus-duobao" class="focus-duobao">
@@ -148,7 +161,7 @@
         <p class="tit_rem hui">无需等待，直接获得商品！</p>
       </div>
       <div style="float: right">
-        <a href="#" class="zuijia">结算</a>
+        <a href="#" class="zuijia" onclick="allBuy()">结算</a>
       </div>
       <P class="clear"></P>
       <p style="color:#FF3F00;" class="tit_rem_big_big">￥<b><span th:text="*{fullPrice}"></span></b></p>
@@ -220,7 +233,7 @@
             <h3>参与人次：</h3>
             <div class="num_wrap">
               <span class="minus minus_disabled" id="minusNum"></span>
-              <input class="num input_clear" id="buyNum" type="tel" value="10" th:value="*{defaultAmount}"/>
+              <input class="num input_clear" id="buyNum" name="buyNum" type="tel" value="10" th:value="*{defaultAmount}"/>
               <span class="plus" id="addNum"></span>
               <input type="hidden" id="hiddenStore" value="3349" />
               <input type="hidden" id="hiddenBuyNum" value="0" />
@@ -238,7 +251,7 @@
 
     <div style="margin:0px 10px; padding:8px 0px">
       <a id="join" href="javascript:join()" class="ljcy tit_rem_big"  style="display:block">立即参与</a>
-      <a id="buy"  href="#" class="ljcy tit_rem_big" style="display:none">夺宝购买</a>
+      <a id="buy"  href="#" class="ljcy tit_rem_big" style="display:none" onclick="buy()">夺宝购买</a>
     </div>
   </div>
   <!--按钮end-->
@@ -477,7 +490,20 @@
      $("#buyList").append(html);
   }
 
+  var buy=function(){
+    var buyNum=Number($("#buyNum").val());
+    var issueId=/*[[${issueId}]]*/'';
+    var customerId=/*[[${customerId}]]*/'';
+    var userId=/*[[${userId}]]*/'';
+    shoppingBuy(buyNum,issueId,customerId,userId);
+  }
 
+  var allBuy=function(){
+    var issueId=/*[[${issueId}]]*/'';
+    var customerId=/*[[${customerId}]]*/'';
+    var userId=/*[[${userId}]]*/'';
+    shoppingAllBuy(issueId,customerId,userId);
+  }
 
 </script>
 

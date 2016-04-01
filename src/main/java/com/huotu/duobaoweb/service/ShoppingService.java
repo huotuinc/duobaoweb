@@ -2,8 +2,8 @@ package com.huotu.duobaoweb.service;
 
 import com.huotu.duobaoweb.entity.Issue;
 import com.huotu.duobaoweb.entity.Orders;
+import com.huotu.duobaoweb.entity.ShoppingCart;
 import com.huotu.duobaoweb.entity.User;
-import com.huotu.duobaoweb.model.PayInfoModel;
 import com.huotu.duobaoweb.model.PayModel;
 import com.huotu.duobaoweb.model.ShoppingCartsModel;
 
@@ -36,7 +36,7 @@ public interface ShoppingService {
 
 
     /**
-     * 结算
+     * 正常结算
      * @param cartId
      * @param buyNum
      * @return
@@ -54,5 +54,19 @@ public interface ShoppingService {
      * @param payInfoModel
      * @return
      */
-    Orders createOrders(PayInfoModel payInfoModel);
+    Orders createOrders(PayModel payInfoModel);
+
+    /**
+     * 全额购买
+     * @param issue
+     * @param user
+     */
+    ShoppingCart allToShoppingCarts(Issue issue, User user);
+
+    /**
+     * 全额支付生成支付所需的model
+     * @param shoppingCartId
+     * @return
+     */
+    PayModel allPayAndGetModel(String shoppingCartId);
 }

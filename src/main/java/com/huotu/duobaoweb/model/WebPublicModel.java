@@ -22,4 +22,14 @@ public class WebPublicModel {
      * <p>当前用户设备，必然非空</p>
      */
     private String ip;
+
+    /**
+     * 期号id
+     */
+    private Long issueId;
+
+    /**
+     * 商家id
+     */
+    private Long customerId;
 }

@@ -282,6 +282,10 @@ public class GoodsServiceImpl implements GoodsService {
         }
 
         map.put("goodsDetailModel", goodsDetailModel);
+        //todo 用户id赋值到页面 by xhk
+        map.put("userId", 1);
+        map.put("issueId", 1);
+        map.put("customerId", 1);
     }
 
     /**

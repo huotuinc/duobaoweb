@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" content="" />
+<meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css" th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+
+
+    <title>支付结果</title>
+ 
+</head>
+
+<body style="background-color:#f5f5f5;" >
+<div class="commfont">
+  <div class="zfjg" style="padding-top:15px;" th:object="${payResult}">
+    <p class=" tit_rem_big" >
+      恭喜你，参与成功！
+    </p>
+    <p class=" tit_rem_big"  style="padding-bottom:20px;">
+      请等待系统为您揭晓！
+    </p>
+    <div class="jxa">
+    <div style="padding:5px;">
+      <span style="float:left; width:50%;">
+      <a href="#" class="buttonantwo tit_rem_big" style=" margin-right: 7px;"  >
+      继续夺宝
+      </a>
+      </span>
+      
+      <span  style="float:right; width:50%">
+      <a  href="#" class=" tit_rem_big hui" style=" margin-left: 7px;" >
+      查看夺宝记录
+      </a>
+      </span>
+       <p  class="clear"></p>
+          </div>
+         
+   
+     
+    </div>
+     
+  </div>
+  
+  <div>
+    <p style="padding:10px 0px 0px 10px;;" th:text="*{title}">
+      您成功参与了1件商品共2人次夺宝，信息如下：
+    </p>
+    <div class="zfxq" >
+  <p style="color:#058cff;" th:text="*{detail}">
+        阿麦基KT迷你家用学生用厨房水果用厨房水果用厨房水果用厨房水果
+        </p>
+       
+     <p  class="clear">
+      </p>
+      <p class=" zfxqp zfxqptop" >
+       <i  style=" color:#ff3f00;" th:text="*{needNumber}">3000</i>人次
+      </p>
+      <p class=" zfxqp zfxqptop" >
+        商品期号：<span th:text="*{issueId}">301089007</span>
+      </p>
+      <p class="zfxqp" >
+        夺宝号码：<span>100032326</span><span>1053238585</span>
+        <span>100032326</span><span>1053238585</span>
+        <span>100032326</span><span>1053238585</span>
+        <span>100032326</span><span>1053238585</span>
+        <span>100032326</span><span>1053238585</span>
+      </p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
