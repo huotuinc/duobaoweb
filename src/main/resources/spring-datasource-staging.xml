@@ -6,7 +6,7 @@
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource">
             <bean class="org.springframework.jndi.JndiObjectFactoryBean">
-                <property name="jndiName" value="jdbc/duobaoweb"></property>
+                <property name="jndiName" value="jdbc/mallduobao"></property>
                 <property name="resourceRef" value="true"></property>
             </bean>
         </property>

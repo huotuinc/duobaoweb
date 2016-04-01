@@ -18,9 +18,9 @@
 
         <property name="jpaPropertyMap">
             <map>
-                <entry key="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/duobaoweb?useUnicode=true&amp;characterEncoding=UTF8"/>
-                <entry key="javax.persistence.jdbc.user" value="dbuser"/>
-                <entry key="javax.persistence.jdbc.password" value="ddbbuusseerr" />
+                <entry key="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mallduobao?useUnicode=true&amp;characterEncoding=UTF8"/>
+                <entry key="javax.persistence.jdbc.user" value="root"/>
+                <entry key="javax.persistence.jdbc.password" value="lgh123" />
                 <entry key="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
                 <entry key="javax.persistence.schema-generation.database.action" value="create"/>
                 <entry key="eclipselink.weaving" value="false"/>
