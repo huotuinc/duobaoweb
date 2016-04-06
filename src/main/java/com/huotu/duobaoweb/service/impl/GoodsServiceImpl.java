@@ -88,6 +88,11 @@ public class GoodsServiceImpl implements GoodsService {
         //6.获取该商品所有的参与次数 todo
         goodsIndexModel.setJoinCount(1000L);
 
+
+        map.put("issueId",goods.getIssue().getId());
+        map.put("customerId",goods.getMerchantId());
+
+
         map.put("goodsIndexModel", goodsIndexModel);
     }
 
@@ -283,9 +288,9 @@ public class GoodsServiceImpl implements GoodsService {
 
         map.put("goodsDetailModel", goodsDetailModel);
         //todo 用户id赋值到页面 by xhk
-        map.put("userId", 1);
-        map.put("issueId", 1);
-        map.put("customerId", 1);
+        map.put("userId",3);
+        map.put("issueId", 2);
+        map.put("customerId", 3447);
     }
 
     /**

@@ -13,23 +13,39 @@
     <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
     <script type="text/javascript" src="../../resources/js/shopping.js"
             th:src="@{/resources/js/shopping.js}"></script>
+    <script type="text/javascript" src="../../resources/js/user.js"
+            th:src="@{/resources/js/user.js}"></script>
 
 
     <title>支付结果</title>
     <script type="text/javascript" th:inline="javascript">
 
-        var pay=function(){
+        var initShow=function() {
+            var upCookie = /*[[${upCookie}]]*/'';
+            var userId = /*[[${userId}]]*/'';
+            var issueId = /*[[${issueId}]]*/'';
+            var customerId = /*[[${customerId}]]*/'';
+            var openidUrl = /*[[${openidUrl}]]*/'';
+            var openId = /*[[${openId}]]*/'';
+            var sign = /*[[${sign}]]*/'';
+            //用户初始化
+            userInit(upCookie, userId, issueId, customerId, openidUrl, openId, sign);
+        }
+            var pay=function(){
+            var userId = /*[[${userId}]]*/'';
+            var issueId = /*[[${issueId}]]*/'';
+            var customerId = /*[[${customerId}]]*/'';
             var payMoney=/*[[${payModel.payMoney}]]*/'';
             var detail=/*[[${payModel.detail}]]*/'';
             var cartsId=/*[[${payModel.cartsId}]]*/'';
             var payType=$('#payType').val();
             var type=/*[[${payModel.type}]]*/'';
-            payToService(payMoney,detail,cartsId,payType,type);
+            payToService(payMoney,detail,cartsId,payType,type,userId,issueId,customerId);
         }
     </script>
 </head>
 
-<body style="background-color:#f5f5f5;" >
+<body style="background-color:#f5f5f5;" onload="initShow()" >
 <div class="commfont" th:object="${payModel}">
     <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
     <input type="hidden" id="issueId" name="issueId" th:value="${issueId}"/>

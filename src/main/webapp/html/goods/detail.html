@@ -21,10 +21,12 @@
           th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
   <script type="text/javascript" src="../../resources/js/shopping.js"
           th:src="@{/resources/js/shopping.js}"></script>
+  <script type="text/javascript" src="../../resources/js/user.js"
+          th:src="@{/resources/js/user.js}"></script>
 <title>奖品详情</title>
 </head>
 
-<body>
+<body onload="initShow()">
 <form method="post" id="form1" th:object="${goodsDetailModel}">
   <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
   <input type="hidden" id="issueId" name="issueId" th:value="${issueId}"/>
@@ -261,6 +263,19 @@
 <script type="text/javascript" th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
 <script type="text/javascript" th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
+  var initShow=function() {
+    var upCookie = /*[[${upCookie}]]*/'';
+    var userId = /*[[${userId}]]*/'';
+    var issueId = /*[[${issueId}]]*/'';
+    var customerId = /*[[${customerId}]]*/'';
+    var openidUrl = /*[[${openidUrl}]]*/'';
+    var openId = /*[[${openId}]]*/'';
+    var sign = /*[[${sign}]]*/'';
+    //用户初始化
+    userInit(upCookie, userId, issueId, customerId, openidUrl, openId, sign);
+  }
+
+
   var toAwardTime;
   var status;
   var goodsId;
@@ -491,11 +506,14 @@
   }
 
   var buy=function(){
+    var cooOID=getCookie("qbdbopenid");
+    var cooSIGN=getCookie("qbdbosign");
+    alert(cooOID+"!!!!"+cooSIGN);
     var buyNum=Number($("#buyNum").val());
     var issueId=/*[[${issueId}]]*/'';
     var customerId=/*[[${customerId}]]*/'';
     var userId=/*[[${userId}]]*/'';
-    shoppingBuy(buyNum,issueId,customerId,userId);
+    shoppingBuy(buyNum,issueId,customerId,userId,cooOID);
   }
 
   var allBuy=function(){

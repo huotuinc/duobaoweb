@@ -32,4 +32,14 @@ public class WebPublicModel {
      * 商家id
      */
     private Long customerId;
+
+    /**
+     * 微信唯一识别openid
+     */
+    private String openId;
+
+    /**
+     * 校验openid的sign
+     */
+    private String sign;
 }

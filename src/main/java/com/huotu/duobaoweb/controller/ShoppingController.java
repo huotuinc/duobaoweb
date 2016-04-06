@@ -95,7 +95,7 @@ public class ShoppingController {
      */
     @RequestMapping(value ="/allToCarts",method = RequestMethod.POST)
     @ResponseBody
-    public ResultModel allToCarts(){//String issueId,Long userId
+    public ResultModel allToCarts() throws UnsupportedEncodingException {//String issueId,Long userId
         WebPublicModel common = PublicParameterHolder.getParameters();
         ResultModel resultModel=new ResultModel();
         if(common.getIssueId()==null){
@@ -127,10 +127,15 @@ public class ShoppingController {
 
         ShoppingCart shoppingCart=shoppingService.allToShoppingCarts(issue,user);
 
+        String openidUrl=userService.getWeixinAuthUrl(common);
+
         resultModel.setUrl("../shopping/toAllPay?shoppingCartId="+shoppingCart.getId()+
                 "&userId="+common.getCurrentUser().getId()+
                 "&issueId="+common.getIssueId()+
-                "&customerId"+common.getCustomerId());
+                "&customerId"+common.getCustomerId()+
+                "&openId="+common.getOpenId()+
+                "&sign="+common.getSign()+
+                "&openidUrl"+openidUrl);
         resultModel.setMessage("添加成功！");
         resultModel.setCode(200);
         return resultModel;
@@ -146,15 +151,15 @@ public class ShoppingController {
         WebPublicModel common = PublicParameterHolder.getParameters();
         payModel.setType(2);
         if(payModel!=null) {
-            //微信授权回调url，跳转到index
-            WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(userService.getIndexUrl(common.getIssueId()), "utf-8");
-            WeixinAuthUrl.customerid=common.getCustomerId();
-            String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
+            String openidUrl=userService.getWeixinAuthUrl(common);
 
+            model.addAttribute("openidUrl",openidUrl);
             model.addAttribute("payModel", payModel);
             model.addAttribute("userId",common.getCurrentUser().getId());
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
+            model.addAttribute("openId",common.getOpenId());
+            model.addAttribute("sign",common.getSign());
 
             return "html/shopping/pay";
         }else{
@@ -183,13 +188,15 @@ public class ShoppingController {
             shoppingCartsModel.setBuyMoney(0.0);
         }
         //微信授权回调url，跳转到index
-        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(userService.getIndexUrl(common.getIssueId()), "utf-8");
-        String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
+        String openidUrl=userService.getWeixinAuthUrl(common);
 
+        model.addAttribute("openidUrl",openidUrl);
         model.addAttribute("shoppingCarts",shoppingCartsModel);
         model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("issueId", common.getIssueId());
         model.addAttribute("customerId", common.getCustomerId());
+        model.addAttribute("openId",common.getOpenId());
+        model.addAttribute("sign",common.getSign());
         return "html/shopping/cartsList";
     }
     /**
@@ -203,13 +210,15 @@ public class ShoppingController {
         payModel.setType(1);
         if(payModel!=null) {
             //微信授权回调url，跳转到index
-            WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(userService.getIndexUrl(common.getIssueId()), "utf-8");
-            String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
+            String openidUrl=userService.getWeixinAuthUrl(common);
 
+            model.addAttribute("openidUrl",openidUrl);
             model.addAttribute("payModel", payModel);
             model.addAttribute("userId",common.getCurrentUser().getId());
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
+            model.addAttribute("openId",common.getOpenId());
+            model.addAttribute("sign",common.getSign());
             return "html/shopping/pay";
         }else{
             //返回购物车提示错误
@@ -232,7 +241,7 @@ public class ShoppingController {
             //如果订单生成失败则跳转到购物车提示商品已经过期
             model.addAttribute("overTime", "1");
             model.addAttribute("notShow", "1");
-            return "html/shopping/cartsList";
+            return "/html/shopping/cartsList";
         }
         String url=shoppingService.getWeixinPayUrl(orders);
         response.sendRedirect(url);

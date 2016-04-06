@@ -1,6 +1,11 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.duobaoweb.common.PublicParameterHolder;
+import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.model.WebPublicModel;
+import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.service.GoodsService;
+import com.huotu.duobaoweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +23,13 @@ import java.util.Map;
 public class GoodsController {
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private GoodsRepository goodsRepository;
 
     /**
      * 跳转到商品活动的首页
@@ -29,6 +40,11 @@ public class GoodsController {
      */
    @RequestMapping("/index")
    public String jumpToGoodsActivityIndex(@RequestParam(value = "id", required = false)Long goodsId, Map<String, Object> map) throws Exception{
+       WebPublicModel common = PublicParameterHolder.getParameters();
+       Issue issue= goodsRepository.findOne(goodsId).getIssue();
+       common.setIssueId(issue.getId());
+       String openidUrl=userService.getWeixinAuthUrl(common);
+       map.put("openidUrl",openidUrl);
         goodsService.jumpToGoodsActivityIndex(goodsId, map);
         return "/html/goods/index";
     }
