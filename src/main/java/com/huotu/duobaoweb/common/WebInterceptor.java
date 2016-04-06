@@ -2,6 +2,7 @@ package com.huotu.duobaoweb.common;
 
 import com.huotu.duobaoweb.model.WebPublicModel;
 import com.huotu.duobaoweb.repository.UserRepository;
+import com.huotu.duobaoweb.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,20 @@ public class WebInterceptor implements HandlerInterceptor {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         
         String weixinOpenId = "2";//todo 获取微信openid
         WebPublicModel webPublicModel = initPublicParam(request, weixinOpenId);
-        if(weixinOpenId==null||webPublicModel.getCustomerId()==null||webPublicModel.getIssueId()==null){
+        if(weixinOpenId==null||webPublicModel.getCustomerId()==null||
+                webPublicModel.getIssueId()==null||webPublicModel.getOpenId()==null||
+                webPublicModel.getSign()==null||!userService.checkOpenid(webPublicModel.getOpenId(),webPublicModel.getSign())){
+            //校验openid是否正确
+            log.info("初始化认证失败啦！！！！！！");
             //todo 跳转到错误页面
         }
         PublicParameterHolder.putParameters(webPublicModel);
@@ -39,9 +47,9 @@ public class WebInterceptor implements HandlerInterceptor {
     private WebPublicModel initPublicParam(HttpServletRequest request, String weixinOpenId) {
 
         WebPublicModel webPublicModel = new WebPublicModel();
-        if(weixinOpenId!=null) {
-            webPublicModel.setCurrentUser(userRepository.findByWeixinOpenId(weixinOpenId));
-        }
+//        if(weixinOpenId!=null) {
+//            webPublicModel.setCurrentUser(userRepository.findByWeixinOpenId(weixinOpenId));
+//        }
         webPublicModel.setIp(getIp(request));
         if(request.getParameter("issueId")!=null) {
             webPublicModel.setIssueId(Long.parseLong(request.getParameter("issueId")));
@@ -54,6 +62,21 @@ public class WebInterceptor implements HandlerInterceptor {
         }else{
             log.info("customerId为空异常！customerId is null!");
             webPublicModel.setCustomerId(null);
+        }
+        if(request.getParameter("openId")!=null) {
+            webPublicModel.setOpenId(request.getParameter("openId"));
+        }else{
+            log.info("openId为空异常！openId is null!");
+            webPublicModel.setOpenId(null);
+        }
+        if(webPublicModel.getOpenId()!=null) {
+            webPublicModel.setCurrentUser(userRepository.findByWeixinOpenId(webPublicModel.getOpenId()));
+        }
+        if(request.getParameter("sign")!=null) {
+            webPublicModel.setSign(request.getParameter("sign"));
+        }else{
+            log.info("sign为空异常！sign is null!");
+            webPublicModel.setSign(null);
         }
         return webPublicModel;
     }

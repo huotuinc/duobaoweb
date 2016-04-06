@@ -15,6 +15,8 @@
             th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
     <script type="text/javascript" src="../../resources/js/shopping.js"
             th:src="@{/resources/js/shopping.js}"></script>
+    <script type="text/javascript" src="../../resources/js/user.js"
+            th:src="@{/resources/js/user.js}"></script>
     <script type="text/javascript" src="../../resources/js/admin.js"
             th:src="@{/resources/js/admin.js}"></script>
     <script type="text/javascript" src="../../resources/js/jquery.utils.js"
@@ -60,9 +62,12 @@
         }
 
         var balance=function(){
+            var userId=/*[[${userId}]]*/'';
+            var issueId=/*[[${issueId}]]*/'';
+            var customerId=/*[[${customerId}]]*/'';
             var cartId =/*[[${shoppingCarts.cartId}]]*/'';
             var buyNum=$("#buyNum").val();
-            turnToBalance(cartId,buyNum);
+            turnToBalance(cartId,buyNum,userId,issueId,customerId);
         }
 
         var initShow=function(){
@@ -70,22 +75,11 @@
             var userId=/*[[${userId}]]*/'';
             var issueId=/*[[${issueId}]]*/'';
             var customerId=/*[[${customerId}]]*/'';
-            var cartId=/*[[${cartId}]]*/'';
-            var cooUID=getCookie("qbdb"+merchantId);
-            if(upCookie==1)//如果标记为更新cookie则进行cookie的更新
-            {
-                setcookie("qbdb"+merchantId,userId);//进行cookie存储相应的商家和商家对应的用户
-            }
-
-            if(cooUID==null){ //undefind
-                //如果该用户的cookie为空则走服务器认证一遍openid
-                var url = /*[[${openidUrl}]]*/'';
-                window.open(url,'_self')
-            }else if(cooUID!=userId){
-                //如果该用户的cookie与进入的网页的userid不一样则直接走cookie中的用户
-                var url="showShoppingCarts?userId="+cooUID+"&issueId="+issueId+"&customerId="+customerId;
-                window.location.href=url;
-            }
+            var openidUrl=/*[[${openidUrl}]]*/'';
+            var openId=/*[[${openId}]]*/'';
+            var sign=/*[[${sign}]]*/'';
+            //用户初始化
+            userInit(upCookie,userId,issueId,customerId,openidUrl,openId,sign);
 
             var notShow =/*[[${notShow}]]*/'';
             if(notShow=="1") {
@@ -98,26 +92,6 @@
 
         }
 
-
-        function getCookie(name) {
-            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-            if(arr=document.cookie.match(reg))
-                return unescape(arr[2]);
-            else
-                return null;
-        }
-        function setCookie(name,value) {
-            var Days = 1;
-            var exp = new Date();
-            exp.setTime(exp.getTime() + Days*2*60*1000);
-            document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
-        }
-        function DelCookie(name) {
-            var exp = new Date();
-            exp.setTime(exp.getTime() + (-1 * 24 * 60 * 60 * 1000));
-            var cval = getCookie(name);
-            document.cookie = name + "=" + cval + "; expires=" + exp.toGMTString();
-        }
         /*]]>*/
 
     </script>
