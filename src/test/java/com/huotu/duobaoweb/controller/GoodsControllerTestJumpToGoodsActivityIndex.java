@@ -1,3 +1,11 @@
+/*
+ * 版权所有:杭州火图科技有限公司
+ * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼在地图中查看
+ *
+ * (c) Copyright Hangzhou Hot Technology Co., Ltd.
+ * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+ * 2013-2015. All rights reserved.
+ */
 package com.huotu.duobaoweb.controller;
 
 import com.huotu.duobaoweb.base.BaseTest;
@@ -14,27 +22,23 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Created by daisy.zhang on 2016/3/30.
- * 测试通过商品ID，跳转到商品活动首页
+ * Created by daisy.zhang on 2016/4/6.
+ * 测试通过商品ID，跳转到活动首页
  */
-
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
+public class GoodsControllerTestJumpToGoodsActivityIndex {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -87,13 +91,12 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods = mockGoodsRep.save(mockGoods);
     }
 
-    //  GoodID不传，错误码和错误信息还未定义
+    //  GoodID不传，错误页面未定义
     @Test
     public void TestNoGoodsID() throws Exception {
         mockMvc.perform(get("/index").param("goodsId", ""))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(1001)))
-                .andExpect((jsonPath("$.resultData.resultDescription").value("参数错误")));
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //上传GoodID格式错误
@@ -101,8 +104,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     public void TestWrongGoodsID() throws Exception {
         mockMvc.perform(get("/index").param("goodsId", ""))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(1001)))
-                .andExpect((jsonPath("$.resultData.resultDescription").value("参数错误")));
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //测试商品ID在数据库中不存在，错误码和错误信息还未定义
@@ -110,8 +112,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     public void TestNotFindGoodsID() throws Exception {
         mockMvc.perform(get("/index").param("goodsId", "-1"))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(1002)))
-                .andExpect((jsonPath("$.resultData.resultDescription").value("商品未找到")));
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //测试商品状态未审核，错误码和错误信息暂未定义
@@ -120,8 +121,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods.setStatus(CommonEnum.GoodsStatus.uncheck);
         mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(10009)))
-                .andExpect((jsonPath("$.resultData.Msg").value("商品未审核")));
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
 
     }
 
@@ -131,8 +131,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods.setStatus(CommonEnum.GoodsStatus.down);
         mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(10010)))
-                .andExpect((jsonPath("$.resultData.Msg").value("商品已下架")));
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
 
     }
 
@@ -143,8 +142,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-03-27 00:00:00"));
         mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(10011)))
-                .andExpect((jsonPath("$.resultData.Msg").value("商品已过期")));
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //测试商品活动还未开始，错误码和错误信息暂未定义
@@ -155,8 +153,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-03-27 00:00:00"));
         mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(10012)))
-                .andExpect((jsonPath("$.resultData.Msg").value("商品活动还未开始")));
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //测试商品ID正确，活动处于进行中，用户未登陆状态
@@ -169,16 +166,16 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2018-03-27 00:00:00"));
         mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
-                .andExpect((jsonPath("$.resultData.Code").value(1)))
-                .andExpect((jsonPath("$.resultData.data.id").value(mockGoods.getId().toString())))
-                .andExpect((jsonPath("$.resultData.data.defaultPictureUrl").value(mockGoods.getDefaultPictureUrl())))
-                .andExpect((jsonPath("$.resultData.data.costPrice").value(costPrice)))
-                .andExpect((jsonPath("$.resultData.data.currentPrice").value(currentPrice)))
-                .andExpect((jsonPath("$.resultData.data.startTime").isNotEmpty()))
-                .andExpect((jsonPath("$.resultData.data.endTime").isNotEmpty()))
-                .andExpect((jsonPath("$.resultData.data.joinCount").value(false)))
-                .andExpect((jsonPath("$.resultData.data.joined").value(false)))
-                .andExpect((jsonPath("$.resultData.data.issueId").isEmpty()));
+                .andExpect(view().name("redirect:/html/goods/index"))
+                .andExpect(model().attribute("id", mockGoods.getId().toString()))
+                .andExpect(model().attribute("defaultPictureUrl", mockGoods.getDefaultPictureUrl()))
+                .andExpect(model().attribute("costPrice", costPrice))
+                .andExpect(model().attribute("currentPrice", currentPrice))
+                .andExpect(model().attribute("startTime", mockGoods.getStartTime()))
+                .andExpect(model().attribute("endTime", mockGoods.getEndTime()))
+                .andExpect(model().attribute("joinCount", mockIssue.getBuyAmount()))
+                .andExpect(model().attribute("joined", false))
+                .andExpect(model().attribute("issueId", false));
 
     }
 
@@ -202,6 +199,4 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
 //
 //    }
     //测试商品ID正确，状态未审核，错误码和错误信息暂未定义
-
-
 }

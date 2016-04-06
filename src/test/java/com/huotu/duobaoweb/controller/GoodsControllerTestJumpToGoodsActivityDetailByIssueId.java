@@ -30,17 +30,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Created by daisy.zhang on 2016/4/6.
- * 通过商品ID获取商品详情
+ * 通过期号ID跳转到商品详情页
  */
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("development")
 @Transactional
-public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId {
+public class GoodsControllerTestJumpToGoodsActivityDetailByIssueId {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -62,7 +64,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId {
         mockIssue.setStepAmount(mockGoods.getStepAmount());//单次购买最低量
         mockIssue.setDefaultAmount(mockGoods.getDefaultAmount()); //缺省购买人次
         mockIssue.setToAmount(mockGoods.getToAmount()); //总需购买人次
-        mockIssue.setBuyAmount(2L); //已购买的人次
+        mockIssue.setBuyAmount(3L); //已购买的人次
         mockIssue.setPricePercentAmount(mockGoods.getPricePercentAmount()); //每人次单价
         mockIssue.setAttendAmount(mockGoods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
         mockIssue.setStatus(CommonEnum.IssueStatus.going);//状态
@@ -93,69 +95,69 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId {
         mockGoods = mockGoodsRep.save(mockGoods);
     }
 
-    //商品ID不传,判断容错（错误码还未定义，定义后统一修改）
+    //期号不传,判断容错（错误码还未定义，定义后统一修改）
     @Test
-    public void TestNOGoodsID() throws Exception {
-        mockMvc.perform(get("/detailByGoodsId").param("id", ""))
+    public void TestNOIssueID() throws Exception {
+        mockMvc.perform(get("/detailByIssueId").param("id", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
-    //商品ID错误,判断容错（错误码还未定义，定义后统一修改）
+    //期号错误,判断容错（错误码还未定义，定义后统一修改）
     @Test
-    public void TestWrongGoodsID() throws Exception {
-        mockMvc.perform(get("/detailByGoodsId").param("id", "ABC"))
+    public void TestWrongIssueID() throws Exception {
+        mockMvc.perform(get("/detailByIssueId").param("id", "ABC"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //商品ID在数据库中不存在,判断容错（错误码还未定义，定义后统一修改）
     @Test
-    public void TestNotFindGoodsID() throws Exception {
-        mockMvc.perform(get("/detailByGoodsId").param("id", "999999999"))
+    public void TestNotFindIssueID() throws Exception {
+        mockMvc.perform(get("/detailByIssueId").param("id", "999999999"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
-    //商品状态未审核,判断容错（错误码还未定义，定义后统一修改）
+    //期号所对应的商品商品状态未审核,判断容错（错误码还未定义，定义后统一修改）
     @Test
     public void TestGoodUnCheck() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.uncheck);
-        mockMvc.perform(get("/detailByGoodsId").param("id", mockGoods.getId().toString()))
+        mockMvc.perform(get("/detailByIssueId").param("id", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
 
     }
 
-    //商品已经过期,判断容错（错误码还未定义，定义后统一修改）
+    //期号所对应的商品已经过期,判断容错（错误码还未定义，定义后统一修改）
     @Test
     public void TestExpired() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.up);
         mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-03-27 00:00:00"));
-        mockMvc.perform(get("/detailByGoodsId").param("id", mockGoods.getId().toString()))
+        mockMvc.perform(get("/detailByIssueId").param("id", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
-    //商品还未开始活动,判断容错（错误码还未定义，定义后统一修改）
+    //期号所对应的商品还未开始活动,判断容错（错误码还未定义，定义后统一修改）
     @Test
     public void TestNotStart() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.up);
         mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2018-03-27 00:00:00"));
         mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-03-27 00:00:00"));
-        mockMvc.perform(get("/detailByGoodsId").param("goodsId", mockGoods.getId().toString()))
+        mockMvc.perform(get("/detailByIssueId").param("id", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
-    //商品活动开始，但还未有任何人参与，判断返回模型数据是否正确
+    //期号所对应的商品活动开始，但还未有任何人参与，判断返回模型数据是否正确
     @Test
     public void TestNoJoined() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.up);
         mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-03-27 00:00:00"));
         mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-03-27 00:00:00"));
         mockIssue.setBuyAmount(0L);
-        mockMvc.perform(get("/detailByGoodsId").param("id", mockGoods.getId().toString()))
+        mockMvc.perform(get("/detailByIssueId").param("id", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/detail"))
                 .andExpect(model().attribute("id", mockGoods.getId().toString()))
@@ -187,7 +189,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId {
     @Test
     public void TestUserJoined() throws Exception {
         mockIssue.setBuyAmount(8L);
-        mockMvc.perform(get("/detailByGoodsId").param("id", mockGoods.getId().toString()))
+        mockMvc.perform(get("/detailByIssueId").param("id", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/detail"))
                 .andExpect(model().attribute("id", mockGoods.getId().toString()))
@@ -221,7 +223,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId {
     public void TestIssueDrawing() throws Exception {
         mockIssue.setStatus(CommonEnum.IssueStatus.drawing);
         mockIssue.setBuyAmount(10L);
-        mockMvc.perform(get("/detailByGoodsId").param("id", mockGoods.getId().toString()))
+        mockMvc.perform(get("/detailByIssueId").param("id", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/detail"))
                 .andExpect(model().attribute("id", mockGoods.getId().toString()))
@@ -262,9 +264,9 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId {
         //设置中奖用户为模拟用户
         mockIssue.setAwardingUser(mockUser);
         //设置中奖号码
-        mockIssue.setLuckyNumber(123457L);
+        mockIssue.setLuckyNumber(123456L);
         //测试本期中奖后，模型数据是否返回正确
-        mockMvc.perform(get("/detailByGoodsId").param("id", mockGoods.getId().toString()))
+        mockMvc.perform(get("/detailByIssueId").param("id", mockGoods.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/detail"))
                 .andExpect(model().attribute("id", mockGoods.getId().toString()))
