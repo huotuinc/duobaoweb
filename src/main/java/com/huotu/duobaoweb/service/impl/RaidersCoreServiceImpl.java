@@ -6,8 +6,6 @@ import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.common.LotteryCode;
 import com.huotu.duobaoweb.common.SysRegex;
 import com.huotu.duobaoweb.entity.*;
-import com.huotu.duobaoweb.entity.Goods;
-import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.exceptions.CrabLotteryCodeRepeatException;
 import com.huotu.duobaoweb.exceptions.InterrelatedException;
 import com.huotu.duobaoweb.exceptions.LotteryCodeError;
@@ -16,7 +14,6 @@ import com.huotu.duobaoweb.service.CacheService;
 import com.huotu.duobaoweb.service.PayService;
 import com.huotu.duobaoweb.service.RaidersCoreService;
 import com.huotu.duobaoweb.service.UserNumberService;
-import com.huotu.huobanplus.common.entity.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -30,8 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -660,12 +655,14 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
     @Override
     @Scheduled(cron = "0 0/5 * * * *")
     @Transactional
-    public void doUserBuyFail() {
+    public void doUserBuyFail() throws IOException {
         List<UserBuyFail> list = userBuyFailRepository.findAllByStatus(CommonEnum.UserBuyFailStatus.undo);
-        list.forEach(this::doUserBuyFailItem);
+        for (UserBuyFail userBuyFail : list) {
+            this.doUserBuyFailItem(userBuyFail);
+        }
     }
 
-    private void doUserBuyFailItem(UserBuyFail userBuyFail) {
+    private void doUserBuyFailItem(UserBuyFail userBuyFail) throws IOException {
         Issue issue = userBuyFail.getGoods().getIssue();
         //在新的期号数量够的情况下进行购买
         if (issue.getToAmount() - issue.getBuyAmount() >= userBuyFail.getAmount()) {

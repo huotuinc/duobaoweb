@@ -7,6 +7,7 @@ import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.model.PayModel;
 import com.huotu.duobaoweb.model.ShoppingCartsModel;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -54,7 +55,7 @@ public interface ShoppingService {
      * @param payInfoModel
      * @return
      */
-    Orders createOrders(PayModel payInfoModel);
+    Orders createOrders(PayModel payInfoModel) throws IOException;
 
     /**
      * 全额购买

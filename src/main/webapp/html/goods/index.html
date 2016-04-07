@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -38,61 +38,64 @@
         </div>
     </div>
 
-        <p class="syjg"><span>原价：</span><span class="red huadiao">￥<b><span
-                th:text="*{costPrice}"></span></b></span>/￥<span th:text="*{currentPrice}"></span>
-                 <a href="goods/detail.html" th:href="@{/goods/detail}"><span class="fr bai">商品详情&nbsp;»</span></a>
-        </p>
+    <p class="syjg"><span>原价：</span><span class="red huadiao">￥<b><span
+            th:text="*{costPrice}"></span></b></span>/￥<span th:text="*{currentPrice}"></span>
+        <a href="goods/detail.html"
+           th:href="@{/goods/detailByGoodsId(goodsId=*{id}, issueId=*{issueId}, userId=${userId}, customerId=${customerId})}"><span
+                class="fr bai">商品详情&nbsp;»</span></a>
+    </p>
 
-        <P class="h10"></P>
+    <P class="h10"></P>
 
-        <p class="sycy">已有<span class="red tit_rem_big_big"><span th:text="*{joinCount}"></span></span>人正在参与</p>
+    <p class="sycy">已有<span class="red tit_rem_big_big"><span th:text="*{joinCount}"></span></span>人正在参与</p>
 
-        <div th:if="*{joined}" class="syabk" style="display:block">
-            <button class="buttonan tit_rem_big_s" type="button">
-                <a href="goods/detail.html" th:href="@{/goods/detailByIssueId(id=*{issueId})}">继续购买</a>
-            </button>
-        </div>
-        <div th:if="*{!joined}" class="syabk" style="display:block">
-            <button class="buttonan tit_rem_big_s" type="button">
-                <a href="goods/detail.html" th:href="@{/goods/detailByGoodsId(id=*{id})}">参与1元夺宝</a>
-            </button>
-        </div>
-
-        <div class="syabk" style="display:block">
-            <div id="mcover" onclick="document.getElementById('mcover').style.display='';" style="display: none;">
-                <img src="/resources/images/mengbanzi.png" th:src="@{/resources/images/mengbanzi.png}"/>
-            </div>
-            <button class="buttonan lv tit_rem_big_s" type="button"
-                    onclick="document.getElementById('mcover').style.display='block';">
-                分享<span>&nbsp;/&nbsp;</span>收藏活动
-            </button>
-        </div>
-        <div th:if="*{logined}" class="syabk" style="display:block">
-            <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
-                <a href="personal/list.html" th:href="@{/personal/getMyInvolvedRecord(userId=*{userId},issueId=*{issueId},customerId=*{customerId},type=0)}">查看我的参与</a>
-            </button>
-        </div>
-
-        <div class="xq">
-            <div class="mid tit_rem_big ">
-                <span>活动提示</span>
-            </div>
-            <p style="line-height:20px; padding:10px 20px; color:#777" class="tit_rem">
-                ⑴.确保你能查看中奖信息，请务必<span style=" text-decoration: underline; color:#FF1E22">收藏</span>本活动页面以及关注公众号。<br/>
-                ⑵.夺宝所有商品均从正规渠道采购，100%正品，可享受厂家提供的全国联保服务。<br/>
-                ⑶.遇到售后问题可通过公众号联系客户。<br/>
-                ⑷.商家保留法律范围内允许的对活动的解释权。
-            </p>
-        </div>
-
-        <P class="h10"></P>
+    <div th:if="*{joined}" class="syabk" style="display:block">
+        <button class="buttonan tit_rem_big_s" type="button">
+            <a href="goods/detail.html"
+               th:href="@{/goods/detailByIssueId(issueId=*{issueId}, userId=${userId}, customerId=${customerId}))}">继续购买</a>
+        </button>
     </div>
-</form>
+    <div th:if="*{!joined}" class="syabk" style="display:block">
+        <button class="buttonan tit_rem_big_s" type="button">
+            <a href="goods/detail.html"
+               th:href="@{/goods/detailByGoodsId(goodsId=*{id}, issueId=*{issueId}, userId=${userId}, customerId=${customerId})}">参与1元夺宝</a>
+        </button>
+    </div>
 
+    <div class="syabk" style="display:block">
+        <div id="mcover" onclick="document.getElementById('mcover').style.display='';" style="display: none;">
+            <img src="/resources/images/mengbanzi.png" th:src="@{/resources/images/mengbanzi.png}"/>
+        </div>
+        <button class="buttonan lv tit_rem_big_s" type="button"
+                onclick="document.getElementById('mcover').style.display='block';">
+            分享<span>&nbsp;/&nbsp;</span>收藏活动
+        </button>
+    </div>
+    <div th:if="*{logined}" class="syabk" style="display:block">
+        <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
+            <a href="personal/list.html"
+               th:href="@{/personal/getMyInvolvedRecord(userId=*{userId},issueId=*{issueId},customerId=*{customerId},type=0)}">查看我的参与</a>
+        </button>
+    </div>
+
+    <div class="xq">
+        <div class="mid tit_rem_big ">
+            <span>活动提示</span>
+        </div>
+        <p style="line-height:20px; padding:10px 20px; color:#777" class="tit_rem">
+            ⑴.确保你能查看中奖信息，请务必<span style=" text-decoration: underline; color:#FF1E22">收藏</span>本活动页面以及关注公众号。<br/>
+            ⑵.夺宝所有商品均从正规渠道采购，100%正品，可享受厂家提供的全国联保服务。<br/>
+            ⑶.遇到售后问题可通过公众号联系客户。<br/>
+            ⑷.商家保留法律范围内允许的对活动的解释权。
+        </p>
+    </div>
+
+    <P class="h10"></P>
+</form>
 <script type="text/javascript" th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
-    var initShow=function() {
+    var initShow = function () {
         var upCookie = /*[[${upCookie}]]*/'';
         var userId = /*[[${userId}]]*/'';
         var issueId = /*[[${issueId}]]*/'';
@@ -101,7 +104,7 @@
         var openId = /*[[${openId}]]*/'';
         var sign = /*[[${sign}]]*/'';
         //用户初始化
-        userInit(upCookie, userId, issueId, customerId, openidUrl, openId, sign);
+        //userInit(upCookie, userId, issueId, customerId, openidUrl, openId, sign);
     }
     //1.获取商品首页model
     var goodsIndexModel = /*[[${goodsIndexModel}]]*/'';
@@ -124,13 +127,13 @@
             var day = Math.floor(diffSecond / (3600 * 24));
             $("#day").text(day + "");
             var hour = Math.floor(diffSecond % (3600 * 24) / 3600);
-            if(10 > hour)hour = "0" + hour;
+            if (10 > hour)hour = "0" + hour;
             $("#hour").text(hour + "");
             var minute = Math.floor(diffSecond % (3600) / 60);
-            if(10 > minute) minute = "0" + minute;
+            if (10 > minute) minute = "0" + minute;
             $("#minute").text(minute + "");
             var second = Math.floor(diffSecond % 60);
-            if(10 > second) second = "0" + second;
+            if (10 > second) second = "0" + second;
             $("#second").text(second + "");
         } else {
             $("#day").text("0");

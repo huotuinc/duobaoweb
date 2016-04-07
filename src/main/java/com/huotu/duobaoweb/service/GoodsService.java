@@ -1,5 +1,7 @@
 package com.huotu.duobaoweb.service;
 
+import com.huotu.duobaoweb.model.SelGoodsSpecModel;
+
 import java.net.URISyntaxException;
 import java.util.Map;
 
@@ -45,4 +47,14 @@ public interface GoodsService {
      * @param map
      */
     void getCountResultByIssueId(Long issueId, Map<String, Object> map) throws Exception;
+
+    /**
+     * 跳转到图文详情页面
+     * @param goodsId
+     * @param map
+     */
+    void jumpToImageTextDetail(Long goodsId, Map<String, Object> map) throws  Exception;
+
+
+    SelGoodsSpecModel getSelGoodsSpecModelByIssueId(Long issueId) throws Exception;
 }

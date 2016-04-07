@@ -52,5 +52,8 @@ public class CommonConfigServiceImpl implements CommonConfigService {
         return env.getProperty("duobao.apikey", "f7b88579e3b948bf8658d103329dd75d");
     }
 
+    @Override
+    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://localhost:8080/huobanplusmanager/");}
+
 
 }

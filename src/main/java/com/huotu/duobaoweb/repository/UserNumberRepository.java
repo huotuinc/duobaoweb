@@ -2,6 +2,7 @@ package com.huotu.duobaoweb.repository;
 
 
 import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.entity.UserNumber;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -20,5 +21,7 @@ public interface UserNumberRepository extends JpaRepository<UserNumber, Long>, J
     UserNumber findByIssueAndNumber(Issue issue, Long number);
 
     List<UserNumber> findByIssue(Issue issue);
+
+    List<UserNumber> findByIssueAndUser(Issue issue, User user);
 
 }

@@ -12,9 +12,11 @@ import com.huotu.duobaoweb.repository.UserRepository;
 import com.huotu.duobaoweb.service.CommonConfigService;
 import com.huotu.duobaoweb.service.ShoppingService;
 import com.huotu.duobaoweb.service.StaticResourceService;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -43,6 +45,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     @Autowired
     private OrdersItemRepository ordersItemRepository;
+
+    @Autowired
+    private GoodsRestRepository goodsRestRepository;
 
     @Override
     public void joinToShoppingCarts(Issue issue, User user, Long buyNum) {
@@ -146,7 +151,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public Orders createOrders(PayModel payModel) {
+    public Orders createOrders(PayModel payModel) throws IOException {
         ShoppingCart shoppingCart = shoppingCartRepository.findOne(payModel.getCartsId());
         if (payModel.getType() == 1) {
             //如果是正常购买
@@ -179,7 +184,12 @@ public class ShoppingServiceImpl implements ShoppingService {
                 return orders;
             }
         } else if (payModel.getType() == 2) {
-            //todo 商品库存如果不够则不能全额购买 待罗国华提供接口
+            //商品库存如果不够则不能全额购买
+            com.huotu.huobanplus.common.entity.Goods goods=goodsRestRepository.getOneByPK(shoppingCart.getIssue().getGoods().getToMallGoodsId());
+            if(goods.getStock()<3){
+                //如果库存量小于3则不允许全额购买
+                return null;
+            }
             if (shoppingCart == null){
                 return null;
             }
@@ -196,7 +206,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             ordersItem.setOrder(orders);
             ordersItem.setAmount(shoppingCart.getIssue().getToAmount());
             ordersItem.setStatus(CommonEnum.OrderStatus.paying);
-            //todo 全额购买中的期号只是为了找到这个物品然后减库存
+            // 全额购买中的期号只是为了找到这个物品然后减库存
             ordersItem.setIssue(shoppingCart.getIssue());
             ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
             return orders;

@@ -1,8 +1,11 @@
 package com.huotu.duobaoweb.service.impl;
 
 
+import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.entity.UserNumber;
 import com.huotu.duobaoweb.model.RaiderNumbersModel;
+import com.huotu.duobaoweb.repository.UserNumberRepository;
 import com.huotu.duobaoweb.service.UserNumberService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +26,9 @@ public class UserNumberServiceImpl implements UserNumberService {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private UserNumberRepository userNumberRepository;
 
     private static Log log = LogFactory.getLog(UserNumberServiceImpl.class);
 
@@ -56,6 +62,13 @@ public class UserNumberServiceImpl implements UserNumberService {
 
     @Override
     public List<UserNumber> getLotteryBeforeTop50(Long date) {
+        return null;
+    }
+
+    @Override
+    public List<Long> getUserNumbersByUserAndIssue(User user, Issue issue) {
+        List<UserNumber> userNumbers= userNumberRepository.findByIssueAndUser(issue,user);
+
         return null;
     }
 
