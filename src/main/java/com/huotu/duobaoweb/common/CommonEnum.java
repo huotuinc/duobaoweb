@@ -375,4 +375,35 @@ public interface CommonEnum {
             this.name = name;
         }
     }
+    enum PayResult implements ICommonEnum{
+
+        normalPay(0,"正常购买"),
+        turnToBuyFail(1,"由于期号数量不足，购买失败"),
+        allPay(2,"全额购买");
+
+        private int value;
+
+        private String name;
+
+        PayResult(int value,String name){
+            this.value=value;
+            this.name=name;
+        }
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
 }

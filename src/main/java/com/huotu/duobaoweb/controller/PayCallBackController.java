@@ -1,5 +1,6 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.entity.OrdersItem;
 import com.huotu.duobaoweb.model.PayResultModel;
 import com.huotu.duobaoweb.model.PaysResultShowModel;
@@ -50,7 +51,8 @@ public class PayCallBackController {
         PaysResultShowModel paysResultShowModel = new PaysResultShowModel();
         if (payResult.isSuccess()) {
             //支付成功
-            if (orderNo != null) {
+            if (orderNo != null&&payResult.getResultType().equals(CommonEnum.PayResult.normalPay)) {
+                //正常支付成功
                 OrdersItem ordersItem = ordersItemRepository.findByOrderId(orderNo);
                 //Orders orders=ordersRepository.findOne(orderNo);
                 if (payResult.getResultNumber() != null) {
@@ -62,6 +64,8 @@ public class PayCallBackController {
                     paysResultShowModel.setNumbers(payResult.getResultNumber());
                     model.addAttribute("paysResultShowModel", paysResultShowModel);
                 }
+            }else if(orderNo != null&&payResult.getResultType().equals(CommonEnum.PayResult.allPay)){
+                //全额支付成功 todo 则直接跳转到填收货地址界面
             }
 
         } else {
