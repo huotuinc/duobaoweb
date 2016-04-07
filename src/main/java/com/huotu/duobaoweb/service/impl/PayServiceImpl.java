@@ -53,7 +53,7 @@ public class PayServiceImpl implements PayService {
      * @param money
      */
     @Transactional
-    private synchronized PayResultModel doPay(Orders orders, float money,String outOrderNo, CommonEnum.PayType purchaseSource) {
+    public synchronized PayResultModel doPay(Orders orders, float money,String outOrderNo, CommonEnum.PayType purchaseSource) {
         log.info("进入支付主流程，in doPay()!");
         Date date=new Date();
         PayResultModel resultModel=new PayResultModel();

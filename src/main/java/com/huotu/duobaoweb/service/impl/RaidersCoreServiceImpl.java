@@ -689,8 +689,9 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             ordersItem.setStatus(CommonEnum.OrderStatus.paying);
             ordersItem.setAmount(userBuyFail.getAmount());
             ordersItemRepository.saveAndFlush(ordersItem);
-            //todo
-            //        payService.doPay(tradeNo, totalMoney.floatValue(), "", CommonEnum.PayType.simulate);
+
+            payService.doPay(userOrder, userBuyFail.getMoney().floatValue()
+                    , userBuyFail.getSourceOrders().getOutOrderNo(), userBuyFail.getSourceOrders().getPayType());
         }
     }
 }

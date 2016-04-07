@@ -1,5 +1,7 @@
 package com.huotu.duobaoweb.service;
 
+import com.huotu.duobaoweb.common.CommonEnum;
+import com.huotu.duobaoweb.entity.Orders;
 import com.huotu.duobaoweb.model.PayResultModel;
 
 /**
@@ -13,4 +15,11 @@ public interface PayService {
      * @return
      */
     PayResultModel solveWeixinPayResult(String orderNo,float money,String outOrderNo);
+
+    /**
+     * 支付成功后的操作，将物品数量减少，
+     * @param orders
+     * @param money
+     */
+    PayResultModel doPay(Orders orders, float money, String outOrderNo, CommonEnum.PayType purchaseSource);
 }
