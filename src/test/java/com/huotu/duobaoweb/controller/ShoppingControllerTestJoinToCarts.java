@@ -3,6 +3,8 @@ package com.huotu.duobaoweb.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.huotu.duobaoweb.base.BaseTest;
+import com.huotu.duobaoweb.boot.MVCConfig;
+import com.huotu.duobaoweb.boot.RootConfig;
 import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.entity.Goods;
 import com.huotu.duobaoweb.entity.Issue;
@@ -12,14 +14,21 @@ import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.repository.IssueRepository;
 import com.huotu.duobaoweb.repository.UserBuyFlowRepository;
 import com.huotu.duobaoweb.repository.UserRepository;
+import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.GET;
 
@@ -32,6 +41,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by cosy on 2016/4/5.
  */
+@SuppressWarnings("SpringJavaAutowiringInspection")
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {RootConfig.class, MVCConfig.class, BaseClientSpringConfig.class})
+@ActiveProfiles("development")
+@Transactional
+
 public class ShoppingControllerTestJoinToCarts extends BaseTest {
     private Log log = LogFactory.getLog(ShoppingControllerTestJoinToCarts.class);
 

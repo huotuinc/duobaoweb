@@ -22,7 +22,7 @@ public class GetMyInvolvedRecordPage {
 
     public void to (WebDriver driver, User user,  Issue currentIssue)
     {
-        String lastTime="11";
+        String lastTime="0";
         driver.get("http://localhost/personal/getMyInvolvedRecord?userId="+user.getId()+"&type="+currentIssue.getStatus() +"&lastTime="+lastTime);
 
         driver.findElement(By.xpath("html/body/div[1]/div[1]/ul/li[1]/div/a")).click();
@@ -34,7 +34,7 @@ public class GetMyInvolvedRecordPage {
 
 
         Assert.assertEquals(currentIssue.getGoods().getTitle(),title);
-        Assert.assertEquals("参与旗号："+currentIssue.getId(),qihao);
+        Assert.assertEquals("参与期号："+currentIssue.getId(),qihao);
         Assert.assertEquals("总需："+currentIssue.getGoods().getToAmount(),zongxu);
         Assert.assertEquals(currentIssue.getGoods().getAttendAmount(),caiyu);
         Assert.assertEquals(4,biaoti.size());

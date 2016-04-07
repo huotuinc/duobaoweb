@@ -1,5 +1,7 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.duobaoweb.boot.MVCConfig;
+import com.huotu.duobaoweb.boot.RootConfig;
 import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.controller.page.GetBalancePage;
 import com.huotu.duobaoweb.controller.page.ShowShoppingCartsPage;
@@ -13,12 +15,19 @@ import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.repository.IssueRepository;
 import com.huotu.duobaoweb.repository.ShoppingCartRepository;
 import com.huotu.duobaoweb.repository.UserRepository;
+import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -27,6 +36,13 @@ import static org.junit.Assert.*;
 /**
  * Created by cosy on 2016/4/6.
  */
+
+@SuppressWarnings("SpringJavaAutowiringInspection")
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {RootConfig.class, MVCConfig.class, BaseClientSpringConfig.class})
+@ActiveProfiles("development")
+@Transactional
 public class ShoppingControllerTest {
     private Log log = LogFactory.getLog(ShoppingControllerTest.class);
 
@@ -115,13 +131,8 @@ public class ShoppingControllerTest {
         shoppingCartRepository.saveAndFlush(shoppingCart);
     }
 
-    //得到购物车
-    @Test
-    public void testGetCartsList() throws Exception {
 
-
-    }
-
+   //得到购物车
     @Test
     public void testShowShoppingCarts() throws Exception {
       //购物车中有商品
@@ -131,6 +142,7 @@ public class ShoppingControllerTest {
         //购物车中无商品
         showShoppingCartsPage.nollGoods(driver,currentUser2);
     }
+
 
     //测试跳转到页面
     @Test
