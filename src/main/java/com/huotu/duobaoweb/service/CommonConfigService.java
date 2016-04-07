@@ -54,5 +54,11 @@ public interface CommonConfigService {
      */
     String getDuobaoApiKey();
 
+    /**
+     * 伙伴商城管理Web地址
+     */
+    String getHuoBanPlusManagerWebUrl();
+
+
 
 }

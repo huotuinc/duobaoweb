@@ -74,7 +74,7 @@ public class GoodsDetailModel {
     /**
      * 参与号码
      */
-    private List<Long> numbers;
+    private Long number;
 
     /**
      * 全额购买商品价格
