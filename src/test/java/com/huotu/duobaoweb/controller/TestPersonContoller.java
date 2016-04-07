@@ -6,8 +6,6 @@ import com.huotu.duobaoweb.entity.*;
 import com.huotu.duobaoweb.repository.CityRepository;
 import com.huotu.duobaoweb.repository.UserRepository;
 import com.huotu.duobaoweb.service.StaticResourceService;
-import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
-import com.huotu.huobanplus.sdk.common.repository.impl.GoodsRestRepositoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +18,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,7 +54,7 @@ public class TestPersonContoller extends BaseTest {
     public void prepareDevice() throws UnsupportedEncodingException {
         mockPassword = UUID.randomUUID().toString();
         //用户名的要求 大于3 小于20
-        User user = generateUserWithMobileWithToken(mockPassword, userRepository);
+        User user = generateUser(mockPassword, userRepository);
         mockUsername = user.getUsername();
         mUser=user;
     }
