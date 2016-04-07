@@ -2,6 +2,7 @@ package com.huotu.duobaoweb.repository;
 
 
 import com.huotu.duobaoweb.entity.Delivery;
+import com.huotu.duobaoweb.entity.pk.DeliveryPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long>, JpaSp
      */
     @Query("select d from Delivery as d where d.issue.id=?1")
     Delivery findByIssueId(Long issueId);
+
+
 }

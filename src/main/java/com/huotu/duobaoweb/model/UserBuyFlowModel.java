@@ -54,6 +54,8 @@ public class UserBuyFlowModel {
      */
     private Date awardingDate;
 
+    private String awardingDateString;
+
     /**
      * 发货状态
      *(0, "获得奖品"),

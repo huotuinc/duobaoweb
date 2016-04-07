@@ -35,11 +35,13 @@ public class Address {
      */
     @Column(length = 50)
     private String cityName;
+
     /**
      * 详细地址
      */
     @Column(length = 400)
     private String details;
+
     /**
      * 缺省地址
      */
