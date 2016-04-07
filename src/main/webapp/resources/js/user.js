@@ -26,7 +26,6 @@ var userInit=function(upCookie,userId,issueId,customerId,openidUrl,openId,sign){
 
     if(upCookie=='1')//如果标记为更新cookie则进行cookie的更新
     {
-        alert("customerId"+customerId+";userId"+userId+";qbdbopenid:"+openId+";qbdbosign:"+sign);
         setCookie("qbdb"+customerId,userId);//进行cookie存储相应的商家和商家对应的用户
         setCookie("qbdbopenid",openId);
         setCookie("qbdbosign",sign);
@@ -35,7 +34,6 @@ var userInit=function(upCookie,userId,issueId,customerId,openidUrl,openId,sign){
     var cooUID=getCookie("qbdb"+customerId);
     var cooOID=getCookie("qbdbopenid");
     var cooSIGN=getCookie("qbdbosign");
-    alert(cooUID+";"+cooOID+";"+cooSIGN);
     if(cooUID==null||cooOID==null||cooSIGN==null){ //undefind
         //如果该用户的cookie为空则走服务器认证一遍openid
         var url = openidUrl;
@@ -48,7 +46,6 @@ var userInit=function(upCookie,userId,issueId,customerId,openidUrl,openId,sign){
             "&openId="+openId+
         "&sign="+sign+
             "&id="+issueId;
-        alert(userId+url)
         window.location.href=url;
     }
 

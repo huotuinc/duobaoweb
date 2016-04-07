@@ -15,6 +15,8 @@ var turnToBalance = function (cartId, buyNum, userId, issueId, customerId) {
         "&openId=" + cooOID +
         "&sign=" + cooSIGN;
     window.location.href = url;
+
+
 }
 //todo 加入必须的信息
 var payToService = function (payMoney, detail, cartsId, payType, type, userId, issueId, customerId) {
@@ -22,13 +24,39 @@ var payToService = function (payMoney, detail, cartsId, payType, type, userId, i
     var cooSIGN = getCookie("qbdbosign");
 
     var payModel = toPayModel(payMoney, detail, cartsId, payType, type);
-    var url = "pay?userId=" + userId +
-        "&issueId=" + issueId +
-        "&customerId=" + customerId +
-        "&openId=" + cooOID +
-        "&sign=" + cooSIGN
-    "&payModel=" + payModel;
-    window.location.href = url;
+    //var url = "pay?userId=" + userId +
+    //    "&issueId=" + issueId +
+    //    "&customerId=" + customerId +
+    //    "&openId=" + cooOID +
+    //    "&sign=" + cooSIGN
+    //"&payModel=" + payModel;
+    //window.location.href = url;
+
+    $.jBox.tip("正在支付...", "loading");
+    $.ajax({
+        url: "../shopping/pay",
+        data: {
+            issueId: issueId,
+            payModel: payModel,
+            userId: userId,
+            customerId: customerId,
+            openId: cooOID,
+            sign: cooSIGN
+        },
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+            if (data.code == 200) {
+                $.jBox.tip(data.message);
+                window.location = data.url;
+            } else {
+                $.jBox.tip(data.message);
+            }
+        },
+        error: function (data) {
+            $.jBox.tip("异常");
+        }
+    })
 }
 function toPayModel(payMoney1, detail1, cartsId1, payType1, type1) {
     var obj = new Object();

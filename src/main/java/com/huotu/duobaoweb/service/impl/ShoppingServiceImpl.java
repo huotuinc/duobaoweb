@@ -1,7 +1,7 @@
 package com.huotu.duobaoweb.service.impl;
 
 import com.huotu.duobaoweb.common.CommonEnum;
-import com.huotu.duobaoweb.common.thirdparty.WeixinUtils;
+import com.huotu.duobaoweb.common.WeixinPayUrl;
 import com.huotu.duobaoweb.entity.*;
 import com.huotu.duobaoweb.model.PayModel;
 import com.huotu.duobaoweb.model.ShoppingCartsModel;
@@ -127,7 +127,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
     public String getWeixinPayUrl(Orders orders) {
-        String appid = WeixinUtils.getAppID();
         String backUri = commonConfigService.getWebUrl() + "web/payCallbackWeixin";
         System.out.println(backUri);
         //授权后要跳转的链接所需的参数一般有会员号，金额，订单号之类，
@@ -136,12 +135,13 @@ public class ShoppingServiceImpl implements ShoppingService {
         backUri = backUri + "?orderNo=" + orders.getId();
         //URLEncoder.encode 后可以在backUri 的url里面获取传递的所有参数
         backUri = URLEncoder.encode(backUri);
+        String url = WeixinPayUrl.getWeixinPayUrl();
         //scope 参数视各自需求而定，这里用scope=snsapi_base 不弹出授权页面直接授权目的只获取统一支付接口的openid
-        String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
-                "appid=" + appid +
-                "&redirect_uri=" +
-                backUri +
-                "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+//        String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
+//                "appid=" + appid +
+//                "&redirect_uri=" +
+//                backUri +
+//                "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
         return url;
     }
 

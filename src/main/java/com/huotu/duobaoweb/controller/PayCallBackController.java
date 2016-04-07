@@ -1,8 +1,14 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.duobaoweb.entity.OrdersItem;
+import com.huotu.duobaoweb.model.PayResultModel;
+import com.huotu.duobaoweb.model.PaysResultShowModel;
+import com.huotu.duobaoweb.repository.OrdersItemRepository;
+import com.huotu.duobaoweb.repository.OrdersRepository;
 import com.huotu.duobaoweb.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +18,7 @@ import java.io.IOException;
 /**
  * Created by xhk on 2016/3/29.
  */
-@RequestMapping(value="/pay")
+@RequestMapping(value = "/pay")
 @Controller
 public class PayCallBackController {
 
@@ -20,30 +26,67 @@ public class PayCallBackController {
     private HttpServletResponse response;
 
     @Autowired
+    private OrdersRepository ordersRepository;
+
+    @Autowired
     private PayService payService;
 
+    @Autowired
+    private OrdersItemRepository ordersItemRepository;
+
     /**
-    *微信回调接口
+     * 微信回调接口
      */
     @RequestMapping("/payCallbackWeixin")
-    public String payCallbackWeixin(HttpServletRequest request) throws Exception {
+    public String payCallbackWeixin(HttpServletRequest request, Model model) throws Exception {
         //网页授权后获取传递的参数
         String orderNo = request.getParameter("orderNo");
+        float money = Float.parseFloat(request.getParameter("money"));
+        String outOrderNo = request.getParameter("outOrderNo");
 
-        boolean success=payService.solveWeixinPayResult(orderNo);
 
-        if(success){
+        PayResultModel payResult = payService.solveWeixinPayResult(orderNo, money, outOrderNo);
+
+        PaysResultShowModel paysResultShowModel = new PaysResultShowModel();
+        if (payResult.isSuccess()) {
             //支付成功
+            if (orderNo != null) {
+                OrdersItem ordersItem = ordersItemRepository.findByOrderId(orderNo);
+                //Orders orders=ordersRepository.findOne(orderNo);
+                if (payResult.getResultNumber() != null) {
+                    //构建前端显示内容
+                    paysResultShowModel.setIssueId(ordersItem.getIssue().getId());
+                    paysResultShowModel.setDetail(ordersItem.getIssue().getGoods().getTitle());
+                    paysResultShowModel.setNeedNumber(ordersItem.getIssue().getToAmount());
+                    paysResultShowModel.setTitle("您成功参与了1件商品共" + ordersItem.getAmount() + "人次夺宝，信息如下：");
+                    paysResultShowModel.setNumbers(payResult.getResultNumber());
+                    model.addAttribute("paysResultShowModel", paysResultShowModel);
+                }
+            }
 
-        }else{
+        } else {
             //支付失败
         }
-        response.sendRedirect("支付结果页面");//"/weChatpay/pay.jsp?appid="+appid2+"&timeStamp="+timestamp+"&nonceStr="+nonceStr2+"&package="+packages+"&sign="+finalsign);
-        return null;
+
+//        //以下为测试信息
+//        List<Long> number=new ArrayList<Long>();
+//        number.add(1L);
+//        number.add(11L);
+//        number.add(111L);
+//        number.add(1111L);
+//        paysResultShowModel.setIssueId(1111111L);
+//        paysResultShowModel.setDetail("这是测试信息：哈哈哈哈哈哈哈哈哈哈！");
+//        paysResultShowModel.setNeedNumber(10000L);
+//        paysResultShowModel.setTitle("您成功参与了1件商品共" + 1000 + "人次夺宝，信息如下：");
+//        paysResultShowModel.setNumbers(number);
+//        model.addAttribute("paysResultShowModel", paysResultShowModel);
+
+        return "/html/shopping/payResult";
     }
 
     /**
      * 支付宝回调接口
+     *
      * @param request
      * @return
      * @throws IOException
@@ -51,7 +94,7 @@ public class PayCallBackController {
     @RequestMapping("/payCallbackAliPay")
     public String payCallbackAliPay(HttpServletRequest request) throws IOException {
 
-        response.sendRedirect("支付结果页面");//"/weChatpay/pay.jsp?appid="+appid2+"&timeStamp="+timestamp+"&nonceStr="+nonceStr2+"&package="+packages+"&sign="+finalsign);
+        response.sendRedirect("支付结果页面");
         return null;
     }
 }

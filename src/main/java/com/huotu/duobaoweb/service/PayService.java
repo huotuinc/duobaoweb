@@ -1,5 +1,7 @@
 package com.huotu.duobaoweb.service;
 
+import com.huotu.duobaoweb.model.PayResultModel;
+
 /**
  * Created by xhk on 2016/3/29.
  */
@@ -10,5 +12,5 @@ public interface PayService {
      * @param orderNo
      * @return
      */
-    boolean solveWeixinPayResult(String orderNo);
+    PayResultModel solveWeixinPayResult(String orderNo,float money,String outOrderNo);
 }
