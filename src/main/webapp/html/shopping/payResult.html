@@ -17,8 +17,8 @@
 </head>
 
 <body style="background-color:#f5f5f5;" >
-<div class="commfont">
-  <div class="zfjg" style="padding-top:15px;" th:object="${payResult}">
+<div class="commfont" th:object="${paysResultShowModel}">
+  <div class="zfjg" style="padding-top:15px;" >
     <p class=" tit_rem_big" >
       恭喜你，参与成功！
     </p>
@@ -28,7 +28,7 @@
     <div class="jxa">
     <div style="padding:5px;">
       <span style="float:left; width:50%;">
-      <a href="#" class="buttonantwo tit_rem_big" style=" margin-right: 7px;"  >
+      <a  class="buttonantwo tit_rem_big" style=" margin-right: 7px;" th:href="@{/goods/detailByIssueId(id=*{issueId})}" >
       继续夺宝
       </a>
       </span>
@@ -65,11 +65,9 @@
         商品期号：<span th:text="*{issueId}">301089007</span>
       </p>
       <p class="zfxqp" >
-        夺宝号码：<span>100032326</span><span>1053238585</span>
-        <span>100032326</span><span>1053238585</span>
-        <span>100032326</span><span>1053238585</span>
-        <span>100032326</span><span>1053238585</span>
-        <span>100032326</span><span>1053238585</span>
+        夺宝号码：<tr th:each="number:*{numbers}" >
+              <span th:text="${number}">100000000</span>
+          </tr>
       </p>
     </div>
   </div>

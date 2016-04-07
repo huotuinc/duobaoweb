@@ -2,7 +2,7 @@ package com.huotu.duobaoweb.controller;
 
 import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.common.PublicParameterHolder;
-import com.huotu.duobaoweb.common.WeixinAuthUrl;
+import com.huotu.duobaoweb.common.WeixinPayUrl;
 import com.huotu.duobaoweb.entity.Issue;
 import com.huotu.duobaoweb.entity.Orders;
 import com.huotu.duobaoweb.entity.ShoppingCart;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -47,8 +46,6 @@ public class ShoppingController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private HttpServletResponse response;
 
     /**
      * 加入购物车
@@ -232,8 +229,11 @@ public class ShoppingController {
      * 支付
      * @return
      */
-    @RequestMapping(value="/pay",method = RequestMethod.GET)
-    public String pay(Model model,PayModel payModel) throws IOException {
+    @RequestMapping(value="/pay",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultModel pay(Model model,PayModel payModel) throws IOException {
+        WebPublicModel common = PublicParameterHolder.getParameters();
+        ResultModel resultModel=new ResultModel();
         //todo 其他用户可以代付
         //生成订单
         Orders orders=shoppingService.createOrders(payModel);
@@ -241,11 +241,17 @@ public class ShoppingController {
             //如果订单生成失败则跳转到购物车提示商品已经过期
             model.addAttribute("overTime", "1");
             model.addAttribute("notShow", "1");
-            return "/html/shopping/cartsList";
+            resultModel.setCode(404);
+            resultModel.setMessage("购物车信息已过期，请重新选择商品！");
+            return resultModel;
         }
+        //设置应该支付的用户
+        WeixinPayUrl.customerid=common.getCustomerId();
         String url=shoppingService.getWeixinPayUrl(orders);
-        response.sendRedirect(url);
-        return null;
+        resultModel.setCode(200);
+        resultModel.setMessage("跳转支付中！");
+        resultModel.setUrl(url);
+        return resultModel;
     }
 
 }
