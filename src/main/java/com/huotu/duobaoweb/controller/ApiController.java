@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 
@@ -41,6 +42,7 @@ public class ApiController {
      * @return
      */
     @RequestMapping(value = "/generateIssue", method = RequestMethod.GET)
+    @ResponseBody
     public ApiResultModel generateIssue(Long goodsId, String sign) throws IOException {
         ApiResultModel apiResultModel = new ApiResultModel();
         String toSign = DigestUtils.md5DigestAsHex((goodsId.toString() + commonConfigService.getDuobaoApiKey()).getBytes());
