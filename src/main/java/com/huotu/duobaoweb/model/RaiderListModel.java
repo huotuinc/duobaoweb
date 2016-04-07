@@ -62,6 +62,10 @@ public class RaiderListModel {
      * 揭晓日期
      */
     private Date awardingDate;
+    /**
+     * 揭晓日期
+     */
+    private String awardingDateString;
 
     /**
      * 夺宝状态
@@ -72,4 +76,5 @@ public class RaiderListModel {
      * 夺宝时间
      */
     private Date time;
+
 }

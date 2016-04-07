@@ -36,6 +36,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
         <p class="syjg"><span>原价：</span><span class="red huadiao">￥<b><span
                 th:text="*{costPrice}"></span></b></span>/￥<span th:text="*{currentPrice}"></span>
@@ -68,7 +69,7 @@
         </div>
         <div th:if="*{logined}" class="syabk" style="display:block">
             <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
-                <a href="personal/list.html" th:href="@{/web/getMyInvolvedRecord?type=0}">查看我的参与</a>
+                <a href="personal/list.html" th:href="@{/personal/getMyInvolvedRecord(userId=*{userId},issueId=*{issueId},customerId=*{customerId},type=0)}">查看我的参与</a>
             </button>
         </div>
 
