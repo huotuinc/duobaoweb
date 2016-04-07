@@ -16,7 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 /**
- *  系统配置项
+ * 系统配置项
  * Created by lgh on 2015/9/23.
  */
 
@@ -43,28 +43,13 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getErrorPrividedMobile() {
-        return env.getProperty("huotu.errorPrividedMobile", "18368893860");
-    }
-
-    @Override
     public String getMallCustomerId() {
         return env.getProperty("mall.customerid", "4471");//3447
     }
 
     @Override
-    public String getMallApiUrl() {
-        return env.getProperty("mall.api.url", "http://mallapi.huobanj.cn");//http://mallapi.51flashmall.com
-    }
-
-    @Override
-    public String getMallAuthKeySecret() {
-        return env.getProperty("mall.auth.keysecret", "1165a8d240b29af3f418b8d10599d0dc");
-    }
-
-    @Override
-    public String getMallUrl() {
-        return env.getProperty("mall.url", "http://olquan.huobanj.cn");//http://cosytest.51flashmall.com
+    public String getDuobaoApiKey() {
+        return env.getProperty("duobao.apikey", "f7b88579e3b948bf8658d103329dd75d");
     }
 
 

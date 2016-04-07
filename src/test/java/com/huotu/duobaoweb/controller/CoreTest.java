@@ -104,4 +104,11 @@ public class CoreTest extends BaseTest {
         log.info("中奖号码为" + issue.getLuckyNumber().toString());
         log.info("中奖用户为" + issue.getAwardingUser().getId());
     }
+
+    @Test
+    public void t()
+    {
+        System.out.println(UUID.randomUUID().toString().replace("-",""));
+        System.out.println(UUID.randomUUID().toString().replace("-",""));
+    }
 }
