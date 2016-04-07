@@ -10,10 +10,8 @@ import com.huotu.duobaoweb.model.WebPublicModel;
 public class PublicParameterHolder {
 
     private static final ThreadLocal<WebPublicModel> models = new ThreadLocal<>();
-
     /**
      * 获取当前公共参数
-     *
      * @return 在controller级别操作 返回总不会为空
      */
     public static WebPublicModel getParameters() {

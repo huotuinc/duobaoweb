@@ -1,0 +1,26 @@
+var data1 = { type: $("#type").val(), pageSize: 10 ,page: 1,userId: $("#userId").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
+var data2 = { pageSize: 10 ,page: 1,userId: $("#userId").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
+
+$(function () {
+    var url = "getMyInvolvedRecordAjax";
+    var stemplete = "#detailTemplate";
+    var snoneTemplete = "<div  style='background-color:#f5f5f5;'><div style='background-color:#f5f5f5;'> <div class='commfont' > <p class='juoo'><img src='../resources/images/db001.png' style='width:200px;'/></p><p class='ju tit_rem_big_s'>您还没有夺宝纪录</p> <p class='assa'><a href='#' class='tit_rem_big_s'> 立即夺宝 </a> </p></div></div>";
+    var data = data1;
+    if($("#type").val()==3){
+        url = "getMyLotteryListAjax"
+        stemplete = "#LotteryTemplate";
+        snoneTemplete = "<div  style='background-color:#f5f5f5;'><div style='background-color:#f5f5f5;'> <div class='commfont' > <p class='juoo'><img src='../resources/images/db001.png' style='width:200px;'/></p><p class='ju tit_rem_big_s'>您还没有中奖纪录</p> <p class='assa'><a href='#' class='tit_rem_big_s'> 立即夺宝 </a> </p></div></div>";
+        data=data2;
+    }
+    $("#content").Jload({
+            url: url,
+            method: "POST",
+            msgImg: "../JLoad/img/loading_cart.gif",
+            data:data,
+            noneTemplete: snoneTemplete,// 没有数据模版
+            isArtTemplete: true,
+            Templete: $(stemplete).html()
+        }
+    );
+})
+

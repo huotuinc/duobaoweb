@@ -1,0 +1,15 @@
+$("#list_" + jsonObj[i].id).Jload({
+    url: "",
+    method: 'GET',
+    dataType:"jsonp",
+    msgImg:"",
+    data: { page:1, pagesize: 10},
+	noneTemplete:"<div style='text-align:center;'>没有数据</div>",//没有数据模版
+    Templete:$("#2").html();
+});
+
+
+<script type="text/template" id="2">
+li>{name}</li>
+</script>
+

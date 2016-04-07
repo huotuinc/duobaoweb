@@ -1,25 +1,16 @@
 package com.huotu.duobaoweb.service;
 
 import com.huotu.duobaoweb.entity.UserBuyFlow;
-import com.huotu.duobaoweb.model.BuyListModel;
-import com.huotu.duobaoweb.model.RaiderListModel;
-import com.huotu.duobaoweb.model.UserBuyFlowModel;
+import com.huotu.duobaoweb.model.*;
+import org.springframework.data.domain.Page;
+
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
  * Created by lhx on 2016/2/2.
  */
 public interface UserBuyFlowService {
-
-    /**
-     *  查找用户夺宝列表
-     * @param userId 用户id
-     * @param type 某期揭晓类型
-     * @param lastTime 分页时间
-     * @return RaiderListModel[]
-     * @throws Exception
-     */
-    RaiderListModel[] findByUserIdAndType(Long userId, Integer type, Long lastTime)throws  Exception;
 
     /**
      * 用户某期参与记录
@@ -44,11 +35,9 @@ public interface UserBuyFlowService {
     /**
      * 中奖列表
      * @param userId
-     * @param lastTime
-     * @return AppUserBuyFlowModel[]
+     * @return UserBuyFlowModelAjax[]
      */
-    UserBuyFlowModel[] findByUser(Long userId, Long lastTime) throws  Exception;
-
+    UserBuyFlowModelAjax findByUserAjax(Long userId,Integer pageSize, Integer page) throws  Exception;
 
     /**
      * 获取 某期夺宝中奖详细信息
@@ -58,4 +47,7 @@ public interface UserBuyFlowService {
     UserBuyFlow findOne(Long issueId);
 
 
+    Page<UserBuyFlow> getMyInvolvedRecordAjax(Long userId, Integer type, Integer page, Integer pageSize);
+
+    RaiderListModelAjax toListRaiderListModel(Integer type,Long userId, Integer pageSize, Integer page) throws URISyntaxException;
 }

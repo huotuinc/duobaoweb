@@ -1,222 +1,169 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<meta name="format-detection" content="telephone=no" />
-<meta name="description" content="" />
-<meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="css/commfont.css"/>
-<link rel="stylesheet" type="text/css" href="css/common.css"/>
-<link rel="stylesheet" type="text/css" href="css/dbdb.css"/>
-<title>填写地址</title>
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="description" content=""/>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css"
+          th:href="@{/resources/css/commfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"
+          th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+
+    <script type="text/javascript" src="../../resources/js/jquery-1.7.2.min.js"
+            th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+
+
+    <script type="text/javascript" th:inline="javascript">
+        $(function () {
+            var userId = $("#userId").val();
+            var issueId = $("#issueId").val();
+            var customerId = $("#customerId").val();
+            $('#province').change(function () {
+                var parentId = $(this).val();
+                $.ajax({
+                    url: "ajaxFindByParentId",
+                    data: {"parentId": parentId,"customerId":customerId,"issueId":issueId,"userId":userId},
+                    type: "post",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#city").empty();
+                        $("#county").empty();
+                        var html = "<option>选择城市</option>";
+                        $("#city").append(html);
+                        $("#county").append(html);
+                        var dataObj = eval("(" + data + ")");//转换为json对象
+                        //解析数组
+                        $.each(dataObj, function (i, item) {
+                            html = "<option value=" + item.id + ">" + item.cityName + "</option>";
+                            $("#city").append(html);
+                        });
+                    },
+                    error: function (data) {
+
+                    }
+                });
+
+            });
+            $('#city').change(function () {
+                var parentId = $(this).val();
+                $.ajax({
+                    url: "ajaxFindByParentId",
+                    data: {"parentId": parentId,"customerId":customerId,"issueId":issueId,"userId":userId},
+                    type: "post",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#county").empty();
+                        var html = "<option>选择城市</option>";
+                        $("#county").append(html);
+                        var dataObj = eval("(" + data + ")");//转换为json对象
+                        //解析数组
+                        $.each(dataObj, function (i, item) {
+                            html = "<option value=" + item.id + ">" + item.cityName + "</option>";
+                            $("#county").append(html);
+                        });
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            });
+
+            $("#submitFrom").click(function () {
+                    $("#details").val($("#province  option:selected").text()+$("#city  option:selected").text()+$("#county  option:selected").text()+$("#details").val());
+                    $("#form1").submit();
+            });
+        });
+    </script>
+
+    <title>填写地址</title>
 </head>
- 
+
 <body>
 
 
 <div class="commfont">
- 
-<form class="js-wx-fm wx-ui wx-fm">
-    <h4 class="wx-fm-title">收货地址</h4>
-    
-    <div class="js-wx-cancel publish-cancel">
-    <a href="#" style="display:block">
-        <div class="cancel-img"></div></a>
-    </div>
-    <div class="block" style="margin:0;">
-        
-        <div class="block-item">
-            <label class="form-row form-text-row">
-                <em class="form-text-label">收货人</em>
-                <span class="input-wrapper"><input type="text" name="user_name" class="form-text-input" value="" placeholder="名字" /></span>
-            </label>
+
+    <form id="form1" class="js-wx-fm wx-ui wx-fm" th:action="addRecpeiptAddress" th:method="get">
+        <input type="hidden"  th:value="${userId}" id="userId" name="userId"/>
+        <input type="hidden"  th:value="${issueId}" id="issueId" name="issueId"/>
+        <input type="hidden"  th:value="${customerId}" id="customerId" name="customerId"/>
+        <input type="hidden" th:value="${deliveryId}" name="deliveryId"/>
+        <h4 class="wx-fm-title">收货地址</h4>
+
+        <div class="js-wx-cancel publish-cancel">
+            <a href="#" style="display:block">
+                <div class="cancel-img"></div>
+            </a>
         </div>
-        <div class="block-item">
-            <label class="form-row form-text-row">
-                <em class="form-text-label">联系电话</em>
-                <span class="input-wrapper"><input type="tel" name="tel" class="form-text-input" value="" placeholder="手机或固话" /></span>
-            </label>
-        </div>
-        <div class="block-item">
-            <div class="form-row form-text-row">
-                <em class="form-text-label">选择地区</em>
-                <div class="input-wrapper input-region js-area-select">
+        <div class="block" style="margin:0;">
 
-                <span>
-	<select id="province" name="province" class="wx-province" data-next-type="城市" data-next="city"><option data-code="0" value="省份">选择省份</option>
+            <div class="block-item">
+                <label class="form-row form-text-row">
+                    <em class="form-text-label">收货人</em>
+                    <span class="input-wrapper"><input type="text" id="receiver" name="receiver" class="form-text-input" value=""
+                                                       placeholder="名字"/></span>
+                </label>
+            </div>
+            <div class="block-item">
+                <label class="form-row form-text-row">
+                    <em class="form-text-label">联系电话</em>
+                    <span class="input-wrapper"><input type="tel" id="mobile" name="mobile" class="form-text-input" value=""
+                                                       placeholder="手机或固话"/></span>
+                </label>
+            </div>
+            <div class="block-item">
+                <div class="form-row form-text-row">
+                    <em class="form-text-label">选择地区</em>
 
-	<option data-code="110000" value="北京市">
-		北京市
-	</option>
+                    <div class="input-wrapper input-region js-area-select">
 
-	<option data-code="120000" value="天津市">
-		天津市
-	</option>
-
-	<option data-code="130000" value="河北省">
-		河北省
-	</option>
-
-	<option data-code="140000" value="山西省">
-		山西省
-	</option>
-
-	<option data-code="150000" value="内蒙古自治区">
-		内蒙古自治区
-	</option>
-
-	<option data-code="210000" value="辽宁省">
-		辽宁省
-	</option>
-
-	<option data-code="220000" value="吉林省">
-		吉林省
-	</option>
-
-	<option data-code="230000" value="黑龙江省">
-		黑龙江省
-	</option>
-
-	<option data-code="310000" value="上海市">
-		上海市
-	</option>
-
-	<option data-code="320000" value="江苏省">
-		江苏省
-	</option>
-
-	<option data-code="330000" value="浙江省">
-		浙江省
-	</option>
-
-	<option data-code="340000" value="安徽省">
-		安徽省
-	</option>
-
-	<option data-code="350000" value="福建省">
-		福建省
-	</option>
-
-	<option data-code="360000" value="江西省">
-		江西省
-	</option>
-
-	<option data-code="370000" value="山东省">
-		山东省
-	</option>
-
-	<option data-code="410000" value="河南省">
-		河南省
-	</option>
-
-	<option data-code="420000" value="湖北省">
-		湖北省
-	</option>
-
-	<option data-code="430000" value="湖南省">
-		湖南省
-	</option>
-
-	<option data-code="440000" value="广东省">
-		广东省
-	</option>
-
-	<option data-code="450000" value="广西壮族自治区">
-		广西壮族自治区
-	</option>
-
-	<option data-code="460000" value="海南省">
-		海南省
-	</option>
-
-	<option data-code="500000" value="重庆市">
-		重庆市
-	</option>
-
-	<option data-code="510000" value="四川省">
-		四川省
-	</option>
-
-	<option data-code="520000" value="贵州省">
-		贵州省
-	</option>
-
-	<option data-code="530000" value="云南省">
-		云南省
-	</option>
-
-	<option data-code="540000" value="西藏自治区">
-		西藏自治区
-	</option>
-
-	<option data-code="610000" value="陕西省">
-		陕西省
-	</option>
-
-	<option data-code="620000" value="甘肃省">
-		甘肃省
-	</option>
-
-	<option data-code="630000" value="青海省">
-		青海省
-	</option>
-
-	<option data-code="640000" value="宁夏回族自治区">
-		宁夏回族自治区
-	</option>
-
-	<option data-code="650000" value="新疆维吾尔自治区">
-		新疆维吾尔自治区
-	</option>
-
-	<option data-code="710000" value="台湾省">
-		台湾省
-	</option>
-
-	<option data-code="810000" value="香港特别行政区">
-		香港特别行政区
-	</option>
-
-	<option data-code="820000" value="澳门特别行政区">
-		澳门特别行政区
-	</option>
-
-
-</select>
-</span>
-<span>
-	<select id="city" name="city" class="wx-city" data-next-type="区县" data-next="county">
-		<option data-code="0" value="城市">选择城市</option>
-	</select>
-</span>
-<span>
-	<select id="county" name="county" class="wx-county">
-		<option data-code="0" value="区县">选择区县</option>
-	</select>
-</span></div>
+                        <span>
+                        <select id="province" name="province" class="wx-province" data-next-type="城市" data-next="city">
+                            <option data-code="" value="省份">选择省份</option>
+                            <option th:each="ct:${citys}" th:text="${ct.cityName}" th:value="${ct.id}">
+                                北京市
+                            </option>
+                        </select>
+                    </span>
+                    <span>
+                        <select id="city" name="city" class="wx-city" data-next-type="区县" data-next="county">
+                            <option>选择城市</option>
+                        </select>
+                    </span>
+                    <span>
+                        <select id="county" name="county" class="wx-county">
+                            <option>选择区县</option>
+                        </select>
+                    </span></div>
+                </div>
+            </div>
+            <div class="block-item">
+                <label class="form-row form-text-row">
+                    <em class="form-text-label">详细地址</em>
+                    <span class="input-wrapper">
+                        <input type="text" id="details" name="details" class="form-text-input"
+                                                       value=""
+                                                       placeholder="街道门牌信息"/></span>
+                </label>
             </div>
         </div>
-        <div class="block-item">
-            <label class="form-row form-text-row">
-                <em class="form-text-label">详细地址</em>
-                <span class="input-wrapper"><input type="text" name="wx_detail" class="form-text-input" value="" placeholder="街道门牌信息" /></span>
-            </label>
-        </div>
-        
-    </div>
-    
-    <div>
-        <div class="action-container tit_rem_big">
-            <a class="js-wx-save btn btn-block btn-green">提交</a>            
-        </div>
-    </div>
-</form>
 
-<p class="tit_rem" style="padding:0px 10px 10px 10px; color:#999">提示：请确保收货地址正确无误，如有问题请通过公众号联系客户。</p>
+        <div>
+            <div class="action-container tit_rem_big">
+                <a class="js-wx-save btn btn-block btn-green" id="submitFrom">提交</a>
+            </div>
+        </div>
+    </form>
+    <p class="tit_rem" style="padding:0px 10px 10px 10px; color:#999">提示：请确保收货地址正确无误，如有问题请通过公众号联系客户。</p>
 </div>
- 
+
 
 </body>
 </html>

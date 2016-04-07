@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -13,295 +13,166 @@
     <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"
           th:href="@{/resources/css/common.css}"/>
     <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+    <script src="js/jquery-1.7.2.min.js"   th:src="@{/resources/js/jquery-1.7.2.min.js}"
+            type="text/javascript"></script>
+
+    <script src="js/template.js" th:src="@{/resources/js/template.js}"  type="text/javascript"></script>
+    <script src="JLoad/jquery.Jload.js"  th:src="@{/JLoad/jquery.Jload.js}" type="text/javascript"></script>
+    <link href="../../resources/js/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+    <script type="text/javascript" src="../../resources/js/shopping.js"
+            th:src="@{/resources/js/shopping.js}"></script>
     <title>夺宝记录</title>
 </head>
 
 <body>
 <div class="commfont">
     <div style="margin-bottom:4px;">
+        <input type="hidden"  th:value="*{type}" id="type"/>
+        <input type="hidden"  th:value="*{userId}" id="userId"/>
+        <input type="hidden"  th:value="*{issueId}" id="issueId"/>
+        <input type="hidden"  th:value="*{customerId}" id="customerId"/>
         <ul class="float-ul flex-ul">
             <li>
                 <div  th:class="*{type eq 0?'con':''}" >
-                    <a href="#" th:href="@{getMyInvolvedRecord(userId=2,type=0,lastTime=0)}">全部</a>
+                    <a href="#" th:href="@{getMyInvolvedRecord(userId=*{userId},issueId=*{issueId},customerId=*{customerId},type=0)}">全部</a>
                 </div>
             </li>
             <li>
                 <div th:class="*{type eq 1?'con':''}">
-                    <a href="#" th:href="@{getMyInvolvedRecord?(userId=2,type=1,lastTime=0)}">进行中</a>
+                    <a href="#" th:href="@{getMyInvolvedRecord?(userId=*{userId},issueId=*{issueId},customerId=*{customerId},type=1)}">进行中</a>
                 </div>
             </li>
             <li>
                 <div th:class="*{type eq 2?'con':''}">
-                    <a href="#" th:href="@{getMyInvolvedRecord?(userId=2,type=2,lastTime=0)}">已揭晓</a>
+                    <a href="#" th:href="@{getMyInvolvedRecord?(userId=*{userId},issueId=*{issueId},customerId=*{customerId},type=2)}">已揭晓</a>
                 </div>
             </li>
             <li>
                 <div th:class="*{type eq 3?'con':''}">
-                    <a href="#" th:href="@{getMyLotteryList?(userId=2,lastTime=0)}">中奖记录</a>
+                    <a href="#" th:href="@{getMyLotteryList?(userId=*{userId},issueId=*{issueId},customerId=*{customerId})}">中奖记录</a>
                 </div>
             </li>
         </ul>
     </div>
 
+    <div id="content">
 
-    <div th:if="*{type eq 0}" >
-        <!-- 进行中正未揭晓 -->
-        <div class="all"  th:each="userBuyFlow:${list}">
-            <div class="right">
-                <div class="right_in">
-                    <p style="margin-bottom:4px" class="tit_rem_big">
-                        <a href="#" th:text="${userBuyFlow.title}">【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</a>
-                    </p>
-                    <div class="left_s">
-                        <div class="left_in_s">
-                            <p class=" hui" th:text="${'参与期号：'+userBuyFlow.issueId}">参与期号：324323232</p>
-
-                            <div class="jdtbox off" style="display:block" th:if="${userBuyFlow.status eq 0}">
-                                <div style="width:50%"  class="jdtbox2 on">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="right_s" style="display:block" th:if="${userBuyFlow.status eq 0}">
-                        <a href="#" class="zuijia">追加</a>
-                    </div>
-                    <div class="hui">
-                        <span style="float:left" th:text="${'总需：'+userBuyFlow.toAmount}">总需：328932</span><span style="float:right;" >剩余&nbsp;<i
-                            style=" color:#009BFF" th:text="${userBuyFlow.remainAmount}">328932</i></span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div>
-                        <span style="float:left;margin:4px 0px">本次参与：<i style=" color:#FF7E00" th:text="${userBuyFlow.attendAmount}">100</i>人次</span><span
-                            style="float:right;margin:4px 0px">
-                        <a  th:href="@{getMyRaiderNumbers(userId=2,issueId=${userBuyFlow.issueId})}" style="color:#009BFF;">查看我的号码</a>
-                        </span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div class="zjmd" style="display:block" th:if="${userBuyFlow.status eq 2}">
-
-                        <p>获奖者：<i style=" color:#009BFF" th:text="${userBuyFlow.winner}" >溜溜溜</i></p>
-
-                        <p>本期参与：<i style=" color:#FF7E00" th:text="${userBuyFlow.winnerAttendAmount}">30</i>人次</p>
-
-                        <p>幸运号：<i style=" color:#FF7E00" th:text="${userBuyFlow.lunkyNumber}">436321</i></p>
-
-                        <p th:text="${'揭晓时间：'+#dates.format(userBuyFlow.awardingDate, 'yyyy/MM/dd HH:mm')}">揭晓时间：2015/12/12 13:00:00</p>
-
-                    </div>
-
-                    <div class="zjmd" style=" display:block" th:if="${userBuyFlow.status eq 1}">
-                        <p>请稍后，正在揭晓...</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="left">
-                <img src="../../resources/images/dsds.jpg" th:src="@{${userBuyFlow.pictureUrl}}" style="width:80px"/>
-            </div>
-        </div>
     </div>
 
-    <div th:if="*{type eq 1}" >
-        <div class="all"  th:each="userBuyFlow:${list}">
-            <div class="right">
-                <div class="right_in">
-                    <p style="margin-bottom:4px" class="tit_rem_big">
-                        <a href="#" th:text="${userBuyFlow.title}">【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</a>
-                    </p>
-                    <div class="left_s">
-                        <div class="left_in_s">
-                            <p class=" hui" th:text="${'参与期号：'+userBuyFlow.issueId}">参与期号：324323232</p>
-
-                            <div class="jdtbox off" style="display:block" th:if="${userBuyFlow.status eq 0}">
-                                <div style="width:50%"  class="jdtbox2 on">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="right_s" style="display:block" th:if="${userBuyFlow.status eq 0}">
-                        <a href="#" class="zuijia">追加</a>
-                    </div>
-                    <div class="hui">
-                        <span style="float:left" th:text="${'总需：'+userBuyFlow.toAmount}">总需：328932</span><span style="float:right;" >剩余&nbsp;<i
-                            style=" color:#009BFF" th:text="${userBuyFlow.remainAmount}">328932</i></span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div>
-                        <span style="float:left;margin:4px 0px">本次参与：<i style=" color:#FF7E00" th:text="${userBuyFlow.attendAmount}">100</i>人次</span><span
-                            style="float:right;margin:4px 0px">
-                        <a  th:href="@{getMyRaiderNumbers(userId=2,issueId=${userBuyFlow.issueId})}" style="color:#009BFF;">查看我的号码</a>
-                        </span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div class="zjmd" style="display:block" th:if="${userBuyFlow.status eq 2}">
-
-                        <p>获奖者：<i style=" color:#009BFF" th:text="${userBuyFlow.winner}" >溜溜溜</i></p>
-
-                        <p>本期参与：<i style=" color:#FF7E00" th:text="${userBuyFlow.winnerAttendAmount}">30</i>人次</p>
-
-                        <p>幸运号：<i style=" color:#FF7E00" th:text="${userBuyFlow.lunkyNumber}">436321</i></p>
-
-                        <p th:text="${'揭晓时间：'+#dates.format(userBuyFlow.awardingDate, 'yyyy-MM-dd  HH:mm')}">揭晓时间：2015/12/12 13:00:00</p>
-
-                    </div>
-
-                    <div class="zjmd" style=" display:block" th:if="${userBuyFlow.status eq 1}">
-                        <p>请稍后，正在揭晓...</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="left">
-                <img src="../../resources/images/dsds.jpg" th:src="@{${userBuyFlow.pictureUrl}}" style="width:80px"/>
-            </div>
-        </div>
-    </div>
-
-    <div th:if="*{type eq 2}" >
-        <div class="all"  th:each="userBuyFlow:${list}">
-            <div class="right">
-                <div class="right_in">
-                    <p style="margin-bottom:4px" class="tit_rem_big">
-                        <a href="#" th:text="${userBuyFlow.title}">【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</a>
-                    </p>
-                    <div class="left_s">
-                        <div class="left_in_s">
-                            <p class=" hui" th:text="${'参与期号：'+userBuyFlow.issueId}">参与期号：324323232</p>
-
-                            <div class="jdtbox off" style="display:block" th:if="${userBuyFlow.status eq 0}">
-                                <div style="width:50%"  class="jdtbox2 on">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="right_s" style="display:block" th:if="${userBuyFlow.status eq 0}">
-                        <a href="#" class="zuijia">追加</a>
-                    </div>
-                    <div class="hui">
-                        <span style="float:left" th:text="${'总需：'+userBuyFlow.toAmount}">总需：328932</span><span style="float:right;" >剩余&nbsp;<i
-                            style=" color:#009BFF" th:text="${userBuyFlow.remainAmount}">328932</i></span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div>
-                        <span style="float:left;margin:4px 0px">本次参与：<i style=" color:#FF7E00" th:text="${userBuyFlow.attendAmount}">100</i>人次</span><span
-                            style="float:right;margin:4px 0px">
-                        <a  th:href="@{getMyRaiderNumbers(userId=2,issueId=${userBuyFlow.issueId})}" style="color:#009BFF;">查看我的号码</a>
-                        </span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div class="zjmd" style="display:block" th:if="${userBuyFlow.status eq 2}">
-
-                        <p>获奖者：<i style=" color:#009BFF" th:text="${userBuyFlow.winner}" >溜溜溜</i></p>
-
-                        <p>本期参与：<i style=" color:#FF7E00" th:text="${userBuyFlow.winnerAttendAmount}">30</i>人次</p>
-
-                        <p>幸运号：<i style=" color:#FF7E00" th:text="${userBuyFlow.lunkyNumber}">436321</i></p>
-
-                        <p th:text="${'揭晓时间：'+#dates.format(userBuyFlow.awardingDate, 'yyyy-MM-dd  HH:mm')}">揭晓时间：2015/12/12 13:00:00</p>
-
-                    </div>
-
-                    <div class="zjmd" style=" display:block" th:if="${userBuyFlow.status eq 1}">
-                        <p>请稍后，正在揭晓...</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="left">
-                <img src="../../resources/images/dsds.jpg" th:src="@{${userBuyFlow.pictureUrl}}" style="width:80px"/>
-            </div>
-        </div>
-        <!-- 揭晓
-        <div class="all">
-            <div class="right">
-                <div class="right_in">
-                    <p style="margin-bottom:4px" class="tit_rem_big">
-                        <a href="#">【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</a>
-                    </p>
-
-                    <div class="left_s">
-                        <div class="left_in_s">
-                            <p class=" hui">参与期号：324323232</p>
-
-                            <div class="jdtbox off" style="display:none">
-                                <div style="width:50%" class="jdtbox2 on">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="right_s" style="display:none">
-                        <a href="#" class="zuijia">追加</a>
-                    </div>
-                    <div class="hui">
-                        <span style="float:left">总需：328932</span><span style="float:right; display:none">剩余&nbsp;<i
-                            style=" color:#009BFF">328932</i></span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div>
-                        <span style="float:left;margin:4px 0px">本次参与：<i style=" color:#FF7E00">100</i>人次</span><span
-                            style="float:right;margin:4px 0px">
-                    <a href="#" style="color:#009BFF;">查看我的号码</a>
-                        </span>
-                    </div>
-                    <p style=" clear:both"></p>
-
-                    <div class="zjmd" style=" display:block">
-                        <p>获奖者：<i style=" color:#009BFF">溜溜溜</i></p>
-
-                        <p>本期参与：<i style=" color:#FF7E00">30</i>人次</p>
-
-                        <p>幸运号：<i style=" color:#FF7E00">436321</i></p>
-
-                        <p>揭晓时间：2015/12/12 13:00:00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="left">
-                <img src="../../resources/images/dsds.jpg" style="width:80px"/>
-            </div>
-        </div>-->
-    </div>
-
-    <div th:if="*{type eq 3}" >
-        <!-- 中奖 -->
-        <div class="all" th:each="userBuyFlowModel:${list}">
-            <div class="right">
-                <div class="right_in">
-                    <p style="margin-bottom:4px" class="tit_rem_big">
-                        <a href="#" th:text="${userBuyFlowModel.title}">【新品尝鲜】广西现摘百香果12-14个装只要19.9包邮</a>
-                    </p>
-
-                    <div>
-                        <p th:text="${'参与期号：'+userBuyFlowModel.issueId}">参与期号：324323232</p>
-
-                        <p th:text="${'总需：'+userBuyFlowModel.toAmount}">总需：328932</p>
-
-                        <p >本次参与：<i style=" color:#FF7E00" th:text="${userBuyFlowModel.amount}">100</i>人次</p>
-
-                        <p>幸运号：<i style=" color:#FF7E00" th:text="${userBuyFlowModel.luckyNumber}">436321</i></p>
-
-                        <p th:text="${'揭晓时间：' + #dates.format(userBuyFlowModel.awardingDate, 'yyyy/MM/dd HH:mm')}">揭晓时间：2015/12/12 13:00:00</p>
-
-                        <p class="qrqr">
-                            <a href="#" th:if="${userBuyFlowModel.deliveryStatus eq 0 || userBuyFlowModel.deliveryStatus eq 1}" th:href="@{getOneLotteryInfo(userId=2,issueId=${userBuyFlowModel.issueId})}" class="zuijia" style="display: block">完善领奖信息</a>
-                            <a href="#" th:if="${userBuyFlowModel.deliveryStatus eq 0 || userBuyFlowModel.deliveryStatus eq 1}" th:href="@{getOneLotteryInfo(userId=2,issueId=${userBuyFlowModel.issueId})}" class="zuijia" style="display: block">查看派发信息</a>
+    <script type="text/template" id="detailTemplate">
+        {{each Rows as row i}}
+            <!-- 进行中正未揭晓 -->
+            <div class="all">
+                <div class="right">
+                    <div class="right_in">
+                        <p style="margin-bottom:4px" class="tit_rem_big">
+                            <a href="../goods/detailByIssueId?{{PublicParament}}{{Hong}}issueId={{row.issueId}}" >{{row.title}}</a>
                         </p>
+                        <div class="left_s">
+                            <div class="left_in_s">
+                                <p class=" hui" >参与期号：{{row.issueId}}</p>
+                                {{if row.status == 0 }}
+                                <div class="jdtbox off" style="display:block" >
+                                    <div style="width:{{(row.toAmount-row.remainAmount)/row.toAmount*100}}%"   class="jdtbox2 on">
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{if row.status==0 }}
+                        <div class="right_s" style="display:block" >
+                            <a onclick="buy({{row.issueId}})" class="zuijia">追加</a>
+                        </div>
+                        {{/if}}
+                        <div class="hui">
+                            <span style="float:left" >总需：{{row.toAmount}}</span><span style="float:right;" >剩余&nbsp;<i
+                                style=" color:#009BFF" >{{row.remainAmount}}</i></span>
+                        </div>
+                        <p style=" clear:both"></p>
+
+                        <div>
+                            <span style="float:left;margin:4px 0px">本次参与：<i style=" color:#FF7E00" >{{row.attendAmount}}</i>人次</span><span
+                                style="float:right;margin:4px 0px">
+                            <a  href="getMyRaiderNumbers?{{PublicParament}}{{Hong}}issueId={{row.issueId}}" style="color:#009BFF;">查看我的号码</a>
+                            </span>
+                        </div>
+                        <p style=" clear:both"></p>
+                        {{if row.status==2}}
+                        <div class="zjmd" style="display:block" >
+
+                            <p>获奖者：<i style=" color:#009BFF" >{{row.winner}}</i></p>
+
+                            <p>本期参与：<i style=" color:#FF7E00">{{row.winnerAttendAmount}}</i>人次</p>
+
+                            <p>幸运号：<i style=" color:#FF7E00">{{row.lunkyNumber}}</i></p>
+
+                            <p>揭晓时间：{{row.awardingDateString}}</p>
+
+                        </div>
+                        {{/if}}
+                        {{if row.status==1 }}
+                        <div class="zjmd" style=" display:block" >
+                            <p>请稍后，正在揭晓...</p>
+                        </div>
+                        {{/if}}
                     </div>
                 </div>
-            </div>
-            <div class="left">
-                <img src="../../resources/images/dsds.jpg" style="width:80px"/>
-            </div>
-        </div>
-    </div>
 
+                <div class="left">
+                    <img src="{{row.pictureUrl}}"  style="width:80px"/>
+                </div>
+            </div>
+        {{/each}}
+    </script>
+
+    <script type="text/template" id="LotteryTemplate">
+        {{each Rows as row i}}
+            <div class="all" >
+                <div class="right">
+                    <div class="right_in">
+                        <p style="margin-bottom:4px" class="tit_rem_big">
+                            <a href="../goods/detailByIssueId?{{PublicParament}}{{Hong}}issueId={{row.issueId}}" >{{row.title}}</a>
+                        </p>
+                        <div>
+                            <p>参与期号：{{row.issueId}}</p>
+
+                            <p>总需：{{row.toAmount}}</p>
+
+                            <p>本次参与：<i style=" color:#FF7E00" >{{row.amount}}</i>人次</p>
+
+                            <p>幸运号：<i style=" color:#FF7E00" >{{row.luckyNumber}}</i></p>
+
+                            <p>揭晓时间：{{row.awardingDateString}}</p>
+
+                            <p class="qrqr">
+                                {{if row.deliveryStatus==0}}
+                                    <a  href="getOneLotteryInfo?{{PublicParament}}{{Hong}}issueId={{row.issueId}}{{Hong}}" class="zuijia" style="display: block">完善领奖信息</a>
+                                {{/if }}
+                                {{if row.deliveryStatus!=0 }}
+                                    <a  href="getOneLotteryInfo?{{PublicParament}}{{Hong}}issueId={{row.issueId}}{{Hong}}" class="zuijia" style="display: block">查看派发信息</a>
+                                {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="left">
+                    <img src="{{row.defaultPictureUrl}}" style="width:80px"/>
+                </div>
+            </div>
+        {{/each}}
+    </script>
+
+    <script type="text/javascript">
+        function buy(issueId){
+            var customerId=$("#customerId").val();
+            var userId=$("#userId").val();
+            shoppingBuy(null,issueId,customerId,userId);
+        }
+    </script>
+    <script type="text/javascript"   src="resources/js/raiderListAjaxModel.js" th:src="@{/resources/js/raiderListAjaxModel.js}"></script>
 </div>
 </body>
 </html>

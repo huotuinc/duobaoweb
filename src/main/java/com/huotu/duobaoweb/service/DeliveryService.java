@@ -5,6 +5,8 @@ import com.huotu.duobaoweb.entity.Delivery;
 import com.huotu.duobaoweb.model.DeliveryModel;
 import org.springframework.data.domain.Page;
 
+import java.net.URISyntaxException;
+
 /**
  * Created by lhx on 2016/2/20.
  */
@@ -14,7 +16,7 @@ public interface DeliveryService {
      * @param issueId 期号id
      * @return AppDeliveryModel
      */
-    DeliveryModel findByIssueId(Long issueId);
+    DeliveryModel findByIssueId(Long issueId) throws URISyntaxException;
 
     /**
      * 中奖纪录的发货单信息
@@ -38,4 +40,12 @@ public interface DeliveryService {
     Delivery findById(Long deliveryId);
 
 
+    /**
+     * 添加收货人信息
+     * @param deliveryId
+     * @param receiver
+     * @param mobile
+     * @param details
+     */
+    void addRecpeiptAddress(Long deliveryId, String receiver, String mobile, String details);
 }

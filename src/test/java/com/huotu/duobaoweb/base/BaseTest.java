@@ -292,13 +292,23 @@ public class BaseTest {
      * @return 返回添加后的商品
      */
     public Goods saveGodds() {
-        Goods good = new Goods();
-        good.setTitle("裙子");
-        good.setDefaultPictureUrl(staticResourceService.GOODS_PICTURE_PATH + "defaultH.jpg");
-        good.setCharacters("连衣裙");
-        good.setStatus(CommonEnum.GoodsStatus.up);
-        good.setDefaultAmount(1L);
-        return goodsRepository.saveAndFlush(good);
+        Goods goods = new Goods();
+        goods.setDefaultPictureUrl("/resources/images/dsds.jpg");
+        goods.setPictureUrls("/resources/images/dsds.jpg,/resources/images/dsds.jpg,/resources/images/dsds.jpg");
+        goods.setTitle("iphone6s");
+        goods.setCharacters("独一无二");
+        goods.setDefaultAmount(10L);
+        goods.setStepAmount(10L);
+        goods.setToAmount(5890L);
+        goods.setPricePercentAmount(new BigDecimal(1L));
+        goods.setStatus(CommonEnum.GoodsStatus.up);
+        Date curDate = new Date();
+        goods.setStartTime(curDate);
+        goods.setEndTime(new Date(curDate.getTime() + 3600 * 24 * 1000));
+        goods.setShareTitle("分享标题");
+        goods.setShareDescription("分享描述");
+        goods.setSharePictureUrl("/resources/images/dsds.jpg");
+        return goodsRepository.saveAndFlush(goods);
     }
 
 
@@ -391,6 +401,7 @@ public class BaseTest {
         oi.setAmount(1l);
         oi.setOrder(orders);
         oi.setIssue(issue);
+        oi.setStatus(CommonEnum.OrderStatus.payed);
         return ordersItemRepository.saveAndFlush(oi);
     }
 
