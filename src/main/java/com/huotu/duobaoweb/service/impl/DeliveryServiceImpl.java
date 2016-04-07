@@ -35,8 +35,8 @@ public class DeliveryServiceImpl implements DeliveryService {
             deliveryModel.setDetails(delivery.getDetails());
             deliveryModel.setReceiver(delivery.getReceiver());
             deliveryModel.setMobile(delivery.getMobile());
-            deliveryModel.setRecieveGoodsTime(delivery.getRecieveGoodsTime());
-            deliveryModel.setDeliveryTime(delivery.getDeliveryTime());
+//            deliveryModel.setRecieveGoodsTime(delivery.getRecieveGoodsTime());
+//            deliveryModel.setDeliveryTime(delivery.getDeliveryTime());
             deliveryModel.setConfirmAddressTime(delivery.getConfirmAddressTime());
             deliveryModel.setIssueId(delivery.getIssue().getId());
             deliveryModel.setUserId(delivery.getUser().getId());

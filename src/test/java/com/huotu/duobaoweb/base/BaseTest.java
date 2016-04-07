@@ -331,7 +331,7 @@ public class BaseTest {
         if (i % 3 == 0) {
             Delivery delivery = new Delivery();
             delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.GetPrize);
-            delivery.setDeliveryTime(new Date());
+//            delivery.setDeliveryTime(new Date());
             delivery.setUser(user);
             delivery.setIssue(issue);
             deliveryRepository.saveAndFlush(delivery);
