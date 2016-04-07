@@ -59,13 +59,14 @@ public class Delivery {
     private Date confirmAddressTime;
 
     /**
-     * 发货时间
+     * 对应商城的货品Id
      */
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date deliveryTime;
+    private Long productId;
+
     /**
-     * 确认收货时间
+     * 备注说明
      */
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date recieveGoodsTime;
+    @Column(length = 200)
+    private String remark;
+
 }

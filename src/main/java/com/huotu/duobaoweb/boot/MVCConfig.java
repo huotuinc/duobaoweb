@@ -104,6 +104,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         resolver.setExcludedViewNames(new String[]{
                 "content/**"
         });
+        resolver.setContentType("text/html;charset=utf-8");
         return resolver;
     }
 
