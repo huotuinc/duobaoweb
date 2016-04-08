@@ -99,7 +99,7 @@ public class BaseTest {
      * 初始化webdriver
      */
     @Before
-    public void init() {
+    public void init() throws UnsupportedEncodingException {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         driver = MockMvcHtmlUnitDriverBuilder.mockMvcSetup(mockMvc).build();
     }
@@ -117,26 +117,12 @@ public class BaseTest {
         return page;
     }
 
-
-    /**
-     * 生成一个绑定了手机而且拥有登录token的用户
-     *
-     * @param password
-     * @param userRepository
-     * @return
-     * @throws UnsupportedEncodingException
-     */
-    public User generateUserWithMobileWithToken(String password, UserRepository userRepository) throws UnsupportedEncodingException {
-        User user = generateUserWithMobileWithoutToken(password, userRepository);
-        user.setToken(DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes("UTF-8")));
-        user.setUserHead(staticResourceService.USER_HEAD_PATH + "defaultH.jpg");
-        user.setUserFromType(CommonEnum.UserFromType.register);
-        user.setMoney(new BigDecimal("1000000"));
-        return userRepository.saveAndFlush(user);
+    public User generateUser(@NotNull String password, UserRepository userRepository) throws UnsupportedEncodingException {
+        return generateUserWithOpenId(password, UUID.randomUUID().toString(), userRepository);
     }
 
 
-    public User generateUserWithoutMobile(@NotNull String password, UserRepository userRepository) throws UnsupportedEncodingException {
+    public User generateUserWithOpenId(@NotNull String password, String openId, UserRepository userRepository) throws UnsupportedEncodingException {
         String userName = generateInexistentMobile(userRepository);
         User user = new User();
         user.setEnabled(true);
@@ -144,26 +130,12 @@ public class BaseTest {
         user.setUsername(userName);
         user.setPassword(DigestUtils.md5DigestAsHex(password.getBytes("UTF-8")).toLowerCase());
         user.setUserHead(staticResourceService.USER_HEAD_PATH + "defaultH.jpg");
+        user.setWeixinOpenId(openId);
+        user.setWeixinBinded(true);
+        user.setUserFromType(CommonEnum.UserFromType.register);
+        user.setMoney(new BigDecimal("1000000"));
         return userRepository.saveAndFlush(user);
     }
-
-    /**
-     * 生成一个班定了手机 但是没有token的用户
-     *
-     * @param password
-     * @param userRepository
-     * @return
-     * @throws UnsupportedEncodingException
-     */
-    public User generateUserWithMobileWithoutToken(String password, UserRepository userRepository) throws UnsupportedEncodingException {
-        User user = generateUserWithoutMobile(password, userRepository);
-        user.setMobileBinded(true);
-        user.setRegTime(new Date(System.currentTimeMillis() + new Random().nextInt(360 * 30 * 24 * 60 * 60)));
-        user.setMobile(user.getUsername());
-        user.setUserHead(staticResourceService.USER_HEAD_PATH + "defaultH.jpg");
-        return userRepository.saveAndFlush(user);
-    }
-
 
     /**
      * 返回一个不存在的手机号码

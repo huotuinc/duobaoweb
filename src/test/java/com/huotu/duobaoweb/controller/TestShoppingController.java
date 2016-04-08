@@ -48,7 +48,7 @@ public class TestShoppingController extends BaseTest {
     public void prepareDevice() throws UnsupportedEncodingException {
         mockPassword = UUID.randomUUID().toString();
         //用户名的要求 大于3 小于20
-        User user = generateUserWithMobileWithToken(mockPassword, userRepository);
+        User user = generateUser(mockPassword, userRepository);
         mockUsername = user.getUsername();
         mUser=user;
     }

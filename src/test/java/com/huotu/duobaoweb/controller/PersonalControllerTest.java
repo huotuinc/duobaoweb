@@ -7,17 +7,14 @@ import com.huotu.duobaoweb.controller.page.GetMyRaiderNumbersPage;
 import com.huotu.duobaoweb.entity.Goods;
 import com.huotu.duobaoweb.entity.Issue;
 import com.huotu.duobaoweb.entity.User;
-import com.huotu.duobaoweb.entity.UserNumber;
 import com.huotu.duobaoweb.repository.*;
 
 import com.huotu.duobaoweb.service.CacheService;
 import com.huotu.duobaoweb.service.RaidersCoreService;
-import com.huotu.duobaoweb.service.StaticResourceService;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -93,7 +90,7 @@ public class PersonalControllerTest extends BaseTest {
         currentIssue = goods.getIssue();
 
         //创建用户
-        currentUser = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
+        currentUser = generateUser(UUID.randomUUID().toString(), userRepository);
         //创建订单
         generateOrdersWithPayed(currentUser, goods.getIssue(), goodsAmount, ordersRepository, ordersItemRepository, issueRepository);
 

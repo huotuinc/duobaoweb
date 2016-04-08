@@ -26,22 +26,6 @@ public interface CommonConfigService {
 
 
     /**
-     * 静态资源域名地址
-     *
-     * @return
-     */
-    String getResourcesUri();
-
-    /**
-     * 上传资源的服务地址
-     *
-     * @return
-     */
-    String getResourcesHome();
-
-
-
-    /**
      * 商城的商家Id
      * @return
      */
@@ -60,5 +44,11 @@ public interface CommonConfigService {
     String getHuoBanPlusManagerWebUrl();
 
 
+
+    /**
+     * 夺宝的key
+     * @return
+     */
+    String getDuobaoKey();
 
 }

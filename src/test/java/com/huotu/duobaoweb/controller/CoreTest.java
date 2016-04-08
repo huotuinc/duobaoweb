@@ -76,11 +76,11 @@ public class CoreTest extends BaseTest {
         currentIssue = goods.getIssue();
 
         //创建用户
-        currentUser = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
-        User userB = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
-        User userC = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
-        User userD = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
-        User userE = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
+        currentUser = generateUser(UUID.randomUUID().toString(), userRepository);
+        User userB = generateUser(UUID.randomUUID().toString(), userRepository);
+        User userC = generateUser(UUID.randomUUID().toString(), userRepository);
+        User userD = generateUser(UUID.randomUUID().toString(), userRepository);
+        User userE = generateUser(UUID.randomUUID().toString(), userRepository);
         //创建订单
         generateOrdersWithPayed(currentUser, goods.getIssue(), 1L, ordersRepository, ordersItemRepository, issueRepository);
         generateOrdersWithPayed(userB, goods.getIssue(), 1L, ordersRepository, ordersItemRepository, issueRepository);
