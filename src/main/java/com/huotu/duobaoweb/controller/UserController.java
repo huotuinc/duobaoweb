@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -30,6 +32,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HttpServletResponse response;
 
     @Autowired
     private IssueService issueService;
@@ -56,25 +61,26 @@ public class UserController {
         WebPublicModel webPublicModel=userService.getWebPublicModel(user,issue);
         PublicParameterHolder.putParameters(webPublicModel);
 
-        String openidUrl=userService.getWeixinAuthUrl(webPublicModel);
-        map.put("userId",user.getId());
-        map.put("openidUrl",openidUrl);
-        map.put("openId",openid);
-        String sign=userService.getSign(user);
-        map.put("sign",sign);
-        map.put("upCookie", 1);
 
-//        ShoppingCartsModel shoppingCartsModel=shoppingService.getShoppingCartsModel(webPublicModel.getCurrentUser().getId());
-//        if(shoppingCartsModel==null){
-//            map.put("notShow", "1");
-//            shoppingCartsModel=new ShoppingCartsModel();
-//            shoppingCartsModel.setBuyNum(0L);
-//            shoppingCartsModel.setBuyMoney(0.0);
-//        }
-        //todo 为了测试添加的数据 以后要删除
-        //map.put("shoppingCarts", shoppingCartsModel);
+        Cookie customerId=new Cookie("customerId", String.valueOf(webPublicModel.getCustomerId()));
+        customerId.setMaxAge(60*2); //单位是秒 todo 正式上线的时候时间设置长一点
+        customerId.setPath("/");
+        Cookie userId=new Cookie("userId",String.valueOf(webPublicModel.getCurrentUser().getId()));
+        userId.setMaxAge(60*2);
+        userId.setPath("/");
+        Cookie openId=new Cookie("openId",openid);
+        openId.setMaxAge(60*2);
+        openId.setPath("/");
+        Cookie sign=new Cookie("sign",webPublicModel.getSign());
+        sign.setMaxAge(60*2);
+        sign.setPath("/");
+        response.addCookie(customerId);
+        response.addCookie(userId);
+        response.addCookie(openId);
+        response.addCookie(sign);
+
         goodsService.jumpToGoodsActivityIndex(goodsId, map);
-        //return "/html/shopping/cartsList";
+
         return "/html/goods/index";
     }
 

@@ -71,8 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getSign(User user) {
-
-        String secretId=user.getWeixinOpenId()+user.getId();
+        String secretId=user.getMerchantId()+user.getWeixinOpenId()+commonConfigService.getDuobaoKey();
         String sign=MD5Util.MD5Encode(secretId,null);
         return sign;
     }

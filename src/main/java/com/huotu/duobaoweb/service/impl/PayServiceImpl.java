@@ -88,7 +88,7 @@ public class PayServiceImpl implements PayService {
         }
         //若果应支付金额与实际支付金额不符则返回false
         if (orders.getMoney().compareTo(new BigDecimal(String.valueOf(money))) != 0) {
-            log.info("实际支付的金额数量不合法!orders.getMoney():" + orders.getMoney().doubleValue() + ";actral money:" + money);
+            log.info("实际支付的金额数量不合法!orders.getMoney():" + orders.getMoney().doubleValue() + ";actural money:" + money);
             resultModel.setSuccess(false);
             return resultModel;
         }
@@ -104,22 +104,24 @@ public class PayServiceImpl implements PayService {
         }
         log.info("开始正常的购买!");
         //正常的购买
-        if (orders.getOrderType().equals(CommonEnum.OrderType.allpay)) {
-            log.info("开始全额购买!");
-            //如果是全额购买 todo
-            this.allPay(orders, ordersItem, outOrderNo, purchaseSource);
-            //todo 全额购买的提示信息
-            resultModel.setResultType(CommonEnum.PayResult.allPay);
-            resultModel.setSuccess(true);
-            return resultModel;
-        }
+//        if (orders.getOrderType().equals(CommonEnum.OrderType.allpay)) {
+//            log.info("开始全额购买!");
+//            //如果是全额购买
+//            this.allPay(orders, ordersItem, outOrderNo, purchaseSource);
+//            //全额购买的提示信息
+//            resultModel.setResultType(CommonEnum.PayResult.allPay);
+//            resultModel.setSuccess(true);
+//            return resultModel;
+//        }
         //如果不是全额购买
         ordersItem.getIssue().setBuyAmount(ordersItem.getIssue().getBuyAmount() + ordersItem.getAmount());
         //用户得到号码，罗国华接口 赋值到结果集
         Boolean result = raidersCoreService.generateUserNumber(orders.getUser(), ordersItem.getIssue(), ordersItem.getAmount(), orders);
 
         List<Long> userNumbers=userNumberService.getUserNumbersByUserAndIssue(orders.getUser(), ordersItem.getIssue());
-        //todo 需要得到所有的数字来传递给前端显示
+        //得到所有的数字来传递给前端显示
+        resultModel.setResultNumber(userNumbers);
+
         //如果用户购买的数量已经达到总需数，则进行新的一期生成
         if (ordersItem.getIssue().getToAmount() <= ordersItem.getIssue().getBuyAmount()) {
             log.info("开始生成新的期号!");
@@ -136,7 +138,6 @@ public class PayServiceImpl implements PayService {
         ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
 
 
-        //统一的用户流水记录
         //用户购买流水
         UserBuyFlow userBuyFlow = new UserBuyFlow();
         //如果用户流水中已经有了对应期号对应用户的流水，则更新
@@ -170,7 +171,7 @@ public class PayServiceImpl implements PayService {
     }
 
     /**
-     * 全额购买
+     * 全额购买 暂时废弃 by xhk
      *
      * @param orders
      * @param ordersItem

@@ -231,16 +231,13 @@ public class ShoppingController {
      */
     @RequestMapping(value="/pay",method = RequestMethod.POST)
     @ResponseBody
-    public ResultModel pay(Model model,PayModel payModel) throws IOException {
+    public ResultModel pay(PayModel payModel) throws IOException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         ResultModel resultModel=new ResultModel();
-        //todo 其他用户可以代付
         //生成订单
         Orders orders=shoppingService.createOrders(payModel);
         if(orders==null){
             //如果订单生成失败则跳转到购物车提示商品已经过期
-            model.addAttribute("overTime", "1");
-            model.addAttribute("notShow", "1");
             resultModel.setCode(404);
             resultModel.setMessage("购物车信息已过期，请重新选择商品！");
             return resultModel;
