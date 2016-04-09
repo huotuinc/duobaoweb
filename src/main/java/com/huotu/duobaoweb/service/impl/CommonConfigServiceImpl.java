@@ -52,5 +52,16 @@ public class CommonConfigServiceImpl implements CommonConfigService {
         return env.getProperty("duobao.key", "91d214037e584213b5a1352855c502af");
     }
 
+    @Override
+    public String getMaindomain() {
+        return env.getProperty("duobao.maindomain", " 51flashmall.com");
+    }
+
+    @Override
+    public String getPaySecret() {
+        //todo 待提供秘钥
+        return null;
+    }
+
 
 }

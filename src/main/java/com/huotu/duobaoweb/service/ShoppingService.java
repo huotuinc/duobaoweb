@@ -5,10 +5,12 @@ import com.huotu.duobaoweb.entity.Orders;
 import com.huotu.duobaoweb.entity.ShoppingCart;
 import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.model.PayModel;
+import com.huotu.duobaoweb.model.PaysResultShowModel;
 import com.huotu.duobaoweb.model.ShoppingCartsModel;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 /**
  * Created by xhk on 2016/3/25.
@@ -19,7 +21,7 @@ public interface ShoppingService {
      * @param issue
      * @param user
      */
-    void joinToShoppingCarts(Issue issue, User user,Long buyNum);
+    ShoppingCart joinToShoppingCarts(Issue issue, User user,Long buyNum);
 
     /**
      * 清空购物车
@@ -48,7 +50,13 @@ public interface ShoppingService {
      * 得到微信支付的url
      * @return
      */
-    String getWeixinPayUrl(Orders orders);
+    String getWeixinPayUrl(Orders orders) throws IOException;
+
+    /**
+     * 将微信支付的参数放入到map中供加密用
+     * @return
+     */
+    Map<String, String> putParamToPayMap();
 
     /**
      * 生成订单
@@ -70,4 +78,11 @@ public interface ShoppingService {
      * @return
      */
     PayModel allPayAndGetModel(String shoppingCartId);
+
+    /**
+     * 得到购买结果的显示
+     * @param orderNo
+     * @return
+     */
+    PaysResultShowModel getPayResultShowModel(String orderNo);
 }

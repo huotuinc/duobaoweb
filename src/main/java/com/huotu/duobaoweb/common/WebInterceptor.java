@@ -1,11 +1,13 @@
 package com.huotu.duobaoweb.common;
 
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.model.WebPublicModel;
 import com.huotu.duobaoweb.repository.UserRepository;
 import com.huotu.duobaoweb.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,23 +32,28 @@ public class WebInterceptor implements HandlerInterceptor {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Environment environment;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 
-        String weixinOpenId = "2";//todo 获取微信openid
-        WebPublicModel webPublicModel = initPublicParam(request, weixinOpenId);
-        if(request.getParameter("customerId")==null||webPublicModel.getIssueId()==null){
-            log.info("初始化认证失败啦！！！！！！");
-            //todo 跳转到错误页面
-        }
-        if(weixinOpenId==null||webPublicModel.getOpenId()==null||
-                webPublicModel.getSign()==null||!userService.checkOpenid(webPublicModel.getOpenId(),webPublicModel.getSign())||
-                !request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))){
-            //校验openid是否正确 需要进行认证
-            log.info("开始进行认证服务！！");
+        WebPublicModel webPublicModel = initPublicParam(request);
 
-            //todo 这是认证服务，暂时注释，不允许删除
+        if(!environment.acceptsProfiles("development")) {
+            //在非测试环境下进行正常请求
+            if (request.getParameter("customerId") == null || webPublicModel.getIssueId() == null) {
+                log.info("初始化认证失败啦！！！！！！");
+                //todo 跳转到错误页面
+            }
+            if (webPublicModel.getOpenId() == null ||
+                    webPublicModel.getSign() == null || !userService.checkOpenid(webPublicModel.getOpenId(), webPublicModel.getSign()) ||
+                    !request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))) {
+                //校验openid是否正确 需要进行认证
+                log.info("开始进行认证服务！！");
+
+                //todo 这是认证服务，暂时注释，不允许删除
 //            if(!request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))){
 //                //如果商户号与cookie中存的不一样则以传过来的商户为准进行请求
 //                webPublicModel.setCustomerId(Long.parseLong(request.getParameter("customerId")));
@@ -54,14 +62,27 @@ public class WebInterceptor implements HandlerInterceptor {
 //            String openidUrl=userService.getWeixinAuthUrl(webPublicModel);
 //            response.sendRedirect(openidUrl);
 //            return false;
-            //进行微信认证
+                //进行微信认证
+            }
+        }else{
+            //在测试环境下，获取所有用户中的第一个用户，如果数据库中没有用户则请求失败
+            List<User> userList=userRepository.findAll();
+            if(userList==null||userList.size()<1){
+                return false;
+            }
+            //默认取第一个用户
+            User user=userList.get(0);
+            webPublicModel.setOpenId(user.getWeixinOpenId());
+            webPublicModel.setSign(userService.getSign(user));
+            webPublicModel.setCurrentUser(user);
+            webPublicModel.setCustomerId(user.getMerchantId());
         }
         PublicParameterHolder.putParameters(webPublicModel);
         return true;
     }
 
 
-    private WebPublicModel initPublicParam(HttpServletRequest request, String weixinOpenId) {
+    private WebPublicModel initPublicParam(HttpServletRequest request) {
 
         WebPublicModel webPublicModel = new WebPublicModel();
 //        if(weixinOpenId!=null) {

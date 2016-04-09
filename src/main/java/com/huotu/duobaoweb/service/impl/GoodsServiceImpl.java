@@ -1,17 +1,16 @@
 package com.huotu.duobaoweb.service.impl;
 
 import com.huotu.duobaoweb.common.PublicParameterHolder;
-import com.huotu.duobaoweb.entity.*;
+import com.huotu.duobaoweb.entity.CountResult;
 import com.huotu.duobaoweb.entity.Goods;
+import com.huotu.duobaoweb.entity.Issue;
 import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.model.*;
 import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.repository.IssueRepository;
 import com.huotu.duobaoweb.service.*;
-import com.huotu.huobanplus.common.entity.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -311,7 +310,7 @@ public class GoodsServiceImpl implements GoodsService {
 
                 //3.2获取用户参与次数
                 RaiderNumbersModel myRaiderNumbers = userNumberService.getMyRaiderNumbers(user.getId(), issueId);
-                if(myRaiderNumbers != null){
+                if(myRaiderNumbers.getAmount() != null){
                     int amount = myRaiderNumbers.getAmount().intValue();
                     goodsDetailModel.setJoinCount(amount);
                     if(amount == 1){
