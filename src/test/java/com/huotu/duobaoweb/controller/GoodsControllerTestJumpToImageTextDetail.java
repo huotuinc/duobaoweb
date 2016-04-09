@@ -62,7 +62,7 @@ public class GoodsControllerTestJumpToImageTextDetail extends BaseTest {
         mockGoods.setSharePictureUrl("http://XXXXX.jpg"); //分享图片地址
         mockGoods.setToMallGoodsId(123456L);
         mockGoods.setAttendAmount(0L); //购买次数
-        mockGoods.setViewAmount(2L); //浏览器
+        mockGoods.setViewAmount(3L); //浏览器
         mockGoods.setMerchantId(3347L); //设置商城ID
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
     }

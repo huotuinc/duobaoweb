@@ -1,12 +1,11 @@
 package com.huotu.duobaoweb.controller.page;
 
-import com.huotu.duobaoweb.entity.UserBuyFlow;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.List;
 
@@ -19,9 +18,20 @@ public class ImageTextDetailPage {
 
     //模型中添加2张图片，检查是否有两张图
     public void to(WebDriver driver, Long goodsId) {
-        driver.get("http://localhost:8080/goods/imageTextDetail?id=" + goodsId);
-        String title = driver.getTitle();
-        List<WebElement> elements = driver.findElements(By.tagName("img"));
+
+        System.setProperty ( "webdriver.chrome.driver" ,
+                "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe" );
+        WebDriver webDriver = new ChromeDriver();
+        webDriver.get("http://localhost:8080/goods/imageTextDetail?id=" + goodsId);
+        webDriver.manage().deleteAllCookies();
+        Cookie cookie=new Cookie("qbdb3447","1","/",null);
+        webDriver.manage().addCookie(cookie);
+        Cookie cookie1=new Cookie("qbdbopenid","77777777","/",null);
+        webDriver.manage().addCookie(cookie);
+        Cookie cookie2=new Cookie("qbdbosign","99999999","/",null);
+        webDriver.manage().addCookie(cookie1);
+        String title = webDriver.getTitle();
+        List<WebElement> elements = webDriver.findElements(By.tagName("img"));
         Assert.assertEquals("图文详情", title);
         Assert.assertEquals(2, elements.size());
     }

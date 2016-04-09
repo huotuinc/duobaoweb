@@ -14,6 +14,7 @@ import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.controller.page.JumpToGoodsActivityIndexPage;
 import com.huotu.duobaoweb.entity.Goods;
 import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.repository.IssueRepository;
 import com.huotu.duobaoweb.repository.UserRepository;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -53,6 +55,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
 
     private Issue mockIssue;
     private Goods mockGoods;
+    private User mockUserA;
 
     @Before
     public void setUp() throws ParseException, IOException, java.text.ParseException {
@@ -90,10 +93,13 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-28 05:00:00"));//开奖日期
         mockIssue = mockIssueRep.saveAndFlush(mockIssue);
 
-
+        //模拟一个用户
+        mockUserA = generateUserWithOpenId("123456","123888888",mockUserRep);
+        mockUserA.setMerchantId(3447L);
     }
 
     //测试商品ID正确，活动处于进行中，查看各元素与modle各值是否正确
+    @Rollback
     @Test
     public void TestUserNotLogin() throws Exception {
         //原价 单价*总需
@@ -106,6 +112,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     }
 
     // GoodID不传，错误页面未定义
+    @Rollback
     @Test
     public void TestNoGoodsID() throws Exception {
         JumpToGoodsActivityIndexPage page = new JumpToGoodsActivityIndexPage();

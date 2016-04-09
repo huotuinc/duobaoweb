@@ -12,10 +12,8 @@ package com.huotu.duobaoweb.controller.page;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created by daisy.zhang on 2016/4/7.
