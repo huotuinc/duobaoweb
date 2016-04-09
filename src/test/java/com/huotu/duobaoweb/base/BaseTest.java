@@ -95,12 +95,15 @@ public class BaseTest {
     @Autowired
     WebApplicationContext context;
 
+//    @Autowired
+  protected   MockMvc mockMvc;
+
     /**
      * 初始化webdriver
      */
     @Before
     public void init() throws UnsupportedEncodingException {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         driver = MockMvcHtmlUnitDriverBuilder.mockMvcSetup(mockMvc).build();
     }
 

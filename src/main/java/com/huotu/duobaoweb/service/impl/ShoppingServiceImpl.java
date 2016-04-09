@@ -4,15 +4,15 @@ import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.common.WeixinPayUrl;
 import com.huotu.duobaoweb.entity.*;
 import com.huotu.duobaoweb.model.PayModel;
+import com.huotu.duobaoweb.model.PaysResultShowModel;
 import com.huotu.duobaoweb.model.ShoppingCartsModel;
 import com.huotu.duobaoweb.repository.OrdersItemRepository;
 import com.huotu.duobaoweb.repository.OrdersRepository;
 import com.huotu.duobaoweb.repository.ShoppingCartRepository;
 import com.huotu.duobaoweb.repository.UserRepository;
-import com.huotu.duobaoweb.service.CommonConfigService;
-import com.huotu.duobaoweb.service.ShoppingService;
-import com.huotu.duobaoweb.service.StaticResourceService;
+import com.huotu.duobaoweb.service.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by xhk on 2016/3/25.
@@ -32,7 +34,16 @@ public class ShoppingServiceImpl implements ShoppingService {
     private ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
+    private MerchantRestRepository merchantRestRepository;
+
+    @Autowired
+    private RaidersCoreService raidersCoreService;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SecurityService securityService;
 
     @Autowired
     private StaticResourceService staticResourceService;
@@ -50,7 +61,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     private GoodsRestRepository goodsRestRepository;
 
     @Override
-    public void joinToShoppingCarts(Issue issue, User user, Long buyNum) {
+    public ShoppingCart joinToShoppingCarts(Issue issue, User user, Long buyNum) {
 
         this.clearShoppingCarts(user);
         ShoppingCart shoppingCart = new ShoppingCart();
@@ -64,6 +75,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         shoppingCart.setIssue(issue);
         shoppingCart.setUser(user);
         shoppingCart = shoppingCartRepository.saveAndFlush(shoppingCart);
+        return shoppingCart;
     }
 
     public void clearShoppingCarts(User user) {
@@ -131,23 +143,40 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public String getWeixinPayUrl(Orders orders) {
-        String backUri = commonConfigService.getWebUrl() + "web/payCallbackWeixin";
-        System.out.println(backUri);
-        //授权后要跳转的链接所需的参数一般有会员号，金额，订单号之类，
-        //最好自己带上一个加密字符串将金额加上一个自定义的key用MD5签名或者自己写的签名,
-        //比如 Sign = %3D%2F%CS%
-        backUri = backUri + "?orderNo=" + orders.getId();
-        //URLEncoder.encode 后可以在backUri 的url里面获取传递的所有参数
-        backUri = URLEncoder.encode(backUri);
+    public String getWeixinPayUrl(Orders orders) throws IOException {
+        //http://{subdomain}.{maindomain}/weixin/pay/payment_delegate.aspx
+        Date date=new Date();
+        String notifyurl = commonConfigService.getWebUrl() + "pay/payCallbackWeixin";
+        String returnurl=commonConfigService.getWebUrl()+"shopping/showResult";
+        notifyurl = notifyurl + "?orderNo=" + orders.getId();
+        returnurl= returnurl + "?orderNo=" + orders.getId();
+        notifyurl = URLEncoder.encode(notifyurl);
+        returnurl = URLEncoder.encode(returnurl);
+        WeixinPayUrl.subdomain=merchantRestRepository.getOne(String.valueOf(WeixinPayUrl.customerid)).getSubDomain();
+        WeixinPayUrl.notifyurl=notifyurl;
+        WeixinPayUrl.returnurl=returnurl;
+        WeixinPayUrl.outradeno=orders.getId();
+        WeixinPayUrl.timestamp=date.getTime();
+        WeixinPayUrl.totalfee=orders.getMoney().doubleValue();
+        WeixinPayUrl.title="夺宝活动";
+        Map<String,String> paramMap=this.putParamToPayMap();
+        WeixinPayUrl.sign=securityService.getPaySign(paramMap);
         String url = WeixinPayUrl.getWeixinPayUrl();
-        //scope 参数视各自需求而定，这里用scope=snsapi_base 不弹出授权页面直接授权目的只获取统一支付接口的openid
-//        String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
-//                "appid=" + appid +
-//                "&redirect_uri=" +
-//                backUri +
-//                "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
         return url;
+    }
+
+    @Override
+    public Map<String, String> putParamToPayMap() {
+        Map<String,String> result=new HashMap<String,String>();
+        result.put("customerid",String.valueOf(WeixinPayUrl.customerid));
+        result.put("returnurl",WeixinPayUrl.returnurl);
+        result.put("outradeno",WeixinPayUrl.outradeno);
+        result.put("openid",WeixinPayUrl.openid);
+        result.put("title",WeixinPayUrl.title);
+        result.put("timestamp",String.valueOf(WeixinPayUrl.timestamp));
+        result.put("totalfee",String.valueOf(WeixinPayUrl.totalfee));
+        result.put("notifyurl",WeixinPayUrl.notifyurl);
+        return result;
     }
 
     @Override
@@ -163,6 +192,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             } else {
                 //正常生成订单
                 Orders orders = new Orders();
+                orders.setId(raidersCoreService.createOrderNo(new Date(), shoppingCart.getUser().getId()));
                 orders.setUser(shoppingCart.getUser());
                 orders.setTime(new Date());
                 orders.setMoney(shoppingCart.getIssue().getPricePercentAmount().multiply(new BigDecimal(String.valueOf(shoppingCart.getBuyAmount()))));
@@ -196,6 +226,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
             //如果是全额购买
             Orders orders = new Orders();
+            orders.setId(raidersCoreService.createOrderNo(new Date(),shoppingCart.getUser().getId()));
             orders.setStatus(CommonEnum.OrderStatus.paying);
             orders.setTime(new Date());
             orders.setUser(shoppingCart.getUser());
@@ -258,6 +289,17 @@ public class ShoppingServiceImpl implements ShoppingService {
         payModel.setDetail(shoppingCart.getIssue().getGoods().getTitle());
         payModel.setPayMoney(shoppingCart.getIssue().getPricePercentAmount().multiply(new BigDecimal(String.valueOf(shoppingCart.getIssue().getBuyAmount()))).doubleValue());
         return payModel;
+    }
+
+    @Override
+    public PaysResultShowModel getPayResultShowModel(String orderNo) {
+        OrdersItem ordersItem=ordersItemRepository.findByOrderId(orderNo);
+        PaysResultShowModel paysResultShowModel=new PaysResultShowModel();
+        paysResultShowModel.setIssueId(ordersItem.getIssue().getId());
+        paysResultShowModel.setDetail(ordersItem.getIssue().getGoods().getTitle());
+        paysResultShowModel.setNeedNumber(ordersItem.getIssue().getToAmount());
+        paysResultShowModel.setTitle("您成功参与了1件商品的夺宝，信息如下：");
+        return paysResultShowModel;
     }
 
 

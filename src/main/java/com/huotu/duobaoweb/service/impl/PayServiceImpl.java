@@ -118,9 +118,9 @@ public class PayServiceImpl implements PayService {
         //用户得到号码，罗国华接口 赋值到结果集
         Boolean result = raidersCoreService.generateUserNumber(orders.getUser(), ordersItem.getIssue(), ordersItem.getAmount(), orders);
 
-        List<Long> userNumbers=userNumberService.getUserNumbersByUserAndIssue(orders.getUser(), ordersItem.getIssue());
-        //得到所有的数字来传递给前端显示
-        resultModel.setResultNumber(userNumbers);
+        //List<Long> userNumbers=userNumberService.getUserNumbersByUserAndIssue(orders.getUser(), ordersItem.getIssue());
+        //得到所有的数字来传递给前端显示 暂时不需要了
+        //resultModel.setResultNumber(userNumbers);
 
         //如果用户购买的数量已经达到总需数，则进行新的一期生成
         if (ordersItem.getIssue().getToAmount() <= ordersItem.getIssue().getBuyAmount()) {

@@ -7,40 +7,75 @@ package com.huotu.duobaoweb.common;
 public class WeixinPayUrl {
 
     /**
-     * 请求支付的商家域名
+     * 商家二级域名
      */
-    public static String customerdomain="cosytest.51flashmall.com";
+    public static String subdomain = "cosytest";
+
+    /**
+     * 顶级域名
+     */
+    public static String maindomain = "51flashmall.com";
 
     /**
      * 商户编号
      */
-    public static Long customerid=3447L;
+    public static Long customerid = 3447L;
 
     /**
      * 完成授权后要回来的网址，需urencode
      */
-    public static String encode_url= "";
+    public static String returnurl = "";
 
     /**
-     * 授权方式
+     * 订单号
      */
-    public static int scope=0;
+    public static String outradeno = "";
 
     /**
-     * 返回
+     * 微信用户id
      */
-    public static int retuinfo=0;
+    public static String openid = "";
+
+    /**
+     * 支付结果通知地址
+     */
+    public static String notifyurl = "";
+
+    /**
+     * 标题
+     */
+    public static String title = "";
+
+    /**
+     * 标题
+     */
+    public static Long timestamp = 0L;
+
+    /**
+     * 签名
+     */
+    public static String sign = "";
+
+    /**
+     * 支付费用
+     */
+    public static Double totalfee = 0.0;
+
 
     /**
      * 伙伴商城微信授权接口地址
      */
-    public static String getWeixinPayUrl()
-    {
-       String  weixinAuthUrl = "http://" + customerdomain
-                + "/OAuth2/WeixinAuthorize.aspx?customerid=" + customerid
-                + "&redirecturl=" + encode_url
-                + "&scope=" + scope
-                + "&retuinfo=" + retuinfo;
+    public static String getWeixinPayUrl() {
+        String weixinAuthUrl = "http://" + subdomain + "." + maindomain
+                + "/weixin/pay/payment_delegate.aspx?customerid=" + customerid
+                + "&returnurl=" + returnurl
+                + "&outradeno=" + outradeno
+                + "&openid=" + openid
+                + "&title=" + title
+                + "&timestamp=" + timestamp
+                + "&sign=" + sign
+                + "&totalfee=" + totalfee
+                + "&notifyurl=" + notifyurl;
         return weixinAuthUrl;
     }
 

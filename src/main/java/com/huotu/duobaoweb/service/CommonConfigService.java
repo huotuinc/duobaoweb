@@ -51,4 +51,16 @@ public interface CommonConfigService {
      */
     String getDuobaoKey();
 
+    /**
+     * 得到商城的顶级域名
+     * @return
+     */
+    String getMaindomain();
+
+    /**
+     * 支付秘钥
+     * @return
+     */
+    String getPaySecret();
+
 }
