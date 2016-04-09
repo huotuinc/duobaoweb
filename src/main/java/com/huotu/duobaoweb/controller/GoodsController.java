@@ -1,13 +1,20 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.common.base.CookieHelper;
 import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.service.GoodsService;
 import com.huotu.duobaoweb.service.UserService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +24,8 @@ import java.util.Map;
 @RequestMapping("/goods")
 @Controller
 public class GoodsController {
+
+    private static Log log = LogFactory.getLog(GoodsController.class);
 
     @Autowired
     private UserService userService;
@@ -114,5 +123,18 @@ public class GoodsController {
         goodsService.getCountResultByIssueId(issueId, map);
         return "/html/goods/countResult";
     }
+
+    @RequestMapping("/default")
+    public String getDefault(HttpServletResponse response, HttpServletRequest request) throws Exception {
+        Object theValue = request.getSession(true).getAttribute("totest");
+        log.info("curent The Value "+theValue);
+        if (theValue==null){
+            request.getSession(true).setAttribute("totest",System.currentTimeMillis());
+            log.info("update curent The Value ");
+        }
+        CookieHelper.set(response, "test", "1", request.getLocalName(), request.getContextPath(), 1000 * 60);
+        return "/html/default";
+    }
+
 
 }
