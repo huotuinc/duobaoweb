@@ -52,7 +52,7 @@
     <div th:if="*{joined}" class="syabk" style="display:block">
         <button class="buttonan tit_rem_big_s" type="button">
             <a href="goods/detail.html"
-               th:href="@{/goods/detailByIssueId(issueId=*{issueId}, userId=${userId}, customerId=${customerId}))}">继续购买</a>
+               th:href="@{/goods/detailByIssueId(issueId=*{issueId}, userId=${userId}, customerId=${customerId})}">继续购买</a>
         </button>
     </div>
     <div th:if="*{!joined}" class="syabk" style="display:block">
@@ -74,10 +74,10 @@
     <div th:if="*{logined}" class="syabk" style="display:block">
         <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
             <a href="personal/list.html"
-               th:href="@{/personal/getMyInvolvedRecord(userId=*{userId},issueId=*{issueId},customerId=*{customerId},type=0)}">查看我的参与</a>
+               th:href="@{/personal/getMyInvolvedRecord(issueId=*{issueId},customerId=${customerId},type=0)}">查看我的参与</a>
         </button>
     </div>
-
+<!--我删了一个userId by Xhk-->
     <div class="xq">
         <div class="mid tit_rem_big ">
             <span>活动提示</span>

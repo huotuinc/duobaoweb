@@ -64,9 +64,10 @@ public class PayCallBackController {
                     paysResultShowModel.setNumbers(payResult.getResultNumber());
                     model.addAttribute("paysResultShowModel", paysResultShowModel);
                 }
-            }else if(orderNo != null&&payResult.getResultType().equals(CommonEnum.PayResult.allPay)){
-                //全额支付成功 todo 则直接跳转到填收货地址界面
             }
+//            else if(orderNo != null&&payResult.getResultType().equals(CommonEnum.PayResult.allPay)){
+//                //全额支付成功 则直接跳转到填收货地址界面
+//            }
 
         } else {
             //支付失败

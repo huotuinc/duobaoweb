@@ -184,6 +184,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 return orders;
             }
         } else if (payModel.getType() == 2) {
+            //全额购买暂时废弃 by Xhk
             //商品库存如果不够则不能全额购买
             com.huotu.huobanplus.common.entity.Goods goods=goodsRestRepository.getOneByPK(shoppingCart.getIssue().getGoods().getToMallGoodsId());
             if(goods.getStock()<3){

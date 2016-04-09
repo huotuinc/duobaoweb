@@ -1,8 +1,5 @@
 package com.huotu.duobaoweb.controller;
 
-import com.huotu.duobaoweb.common.PublicParameterHolder;
-import com.huotu.duobaoweb.entity.Issue;
-import com.huotu.duobaoweb.model.WebPublicModel;
 import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.service.GoodsService;
 import com.huotu.duobaoweb.service.UserService;
@@ -40,11 +37,6 @@ public class GoodsController {
      */
     @RequestMapping("/index")
     public String jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception {
-        WebPublicModel common = PublicParameterHolder.getParameters();
-        Issue issue = goodsRepository.findOne(goodsId).getIssue();
-        common.setIssueId(issue.getId());
-        String openidUrl = userService.getWeixinAuthUrl(common);
-        map.put("openidUrl", openidUrl);
         goodsService.jumpToGoodsActivityIndex(goodsId, map);
         return "/html/goods/index";
     }

@@ -68,8 +68,11 @@ public class UserNumberServiceImpl implements UserNumberService {
     @Override
     public List<Long> getUserNumbersByUserAndIssue(User user, Issue issue) {
         List<UserNumber> userNumbers= userNumberRepository.findByIssueAndUser(issue,user);
-
-        return null;
+        List<Long> numbers=new ArrayList<Long>();
+        userNumbers.stream().forEach(userNumber->{
+            numbers.add(userNumber.getNumber());
+        });
+        return numbers;
     }
 
 
