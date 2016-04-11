@@ -41,7 +41,7 @@ public class WebInterceptor implements HandlerInterceptor {
 
         WebPublicModel webPublicModel = initPublicParam(request);
 
-        if(!environment.acceptsProfiles("development")) {
+        if(environment.acceptsProfiles("development")) {
             //在非测试环境下进行正常请求
             if (request.getParameter("customerId") == null || webPublicModel.getIssueId() == null) {
                 log.info("初始化认证失败啦！！！！！！");
@@ -54,14 +54,14 @@ public class WebInterceptor implements HandlerInterceptor {
                 log.info("开始进行认证服务！！");
 
                 //todo 这是认证服务，暂时注释，不允许删除
-//            if(!request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))){
-//                //如果商户号与cookie中存的不一样则以传过来的商户为准进行请求
-//                webPublicModel.setCustomerId(Long.parseLong(request.getParameter("customerId")));
-//            }
-//            PublicParameterHolder.putParameters(webPublicModel);
-//            String openidUrl=userService.getWeixinAuthUrl(webPublicModel);
-//            response.sendRedirect(openidUrl);
-//            return false;
+            if(!request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))){
+                //如果商户号与cookie中存的不一样则以传过来的商户为准进行请求
+                webPublicModel.setCustomerId(Long.parseLong(request.getParameter("customerId")));
+            }
+            PublicParameterHolder.putParameters(webPublicModel);
+            String openidUrl=userService.getWeixinAuthUrl(webPublicModel);
+            response.sendRedirect(openidUrl);
+            return false;
                 //进行微信认证
             }
         }else{

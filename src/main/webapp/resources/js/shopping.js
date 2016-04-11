@@ -4,46 +4,30 @@
 
 //todo 加入必须的信息
 var turnToBalance = function (cartId, buyNum, userId, issueId, customerId) {
-    var cooOID = getCookie("qbdbopenid");
-    var cooSIGN = getCookie("qbdbosign");
 
     var url = "balance?cartId=" + cartId +
         "&buyNum=" + buyNum +
         "&userId=" + userId +
         "&issueId=" + issueId +
-        "&customerId=" + customerId +
-        "&openId=" + cooOID +
-        "&sign=" + cooSIGN;
+        "&customerId=" + customerId;
     window.location.href = url;
 
 
 }
 //todo 加入必须的信息
 var payToService = function (payMoney, detail, cartsId, payType, type, userId, issueId, customerId) {
-    alert("in payservice!");
-    var cooOID = getCookie("qbdbopenid");
-    var cooSIGN = getCookie("qbdbosign");
-
-    var payModel = toPayModel(payMoney, detail, cartsId, payType, type);
-    //var url = "pay?userId=" + userId +
-    //    "&issueId=" + issueId +
-    //    "&customerId=" + customerId +
-    //    "&openId=" + cooOID +
-    //    "&sign=" + cooSIGN
-    //"&payModel=" + payModel;
-    //window.location.href = url;
 
     alert(payMoney+detail+cartsId+payType+type);
     $.jBox.tip("正在支付...", "loading");
     $.ajax({
         url: "../shopping/pay",
         data: {
-            issueId: issueId,
-            payModel: payModel,
-            userId: userId,
-            customerId: customerId,
-            openId: cooOID,
-            sign: cooSIGN
+            payMoney:payMoney,
+            detail:detail,
+            cartsId:cartsId,
+            payType:payType,
+            type:type,
+            customerId:customerId
         },
         type: "post",
         dataType: "json",
@@ -72,9 +56,6 @@ function toPayModel(payMoney1, detail1, cartsId1, payType1, type1) {
 }
 
 var shoppingBuy = function (buyNum, issueId, customerId, userId) {
-    var cooOID = getCookie("qbdbopenid");
-    var cooSIGN = getCookie("qbdbosign");
-
     $.jBox.tip("正在结算...", "loading");
     $.ajax({
         url: "../shopping/joinToCarts",
@@ -82,9 +63,7 @@ var shoppingBuy = function (buyNum, issueId, customerId, userId) {
             issueId: issueId,
             buyNum: buyNum,
             userId: userId,
-            customerId: customerId,
-            openId: cooOID,
-            sign: cooSIGN
+            customerId: customerId
         },
         type: "post",
         dataType: "json",
@@ -107,8 +86,6 @@ var shoppingBuy = function (buyNum, issueId, customerId, userId) {
 }
 
 var shoppingAllBuy = function (issueId, customerId, userId) {
-    var cooOID = getCookie("qbdbopenid");
-    var cooSIGN = getCookie("qbdbosign");
 
     $.jBox.tip("正在结算...", "loading");
     $.ajax({
@@ -116,9 +93,7 @@ var shoppingAllBuy = function (issueId, customerId, userId) {
         data: {
             issueId: issueId,
             userId: userId,
-            customerId: customerId,
-            openId: cooOID,
-            sign: cooSIGN
+            customerId: customerId
         },
         type: "post",
         dataType: "json",

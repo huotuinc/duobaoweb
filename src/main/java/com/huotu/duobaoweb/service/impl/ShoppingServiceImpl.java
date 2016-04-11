@@ -182,7 +182,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
     public Orders createOrders(PayModel payModel) throws IOException {
         ShoppingCart shoppingCart = shoppingCartRepository.findOne(payModel.getCartsId());
-        if (payModel.getType() == 1) {
+        if (payModel.getType()!=null&&payModel.getType() == 1) {
             //如果是正常购买
             if (shoppingCart == null ||
                     shoppingCart.getIssue().getStatus() != CommonEnum.IssueStatus.going ||
@@ -213,7 +213,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                 return orders;
             }
-        } else if (payModel.getType() == 2) {
+        } else if (payModel.getType()!=null&&payModel.getType() == 2) {
             //全额购买暂时废弃 by Xhk
             //商品库存如果不够则不能全额购买
             com.huotu.huobanplus.common.entity.Goods goods=goodsRestRepository.getOneByPK(shoppingCart.getIssue().getGoods().getToMallGoodsId());
