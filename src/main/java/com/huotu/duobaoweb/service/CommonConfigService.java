@@ -57,11 +57,6 @@ public interface CommonConfigService {
      */
     String getMaindomain();
 
-    /**
-     * 支付秘钥
-     * @return
-     */
-    String getPaySecret();
 
 
     /**

@@ -86,7 +86,7 @@ public class WebInterceptor implements HandlerInterceptor {
 //            webPublicModel.setCurrentUser(userRepository.findByWeixinOpenId(weixinOpenId));
 //        }
         //todo lhx da
-        webPublicModel.setCurrentUser(userRepository.findOne(1L));
+//        webPublicModel.setCurrentUser(userRepository.findOne(1L));
         webPublicModel.setIp(getIp(request));
 
         if(request.getParameter("issueId")!=null) {

@@ -3,6 +3,7 @@ package com.huotu.duobaoweb.controller;
 import com.huotu.duobaoweb.common.PublicParameterHolder;
 import com.huotu.duobaoweb.entity.Issue;
 import com.huotu.duobaoweb.entity.User;
+import com.huotu.duobaoweb.model.PaysResultShowModel;
 import com.huotu.duobaoweb.model.WebPublicModel;
 import com.huotu.duobaoweb.service.GoodsService;
 import com.huotu.duobaoweb.service.IssueService;
@@ -10,11 +11,13 @@ import com.huotu.duobaoweb.service.ShoppingService;
 import com.huotu.duobaoweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -82,6 +85,18 @@ public class UserController {
         goodsService.jumpToGoodsActivityIndex(goodsId, map);
 
         return "/html/goods/index";
+    }
+
+    /**
+     * 支付结果显示
+     *
+     * @return
+     */
+    @RequestMapping(value = "/showResult", method = RequestMethod.GET)
+    public String showResult(String orderNo,Model model) throws UnsupportedEncodingException {
+        PaysResultShowModel paysResultShowModel=shoppingService.getPayResultShowModel(orderNo);
+        model.addAttribute("paysResultShowModel", paysResultShowModel);
+        return "/html/shopping/payResult";
     }
 
 }

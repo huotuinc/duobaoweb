@@ -188,8 +188,8 @@ public class ShoppingController {
     public String balance(Model model, Long cartId, Integer buyNum) throws UnsupportedEncodingException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         PayModel payModel = shoppingService.balance(cartId, buyNum);
-        payModel.setType(1);
         if (payModel != null) {
+            payModel.setType(1);
             model.addAttribute("payModel", payModel);
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
@@ -230,15 +230,5 @@ public class ShoppingController {
         return resultModel;
     }
 
-    /**
-     * 结算购物车
-     *
-     * @return
-     */
-    @RequestMapping(value = "/showResult", method = RequestMethod.GET)
-    public String showResult(String orderNo,Model model) throws UnsupportedEncodingException {
-        PaysResultShowModel paysResultShowModel=shoppingService.getPayResultShowModel(orderNo);
-        model.addAttribute("paysResultShowModel", paysResultShowModel);
-        return "/html/shopping/payResult";
-    }
+
 }

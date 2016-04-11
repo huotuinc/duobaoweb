@@ -11,12 +11,10 @@ var turnToBalance = function (cartId, buyNum, issueId, customerId) {
         "&customerId=" + customerId;
     window.location.href = url;
 
-
 }
 //todo 加入必须的信息
 var payToService = function (payMoney, detail, cartsId, payType, type, issueId, customerId) {
 
-    alert(payMoney+detail+cartsId+payType+type);
     $.jBox.tip("正在支付...", "loading");
     $.ajax({
         url: "../shopping/pay",
@@ -32,8 +30,7 @@ var payToService = function (payMoney, detail, cartsId, payType, type, issueId, 
         dataType: "json",
         success: function (data) {
             if (data.code == 200) {
-                alert("success"+ data.url);
-                $.jBox.tip(data.message);
+                $.jBox.tip(data.message, "loading");
                 window.location = data.url;
             } else {
                 $.jBox.tip(data.message);
