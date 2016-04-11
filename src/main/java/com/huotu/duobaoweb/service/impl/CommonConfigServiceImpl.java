@@ -29,7 +29,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getWebUrl() {
-        return env.getProperty("duobao.web.url", "http://192.168.1.41:8080/duobaoweb");
+        return env.getProperty("duobao.web.url", "http://192.168.3.30:8888/duobaoweb");
     }
 
 
@@ -45,7 +45,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://localhost:8080/huobanplusmanager/");}
+    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://localhost:8888/duobaoweb");}
 
     @Override
     public String getDuobaoKey() {
@@ -61,6 +61,11 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     public String getPaySecret() {
         //todo 待提供秘钥
         return null;
+    }
+
+    @Override
+    public String getMallKey() {
+        return env.getProperty("mall.key", "1165a8d240b29af3f418b8d10599d0dc");
     }
 
 

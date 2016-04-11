@@ -1,0 +1,197 @@
+@charset "utf-8";
+/* CSS Document */
+body{ background-color:#fff}
+.sbs{border: 1px solid #ddd;
+    margin: 10px 0px;
+    padding: 4px 0px 0px 8px;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 0px;
+    height: 18px;}
+	.detail_info_wrap .detail_item.padding_none{ padding:0px;}
+	.buy_area .fn_wrap{ padding-bottom:6px}
+	.lsls{font-size: 12px;
+    text-align: left;
+    background-color: #2F2F2F;
+    padding: 0px 8px 0px 1px;
+    color: #fff;
+    height: 15px;
+    line-height: 15px;
+    top: 1px;
+    position: absolute;
+    border-radius: 0px 4px 4px 0px;}
+	.yuanjiaoo{margin: 6px;
+    line-height: 34px;
+    border-radius: 4px;}
+	.yuanjiaoo:nth-child(odd){margin-left:0px}
+ 
+.item-action {
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    position: fixed;
+    height: 48px;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    line-height: 48px;
+    z-index: 999;
+    background-color: #fff; font-size:12px;
+}
+.item-action .toggle-collect_on {
+	width: 48px;
+	line-height: 19px;
+	border-right: 1px #d9d9d9 solid;
+	 
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box
+}
+.item-action .toggle-collect {
+	width: 48px;
+	line-height: 19px;
+	border-right: 1px #d9d9d9 solid;
+	 
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box
+}
+.item-action .active-contact {
+    width: 48px;
+    line-height: 19px;
+    border-right: 1px #d9d9d9 solid;
+    
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.item-action .active-contact .icon {
+    background-image: url(../images/kkkkffff.png);
+    background-size: 18px 18px;
+    width: 18px;
+    height: 18px;
+}
+.item-action .toggle-collect .icon {
+    background-image: url(../images/sssscccc.png);
+    background-size: 18px 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.item-action .toggle-collect_on .icon {
+    background-image: url(../images/sssscccc_on.png);
+    background-size: 18px 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.item-action .go-store {
+    width: 48px;
+    line-height: 19px;
+    border-right: 1px #d9d9d9 solid;
+    
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.item-action .go-store .icon {
+    background-image:url(../images/ssssyyyy.png);
+    background-size: 18px 18px;
+    width: 18px;
+    height: 18px;
+}
+.item-action .icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 6px;
+}
+.item-action .add-to-cart, .item-action .prepay-info {
+    -webkit-box-flex: 3;
+    width: 33.333%;
+    -webkit-flex: 3;
+    -webkit-box-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+    background-color: #ff9402;
+    color: #fff;
+}
+.item-action .buy-now {
+    -webkit-box-flex: 3;
+    width: 33.333%;
+    -webkit-flex: 3;
+    -webkit-box-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+    background-color: #FF2600;
+    color: #fff;
+}
+.add-to-cart,.buy-now{ font-size:14px;}
+
+.f-box {
+    background-color: #fff;font-size: 12px;
+}.g-boxs {
+    margin-left: 10px;
+}
+
+.top11 {
+    padding-top: 11px;
+    height: 35px;
+}
+.g-boxs .tl:first-child .top11 {
+    padding: 12px 0px 0px 0px;
+    height: 35px;
+}.f-lefto {
+    float: left;
+}
+.imgsize {
+    width: 25px;
+    height: 23px;
+    margin-top: -4px;
+}
+.f-lefto i {
+    color: #696969;
+    margin-left: 6px;
+    line-height: 25px;
+}
+.f-righto {
+    float: right;
+    margin-right: 17px;
+    margin-top: 5px;
+}
+.xian-f {
+    clear: both;
+    border-bottom: 1px solid #dcdcdc;
+    padding-top: 10px;
+}
+.top11 img{ vertical-align:middle}
+
+.g-box .tl:last-child .top11 .xian-f {
+    display: none;
+}
+.custom-line-wrap2 {
+    padding: 0px 0;
+    margin: 0px auto 0px auto;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    color: #FF0707;
+    font-size: 14px;
+    line-height: 30px;
+}
+.custom-line-wrap2:after, .custom-line-wrap2:before {
+    height: 1px;
+    width: 37%;
+    content: '\20';
+    position: absolute;
+    top: 15px;
+    display: block;
+    background: #f1f1f1;
+}
+ .control-group {
+    margin: 0;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    min-height: 30px;
+}
+.custom-line-wrap2:before {
+    right: 0;
+}

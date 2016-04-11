@@ -309,11 +309,11 @@ public interface CommonEnum {
          * 获得奖品 默认状态
          */
         GetPrize(0, "获得奖品"),
-        ConfirmAddress(1, "确认收货地址"),
-        WaitingDelivery(2, "等待奖品派发"),
-        RecieveGoods(4, "确认收货"),
-        Finished(5, "已收货"),
-        ShareOrdering(6, "已晒单");
+        ConfirmProduct(1, "选择货品"),
+        ConfirmAddress(2, "确认地址"),
+        ConfirmOrder(3, "已经提单");
+
+
         private int value;
 
         private String name;

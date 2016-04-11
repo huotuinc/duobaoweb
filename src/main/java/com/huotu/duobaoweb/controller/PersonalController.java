@@ -2,22 +2,21 @@ package com.huotu.duobaoweb.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.huotu.common.base.HttpHelper;
 import com.huotu.duobaoweb.common.PublicParameterHolder;
-import com.huotu.duobaoweb.common.StringHelper;
+import com.huotu.duobaoweb.entity.Delivery;
 import com.huotu.duobaoweb.model.*;
 import com.huotu.duobaoweb.repository.CityRepository;
 import com.huotu.duobaoweb.repository.DeliveryRepository;
 import com.huotu.duobaoweb.service.DeliveryService;
+import com.huotu.duobaoweb.service.GoodsService;
 import com.huotu.duobaoweb.service.UserBuyFlowService;
 import com.huotu.duobaoweb.service.UserNumberService;
 import com.huotu.huobanplus.common.entity.Goods;
-import com.huotu.huobanplus.common.entity.Product;
-import com.huotu.huobanplus.common.entity.support.ProductSpecifications;
 import com.huotu.huobanplus.common.entity.support.SpecDescription;
 import com.huotu.huobanplus.common.entity.support.SpecDescriptions;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +56,8 @@ public class PersonalController {
     GoodsRestRepository goodsRestRepository;
 
     @Autowired
-    ProductRestRepository  productRestRepository;
+    GoodsService goodsService;
+
 
     /**
      * 跳转到我的参与记录页面
@@ -72,7 +71,7 @@ public class PersonalController {
         model.addAttribute("type",type);
         model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
-        model.addAttribute("issueId",common.getIssueId());
+        model.addAttribute("issueId", common.getIssueId());
         return "/html/personal/raiderList";
     }
 
@@ -87,11 +86,10 @@ public class PersonalController {
     @ResponseBody
     public RaiderListModelAjax getMyInvolvedRecordAjax(Model model,Integer type, Integer pageSize, Integer page) throws IOException, URISyntaxException {
         WebPublicModel common = PublicParameterHolder.getParameters();
-        model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         RaiderListModelAjax raiderListAjaxModel= userBuyFlowService.toListRaiderListModel(type,common.getCurrentUser().getId(),pageSize,page);
-        raiderListAjaxModel.setPublicParament("userId="+common.getCurrentUser().getId()+"&"+"customerId="+common.getCustomerId());
+        raiderListAjaxModel.setPublicParament("customerId=" + common.getCustomerId());
         return raiderListAjaxModel;
     }
 
@@ -106,7 +104,6 @@ public class PersonalController {
     public String getMyRaiderNumbers(Model model) throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
         RaiderNumbersModel raiderNumbersModel = userNumberService.getMyRaiderNumbers(common.getCurrentUser().getId(), common.getIssueId());
-        model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         model.addAttribute("raiderNumbersModel", raiderNumbersModel);
@@ -123,8 +120,7 @@ public class PersonalController {
     @RequestMapping(value = "/getMyLotteryList" , method = RequestMethod.GET)
     public String getMyLotteryList(Model model) throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
-        model.addAttribute("type",3);
-        model.addAttribute("userId",common.getCurrentUser().getId());
+        model.addAttribute("type", 3);
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         return "/html/personal/raiderList";
@@ -142,8 +138,7 @@ public class PersonalController {
     public UserBuyFlowModelAjax getMyLotteryListAjax(Model model,Integer pageSize, Integer page) throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
         UserBuyFlowModelAjax userBuyFlowModelAjax = userBuyFlowService.findByUserAjax(common.getCurrentUser().getId(), pageSize, page);
-        userBuyFlowModelAjax.setPublicParament("userId="+common.getCurrentUser().getId()+"&"+"customerId="+common.getCustomerId());
-        model.addAttribute("userId",common.getCurrentUser().getId());
+        userBuyFlowModelAjax.setPublicParament("customerId=" + common.getCustomerId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         return userBuyFlowModelAjax;
@@ -159,11 +154,42 @@ public class PersonalController {
     public String getOneLotteryInfo(Model model)  throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
         DeliveryModel deliveryModel = deliveryService.findByIssueId(common.getIssueId());
-        model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         model.addAttribute("deliveryModel",deliveryModel);
         return "/html/personal/lotteryInfo";
+    }
+
+    /**
+     * 选择商品规格
+     *  中奖后选择商品规格
+     *  @param model
+     * @return String
+     * @throws Exception all
+     */
+    @RequestMapping(value = "/selGoodsSpec" , method = RequestMethod.GET)
+    public String selGoodsSpec(Model model)  throws Exception {
+        WebPublicModel common = PublicParameterHolder.getParameters();
+        SelGoodsSpecModel selGoodsSpecModel = goodsService.getSelGoodsSpecModelByIssueId(common.getIssueId());
+        Map<String,Object> map = userBuyFlowService.getGoodsSpec(1L);
+        model.addAttribute("goodsAndSpecModel", selGoodsSpecModel);
+        model.addAttribute("list",map.get("mgsList"));
+        model.addAttribute("productList",map.get("productList"));
+        model.addAttribute("customerId",common.getCustomerId());
+        model.addAttribute("issueId",common.getIssueId());
+        return "/html/personal/selectGoodsSpecifications";
+    }
+
+    /**
+     * 添加收货货品ID,和名称
+     */
+    @RequestMapping(value = "/addDeliveryProductInfo" , method = RequestMethod.GET)
+    public String addDeliveryProductInfo(Model model, Long productId,String productName) throws IOException {
+        WebPublicModel common = PublicParameterHolder.getParameters();
+        deliveryService.addDeliveryProductInfo(common.getIssueId(), productId, productName);
+        model.addAttribute("customerId",common.getCustomerId());
+        model.addAttribute("issueId",common.getIssueId());
+        return "redirect:/personal/getOneLotteryInfo?issueId="+common.getIssueId()+"&customerId="+common.getCustomerId();
     }
 
     /**
@@ -174,31 +200,6 @@ public class PersonalController {
      */
     @RequestMapping(value = "/toRecpeiptAddress" , method = RequestMethod.GET)
     public String toRecpeiptAddress(Model model, Long deliveryId) throws IOException {
-//        Goods goods = goodsRestRepository.getOneByPK("1");
-//        List<Product> list = productRestRepository.findByGoods(goods);
-//        System.out.println("=========" + goods.getSpec());
-//        SpecDescriptions specDescription = goods.getSpecDescriptions();
-//        System.out.println("=========" + specDescription);
-//
-//        Map<Long,String> map = JSONObject.toJavaObject(JSON.parseObject(goods.getSpec()) , Map.class);
-//
-//        if(map==null){
-//            model.addAttribute("types",null);//返回一个List
-//        }else {
-//            SpecDescriptions specDescriptions = goods.getSpecDescriptions();
-//            List<BasicNameValuePair> types=new ArrayList<>();
-//            for(Map.Entry<Long,List<SpecDescription>> entry:specDescriptions.entrySet()){
-//                StringBuffer sb=new StringBuffer();
-//                for(SpecDescription s:entry.getValue()){
-//                    sb.append(s.getSpecValue()+"、");
-//                }
-//                String typeDesc=sb.toString();
-//                BasicNameValuePair bnv=new BasicNameValuePair(map.get(entry.getKey()),sb.toString().substring(0,typeDesc.length()-1));
-//                types.add(bnv);
-//            }
-//            model.addAttribute("types",types);//返回一个List
-//        }
-
         WebPublicModel common = PublicParameterHolder.getParameters();
         model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
@@ -209,7 +210,7 @@ public class PersonalController {
     }
 
     /**
-     * 查找数据
+     * 查找城市city数据
      * @param parentId
      * @return
      */
@@ -223,23 +224,6 @@ public class PersonalController {
         return JSONObject.toJSONString(cityRepository.findByParentId(parentId));
     }
 
-    /**
-     * 确认收货
-     * @param deliveryId
-     * @return
-     */
-    @RequestMapping("/confirmReceipt")
-    public String confirmReceipt(Model model,Long deliveryId) {
-        WebPublicModel common = PublicParameterHolder.getParameters();
-//        Delivery delivery = deliveryService.findById(deliveryId);
-//        delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.Finished);
-//        delivery.setRecieveGoodsTime(new Date());
-//        deliveryRepository.save(delivery);
-        model.addAttribute("userId", common.getCurrentUser().getId());
-        model.addAttribute("customerId", common.getCustomerId());
-        model.addAttribute("issueId", common.getIssueId());
-        return "redirect:/personal/getMyLotteryList?userId="+common.getCurrentUser().getId()+"&issueId="+common.getIssueId()+"&customerId="+common.getCustomerId();
-    }
 
     /**
      * 添加收货地址
@@ -252,13 +236,13 @@ public class PersonalController {
      * @throws Exception
      */
     @RequestMapping("/addRecpeiptAddress")
-    public String addRecpeiptAddress(Model model, Long deliveryId, String receiver, String mobile, String details) throws Exception {
+    public String addRecpeiptAddress(Model model, Long deliveryId, String receiver, String mobile, String details,String remark) throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
-        deliveryService.addRecpeiptAddress(deliveryId, receiver, mobile, details);
+        deliveryService.addRecpeiptAddress(common.getCustomerId(),deliveryId, receiver, mobile, details,remark);
         model.addAttribute("userId", common.getCurrentUser().getId());
         model.addAttribute("customerId", common.getCustomerId());
         model.addAttribute("issueId", common.getIssueId());
-        return "redirect:/personal/getOneLotteryInfo?userId="+common.getCurrentUser().getId()+"&issueId="+common.getIssueId()+"&customerId="+common.getCustomerId();
+        return "redirect:/personal/getOneLotteryInfo?issueId="+common.getIssueId()+"&customerId="+common.getCustomerId();
     }
 
 }

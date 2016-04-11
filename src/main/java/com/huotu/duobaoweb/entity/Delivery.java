@@ -63,10 +63,23 @@ public class Delivery {
      */
     private Long productId;
 
+    @Column(length = 20)
+    private String productSpec;
+
     /**
      * 备注说明
      */
     @Column(length = 200)
     private String remark;
 
+    /**
+     * 是否提单成功
+     * true 提单成功 false提单失败
+     */
+    private Boolean isCommit;
+
+    /**
+     * 商城订单id
+     */
+    private String mallOrderId;
 }

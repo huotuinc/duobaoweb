@@ -33,7 +33,7 @@ em
 {
     font-style:italic;
 }
-input[type=button],input[type=text],input[type=tel] {-webkit-appearance:none;
+input[type=button],input[type=text],input[type=tel],input[type=password] {-webkit-appearance:none;
 -moz-appearance:none;
 appearance:none;-webkit-tap-highlight-color: transparent;
 outline: 0; border-radius:0px}
@@ -79,4 +79,4 @@ select{-webkit-tap-highlight-color:rgba(0,0,0,0);}
 
 .input_clear{-webkit-appearance:none;
 -moz-appearance:none;
-appearance:none;}
+appearance:none;-webkit-tap-highlight-color: transparent;}

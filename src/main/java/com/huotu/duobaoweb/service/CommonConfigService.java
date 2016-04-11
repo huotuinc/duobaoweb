@@ -63,4 +63,11 @@ public interface CommonConfigService {
      */
     String getPaySecret();
 
+
+    /**
+     * 商城对接秘钥
+     * @return
+     */
+    String getMallKey();
+
 }

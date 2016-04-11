@@ -10,9 +10,12 @@
 package com.huotu.duobaoweb.common;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.htmlparser.jericho.Source;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.Random;
 
 public class StringHelper extends com.huotu.common.base.StringHelper {

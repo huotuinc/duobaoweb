@@ -457,11 +457,10 @@ public class GoodsServiceImpl implements GoodsService {
                 }
                 selGoodsSpecModel.setPictureUrlList(pictureUrlList);
                 //3.获取商城商品
-                com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
+                com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK("1");
                 selGoodsSpecModel.setIntroduce(mallGoods.getIntro());
             }
         }
-
         return selGoodsSpecModel;
     }
 }

@@ -37,8 +37,6 @@ public class WebInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-
         WebPublicModel webPublicModel = initPublicParam(request);
 
         if(environment.acceptsProfiles("development")) {
@@ -52,7 +50,6 @@ public class WebInterceptor implements HandlerInterceptor {
                     !request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))) {
                 //校验openid是否正确 需要进行认证
                 log.info("开始进行认证服务！！");
-
                 //todo 这是认证服务，暂时注释，不允许删除
             if(!request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))){
                 //如果商户号与cookie中存的不一样则以传过来的商户为准进行请求
@@ -88,6 +85,7 @@ public class WebInterceptor implements HandlerInterceptor {
 //        if(weixinOpenId!=null) {
 //            webPublicModel.setCurrentUser(userRepository.findByWeixinOpenId(weixinOpenId));
 //        }
+        //todo lhx da
         webPublicModel.setCurrentUser(userRepository.findOne(1L));
         webPublicModel.setIp(getIp(request));
 

@@ -76,7 +76,7 @@
             });
 
             $("#submitFrom").click(function () {
-                    $("#details").val($("#province  option:selected").text()+$("#city  option:selected").text()+$("#county  option:selected").text()+$("#details").val());
+                    $("#details").val($("#province  option:selected").text()+','+$("#city  option:selected").text()+','+$("#county  option:selected").text()+','+$("#details").val());
                     $("#form1").submit();
             });
         });
@@ -91,19 +91,17 @@
 <div class="commfont">
 
     <form id="form1" class="js-wx-fm wx-ui wx-fm" th:action="addRecpeiptAddress" th:method="get">
-        <input type="hidden"  th:value="${userId}" id="userId" name="userId"/>
         <input type="hidden"  th:value="${issueId}" id="issueId" name="issueId"/>
         <input type="hidden"  th:value="${customerId}" id="customerId" name="customerId"/>
         <input type="hidden" th:value="${deliveryId}" name="deliveryId"/>
         <h4 class="wx-fm-title">收货地址</h4>
 
         <div class="js-wx-cancel publish-cancel">
-            <a href="#" style="display:block">
+            <a href="javascript:history.go(-1);" style="display:block">
                 <div class="cancel-img"></div>
             </a>
         </div>
         <div class="block" style="margin:0;">
-
             <div class="block-item">
                 <label class="form-row form-text-row">
                     <em class="form-text-label">收货人</em>
@@ -153,6 +151,16 @@
                                                        placeholder="街道门牌信息"/></span>
                 </label>
             </div>
+            <div class="block-item">
+                <label class="form-row form-text-row">
+                    <em class="form-text-label">备注</em>
+                    <span class="input-wrapper">
+                        <input type="text" id="remark" name="remark" class="form-text-input"
+                               value=""
+                               placeholder="留言"/></span>
+                </label>
+            </div>
+
         </div>
 
         <div>
