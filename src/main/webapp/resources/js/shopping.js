@@ -72,9 +72,7 @@ var shoppingBuy = function (buyNum, issueId, customerId, userId) {
                 $.jBox.tip(data.message);
                 window.location = "../shopping/showShoppingCarts?userId=" + userId +
                     "&issueId=" + issueId +
-                    "&customerId=" + customerId +
-                    "&openId=" + cooOID +
-                    "&sign=" + cooSIGN;
+                    "&customerId=" + customerId;
             } else {
                 $.jBox.tip(data.message);
             }
