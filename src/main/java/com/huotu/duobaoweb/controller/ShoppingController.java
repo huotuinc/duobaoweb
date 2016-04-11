@@ -124,12 +124,8 @@ public class ShoppingController {
         String openidUrl = userService.getWeixinAuthUrl(common);
 
         resultModel.setUrl("../shopping/toAllPay?shoppingCartId=" + shoppingCart.getId() +
-                "&userId=" + common.getCurrentUser().getId() +
                 "&issueId=" + common.getIssueId() +
-                "&customerId" + common.getCustomerId() +
-                "&openId=" + common.getOpenId() +
-                "&sign=" + common.getSign() +
-                "&openidUrl" + openidUrl);
+                "&customerId" + common.getCustomerId());
         resultModel.setMessage("添加成功！");
         resultModel.setCode(200);
         return resultModel;
@@ -146,15 +142,9 @@ public class ShoppingController {
         WebPublicModel common = PublicParameterHolder.getParameters();
         payModel.setType(2);
         if (payModel != null) {
-            String openidUrl = userService.getWeixinAuthUrl(common);
-
-            model.addAttribute("openidUrl", openidUrl);
             model.addAttribute("payModel", payModel);
-            model.addAttribute("userId", common.getCurrentUser().getId());
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
-            model.addAttribute("openId", common.getOpenId());
-            model.addAttribute("sign", common.getSign());
 
             return "html/shopping/pay";
         } else {
@@ -183,16 +173,9 @@ public class ShoppingController {
             shoppingCartsModel.setBuyNum(0L);
             shoppingCartsModel.setBuyMoney(0.0);
         }
-        //微信授权回调url，跳转到index
-        String openidUrl = userService.getWeixinAuthUrl(common);
-
-        model.addAttribute("openidUrl", openidUrl);
         model.addAttribute("shoppingCarts", shoppingCartsModel);
-        model.addAttribute("userId", common.getCurrentUser().getId());
         model.addAttribute("issueId", common.getIssueId());
         model.addAttribute("customerId", common.getCustomerId());
-        model.addAttribute("openId", common.getOpenId());
-        model.addAttribute("sign", common.getSign());
         return "html/shopping/cartsList";
     }
 
@@ -207,16 +190,9 @@ public class ShoppingController {
         PayModel payModel = shoppingService.balance(cartId, buyNum);
         payModel.setType(1);
         if (payModel != null) {
-            //微信授权回调url，跳转到index
-            String openidUrl = userService.getWeixinAuthUrl(common);
-
-            model.addAttribute("openidUrl", openidUrl);
             model.addAttribute("payModel", payModel);
-            model.addAttribute("userId", common.getCurrentUser().getId());
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
-            model.addAttribute("openId", common.getOpenId());
-            model.addAttribute("sign", common.getSign());
             return "html/shopping/pay";
         } else {
             //返回购物车提示错误

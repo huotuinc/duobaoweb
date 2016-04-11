@@ -30,7 +30,6 @@
     <script type="text/javascript" th:inline="javascript">
 
             var pay=function(){
-            var userId = /*[[${userId}]]*/'';
             var issueId = /*[[${issueId}]]*/'';
             var customerId = /*[[${customerId}]]*/'';
             var payMoney=/*[[${payModel.payMoney}]]*/'';
@@ -38,7 +37,7 @@
             var cartsId=/*[[${payModel.cartsId}]]*/'';
             var payType=$("#payType").val();
             var type=/*[[${payModel.type}]]*/'';
-            payToService(payMoney,detail,cartsId,payType,type,userId,issueId,customerId);
+            payToService(payMoney,detail,cartsId,payType,type,issueId,customerId);
         }
     </script>
 </head>

@@ -28,7 +28,6 @@
 
 <body>
 <form method="post" id="form1" th:object="${goodsDetailModel}">
-  <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
   <input type="hidden" id="issueId" name="issueId" th:value="${issueId}"/>
   <input type="hidden" id="customerId" name="customerId" th:value="${customerId}"/>
 <div class="superli clearfix editing">
@@ -519,21 +518,16 @@
   }
 
   var buy=function(){
-    var cooOID=getCookie("qbdbopenid");
-    var cooSIGN=getCookie("qbdbosign");
-    //alert(cooOID+"!!!!"+cooSIGN);
     var buyNum=Number($("#buyNum").val());
     var issueId=/*[[${issueId}]]*/'';
     var customerId=/*[[${customerId}]]*/'';
-    var userId=/*[[${userId}]]*/'';
-    shoppingBuy(buyNum,issueId,customerId,userId,cooOID);
+    shoppingBuy(buyNum,issueId,customerId);
   }
 
   var allBuy=function(){
     var issueId=/*[[${issueId}]]*/'';
     var customerId=/*[[${customerId}]]*/'';
-    var userId=/*[[${userId}]]*/'';
-    shoppingAllBuy(issueId,customerId,userId);
+    shoppingAllBuy(issueId,customerId);
   }
 
 </script>

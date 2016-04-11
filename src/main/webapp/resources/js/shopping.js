@@ -3,11 +3,10 @@
  */
 
 //todo 加入必须的信息
-var turnToBalance = function (cartId, buyNum, userId, issueId, customerId) {
+var turnToBalance = function (cartId, buyNum, issueId, customerId) {
 
     var url = "balance?cartId=" + cartId +
         "&buyNum=" + buyNum +
-        "&userId=" + userId +
         "&issueId=" + issueId +
         "&customerId=" + customerId;
     window.location.href = url;
@@ -15,7 +14,7 @@ var turnToBalance = function (cartId, buyNum, userId, issueId, customerId) {
 
 }
 //todo 加入必须的信息
-var payToService = function (payMoney, detail, cartsId, payType, type, userId, issueId, customerId) {
+var payToService = function (payMoney, detail, cartsId, payType, type, issueId, customerId) {
 
     alert(payMoney+detail+cartsId+payType+type);
     $.jBox.tip("正在支付...", "loading");
@@ -55,14 +54,13 @@ function toPayModel(payMoney1, detail1, cartsId1, payType1, type1) {
     return obj;
 }
 
-var shoppingBuy = function (buyNum, issueId, customerId, userId) {
+var shoppingBuy = function (buyNum, issueId, customerId) {
     $.jBox.tip("正在结算...", "loading");
     $.ajax({
         url: "../shopping/joinToCarts",
         data: {
             issueId: issueId,
             buyNum: buyNum,
-            userId: userId,
             customerId: customerId
         },
         type: "post",
@@ -70,8 +68,7 @@ var shoppingBuy = function (buyNum, issueId, customerId, userId) {
         success: function (data) {
             if (data.code == 200) {
                 $.jBox.tip(data.message);
-                window.location = "../shopping/showShoppingCarts?userId=" + userId +
-                    "&issueId=" + issueId +
+                window.location = "../shopping/showShoppingCarts?issueId=" + issueId +
                     "&customerId=" + customerId;
             } else {
                 $.jBox.tip(data.message);
@@ -83,14 +80,13 @@ var shoppingBuy = function (buyNum, issueId, customerId, userId) {
     })
 }
 
-var shoppingAllBuy = function (issueId, customerId, userId) {
+var shoppingAllBuy = function (issueId, customerId) {
 
     $.jBox.tip("正在结算...", "loading");
     $.ajax({
         url: "../shopping/allToCarts",
         data: {
             issueId: issueId,
-            userId: userId,
             customerId: customerId
         },
         type: "post",

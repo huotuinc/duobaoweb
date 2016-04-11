@@ -62,12 +62,11 @@
         }
 
         var balance=function(){
-            var userId=/*[[${userId}]]*/'';
             var issueId=/*[[${issueId}]]*/'';
             var customerId=/*[[${customerId}]]*/'';
             var cartId =/*[[${shoppingCarts.cartId}]]*/'';
             var buyNum=$("#buyNum").val();
-            turnToBalance(cartId,buyNum,userId,issueId,customerId);
+            turnToBalance(cartId,buyNum,issueId,customerId);
         }
 
         var initShow=function(){
@@ -90,7 +89,6 @@
  
 <body style="background-color:#f5f5f5" onload="initShow()">
 <div class="commfont" th:object="${shoppingCarts}">
-    <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
     <input type="hidden" id="issueId" name="issueId" th:value="${issueId}"/>
     <input type="hidden" id="customerId" name="customerId" th:value="${customerId}"/>
     <input type="hidden" id="cartId" name="cartId" th:value="*{cartId}"/>
