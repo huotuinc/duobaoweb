@@ -59,6 +59,6 @@ public class TestCallPayBackController extends BaseTest {
         payModel.setType(1);
         payModel.setCartsId(shoppingCart.getId());
         Orders orders = shoppingService.createOrders(payModel);
-        PayResultModel payResultModel=payService.solveWeixinPayResult(orders.getId(),10.0F,"thisis outorderno!");
+        PayResultModel payResultModel=payService.solveWeixinPayResult(orders.getId(),0.01F,"thisis outorderno!");
     }
 }

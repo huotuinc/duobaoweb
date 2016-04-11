@@ -85,7 +85,7 @@ public class ShoppingController {
     }
 
     /**
-     * 全额购买购物车 直接跳转到支付界面 pay.html
+     * 全额购买购物车 直接跳转到支付界面 pay.html 暂时废弃
      */
     @RequestMapping(value = "/allToCarts", method = RequestMethod.POST)
     @ResponseBody
@@ -132,7 +132,7 @@ public class ShoppingController {
     }
 
     /**
-     * 全额支付跳转到支付页面
+     * 全额支付跳转到支付页面 暂时废弃
      *
      * @return
      */
