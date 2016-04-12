@@ -49,7 +49,7 @@ public class UserController {
      * @throws Exception
      */
     @RequestMapping(value = "/getOpid", method = RequestMethod.GET)
-    public String getOpid(String issueId,String openid,Map<String, Object> map) throws Exception {
+    public String getOpid(String issueId,String customerId,String openid,Map<String, Object> map) throws Exception {
 
         //进行用户注册(如果用户存在则不注册，不存在才注册)
         User user =userService.registerUser(openid);
@@ -65,9 +65,9 @@ public class UserController {
         PublicParameterHolder.putParameters(webPublicModel);
 
 
-        Cookie customerId=new Cookie("customerId", String.valueOf(webPublicModel.getCustomerId()));
-        customerId.setMaxAge(60*2); //单位是秒 todo 正式上线的时候时间设置长一点
-        customerId.setPath("/");
+        Cookie custId=new Cookie("customerId",customerId);
+        custId.setMaxAge(60*2); //单位是秒 todo 正式上线的时候时间设置长一点
+        custId.setPath("/");
         Cookie userId=new Cookie("userId",String.valueOf(webPublicModel.getCurrentUser().getId()));
         userId.setMaxAge(60*2);
         userId.setPath("/");
@@ -77,7 +77,7 @@ public class UserController {
         Cookie sign=new Cookie("sign",webPublicModel.getSign());
         sign.setMaxAge(60*2);
         sign.setPath("/");
-        response.addCookie(customerId);
+        response.addCookie(custId);
         response.addCookie(userId);
         response.addCookie(openId);
         response.addCookie(sign);

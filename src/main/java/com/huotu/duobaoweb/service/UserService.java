@@ -18,7 +18,7 @@ public interface UserService {
      * @param issueId
      * @return
      */
-    String getIndexUrl(Long issueId);
+    String getIndexUrl(Long issueId,Long customerId);
 
     /**
      * 通过openid注册一个用户

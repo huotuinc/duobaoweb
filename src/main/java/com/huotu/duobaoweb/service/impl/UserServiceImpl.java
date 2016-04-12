@@ -33,12 +33,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String getIndexUrl(Long issueId) {
+    public String getIndexUrl(Long issueId,Long customerId) {
         String url = commonConfigService.getWebUrl()+ "/user/getOpid?issueId=";
         if(issueId!=null) {
             url =url + issueId;
         }
-        return url;
+        return url+"&customerId="+customerId;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     public String getWeixinAuthUrl(WebPublicModel common) throws UnsupportedEncodingException {
 
         //微信授权回调url，跳转到index
-        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(common.getIssueId()), "utf-8");
+        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(common.getIssueId(),common.getCustomerId()), "utf-8");
         WeixinAuthUrl.customerid=common.getCustomerId();
         String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
         return apiUrl;
