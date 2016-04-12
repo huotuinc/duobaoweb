@@ -68,6 +68,12 @@ public class CoreTest extends BaseTest {
     private Issue currentIssue;
 
     @Test
+    public void tt(){
+        String a=null;
+        System.out.print(a.equals(""));
+    }
+
+    @Test
     public void drawLottery() throws Exception {
         //模拟数据
         Long goodsAmount = 10L;

@@ -56,7 +56,7 @@ public class UserController {
 
         Long goodsId=null;
         Issue issue=new Issue();
-        if(issueId!=null&!issueId.equals("")) {
+        if(issueId!=null&&!issueId.equals("")) {
             issue= issueService.getIssueById(issueId);
             goodsId=issue.getGoods().getId();
         }
