@@ -1,12 +1,15 @@
 package com.huotu.duobaoweb.service.impl;
 
-import com.huotu.duobaoweb.entity.*;
+import com.huotu.duobaoweb.common.PublicParameterHolder;
+import com.huotu.duobaoweb.entity.CountResult;
+import com.huotu.duobaoweb.entity.Goods;
+import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.model.*;
 import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.repository.IssueRepository;
-import com.huotu.duobaoweb.service.GoodsService;
-import com.huotu.duobaoweb.service.StaticResourceService;
-import com.huotu.duobaoweb.service.UserBuyFlowService;
+import com.huotu.duobaoweb.service.*;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +38,17 @@ public class GoodsServiceImpl implements GoodsService {
     private UserBuyFlowService userBuyFlowService;
 
     @Autowired
-    private StaticResourceService staticResourceService;
+    private CommonConfigService commonConfigService;
+
+    @Autowired
+    private RaidersCoreService raidersCoreService;
+
+    @Autowired
+    private UserNumberService userNumberService;
+
+    @Autowired
+    private GoodsRestRepository goodsRestRepository;
+
 
     /**
      * 跳转到商品活动首页
@@ -47,6 +60,9 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public void jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception {
         if (goodsId == null) return;
+        Issue issue = null;
+
+        WebPublicModel webPublicModel = PublicParameterHolder.getParameters();
 
         GoodsIndexModel goodsIndexModel = new GoodsIndexModel();
         //1.通过商品Id获取对应的商品
@@ -55,10 +71,10 @@ public class GoodsServiceImpl implements GoodsService {
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
             goodsIndexModel.setId(goods.getId());
-            goodsIndexModel.setDefaultPictureUrl(staticResourceService.getResource(goods.getDefaultPictureUrl()).toString());
+            goodsIndexModel.setDefaultPictureUrl(commonConfigService.getHuoBanPlusManagerWebUrl() + goods.getDefaultPictureUrl());
             goodsIndexModel.setStartTime(goods.getStartTime().getTime());
             goodsIndexModel.setEndTime(goods.getEndTime().getTime());
-            Issue issue = goods.getIssue();
+            issue = goods.getIssue();
             if (issue != null) {
                 goodsIndexModel.setIssueId(issue.getId());
                 //计算商品价格
@@ -71,14 +87,14 @@ public class GoodsServiceImpl implements GoodsService {
                 }
             }
         }
-        //3.获取当前用户 todo
-        User user = new User();
+        //3.获取当前用户
+        User user = webPublicModel.getCurrentUser();
 
         //4.获取用户是否登录
         if (user != null) {
             goodsIndexModel.setLogined(true);
-
-            //5.判断当前用户是否参与 todo
+            //5.判断当前用户是否参与
+            userBuyFlowService.findByUserIdAndIssuId(user.getId(), issue.getId());
             goodsIndexModel.setJoined(true);
         } else {
             goodsIndexModel.setLogined(false);
@@ -94,7 +110,13 @@ public class GoodsServiceImpl implements GoodsService {
 
 
         map.put("goodsIndexModel", goodsIndexModel);
+        if(user != null){
+            map.put("userId", user.getId());
+        }
+        map.put("customerId", webPublicModel.getCustomerId());
     }
+
+
 
     /**
      * 通过商品Id跳转到商品详情
@@ -107,6 +129,8 @@ public class GoodsServiceImpl implements GoodsService {
         if (goodsId == null) return;
 
         GoodsDetailModel goodsDetailModel = new GoodsDetailModel();
+
+        WebPublicModel webPublicModel = PublicParameterHolder.getParameters();
 
         //1.通过商品Id获取商品
         Goods goods = goodsRepository.findOne(goodsId);
@@ -123,12 +147,15 @@ public class GoodsServiceImpl implements GoodsService {
             if (pictures != null) {
                 String[] pics = pictures.split(",");
                 for (int i = 0; i < pics.length; ++i) {
-                    picList.add(staticResourceService.getResource(pics[i]).toString());
+                    picList.add(commonConfigService.getHuoBanPlusManagerWebUrl()  + pics[i]);
                 }
                 goodsDetailModel.setPictureUrls(picList);
             }
 
             if (issue != null) {
+
+                map.put("issueId", issue.getId());
+
                 //0:进行中  1:倒计时  2:已揭晓
                 int status = issue.getStatus().getValue();
                 goodsDetailModel.setStatus(status);
@@ -147,18 +174,10 @@ public class GoodsServiceImpl implements GoodsService {
                     goodsDetailModel.setProgress(toAmount == 0 ? 0 : (int) (buyAmount / toAmount));
                 } else if (status == 1) {
                     //倒计时
-                    goodsDetailModel.setToAwardTime(86400000L);  //todo
+                    goodsDetailModel.setToAwardTime(raidersCoreService.getAwardingTime() * 1000);
                 } else {
                     //已揭晓
                     User awardUser = issue.getAwardingUser();
-
-                    //模拟数据 todo
-                    if (awardUser == null) awardUser = new User();
-                    awardUser.setRealName("紫风飘雪");
-                    awardUser.setCityName("浙江省杭州市");
-                    awardUser.setIp("192.168.3.86");
-                    awardUser.setUserHead("/resources/goods/defaultH.jpg");
-                    //模拟数据结束
 
                     if (awardUser != null) {
                         goodsDetailModel.setAwardUserName(awardUser.getRealName());
@@ -166,23 +185,36 @@ public class GoodsServiceImpl implements GoodsService {
                         goodsDetailModel.setAwardUserCityName(awardUser.getCityName());
                         String head = awardUser.getUserHead();
                         if (head != null) {
-                            goodsDetailModel.setAwardUserHead(staticResourceService.getResource(head).toString());
+                            goodsDetailModel.setAwardUserHead(commonConfigService.getHuoBanPlusManagerWebUrl()  + head);
                         }
-                        goodsDetailModel.setAwardUserJoinCount(10L);  //todo 获取中奖用户的参与次数
+
+                        goodsDetailModel.setAwardUserJoinCount(userBuyFlowService.findByUserIdAndIssuId(awardUser.getId(), issue.getId()).size() + 0L);
                     }
 
-                    goodsDetailModel.setAwardTime(new Date());  //todo
-                    goodsDetailModel.setLuckNumber(100001L);
-                    //goodsDetailModel.setAwardTime(issue.getAwardingDate());
-                    //goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
+                    goodsDetailModel.setAwardTime(issue.getAwardingDate());
+                    goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
                 }
 
                 //3.获取用户当前参与次数
-                //3.1获取当前用户 todo
-                User user = new User();
+                //3.1获取当前用户
+                User user = webPublicModel.getCurrentUser();
+                if(user != null){
+                    map.put("userId", user.getId());
 
-                //3.2获取用户参与次数 todo
-                goodsDetailModel.setJoinCount(0);
+                    //3.2获取用户参与次数
+                    RaiderNumbersModel myRaiderNumbers = userNumberService.getMyRaiderNumbers(user.getId(), issue.getId());
+                    if(myRaiderNumbers != null){
+                        int amount = myRaiderNumbers.getAmount().intValue();
+                        goodsDetailModel.setJoinCount(amount);
+                        if(amount == 1){
+                            goodsDetailModel.setNumber(myRaiderNumbers.getNumbers().get(0));
+                        }
+                    }else{
+                        goodsDetailModel.setJoinCount(0);
+                    }
+                }else{
+                    goodsDetailModel.setJoinCount(0);
+                }
 
                 //4.获取首次购买的时间 todo
                 goodsDetailModel.setFirstBuyTime(new Date());
@@ -190,6 +222,7 @@ public class GoodsServiceImpl implements GoodsService {
             }
         }
         map.put("goodsDetailModel", goodsDetailModel);
+        map.put("customerId", webPublicModel.getCustomerId());
     }
 
     /**
@@ -204,12 +237,16 @@ public class GoodsServiceImpl implements GoodsService {
         if (issueId == null) return;
 
         GoodsDetailModel goodsDetailModel = new GoodsDetailModel();
+        WebPublicModel webPublicModel = PublicParameterHolder.getParameters();
 
         //1.通过期号获取定义的期
         Issue issue = issueRepository.findOne(issueId);
 
         //2.封装数据
         if (issue != null) {
+
+            map.put("issueId", issue.getId());
+
             //3.获取商品
             Goods goods = issue.getGoods();
 
@@ -222,7 +259,7 @@ public class GoodsServiceImpl implements GoodsService {
                 if (pictures != null) {
                     String[] pics = pictures.split(",");
                     for (int i = 0; i < pics.length; ++i) {
-                        picList.add(staticResourceService.getResource(pics[i]).toString());
+                        picList.add(commonConfigService.getHuoBanPlusManagerWebUrl()  + pics[i]);
                     }
                     goodsDetailModel.setPictureUrls(picList);
                 }
@@ -245,18 +282,10 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsDetailModel.setProgress(toAmount == 0 ? 0 : (int) (buyAmount / toAmount));
             } else if (status == 1) {
                 //倒计时
-                goodsDetailModel.setToAwardTime(86400000L);  //todo
+                goodsDetailModel.setToAwardTime(raidersCoreService.getAwardingTime() * 1000);
             } else {
                 //已揭晓
                 User awardUser = issue.getAwardingUser();
-
-                //模拟数据 todo
-                if (awardUser == null) awardUser = new User();
-                awardUser.setRealName("紫风飘雪");
-                awardUser.setCityName("浙江省杭州市");
-                awardUser.setIp("192.168.3.86");
-                awardUser.setUserHead("/resources/goods/defaultH.jpg");
-                //模拟数据结束
 
                 if (awardUser != null) {
                     goodsDetailModel.setAwardUserName(awardUser.getRealName());
@@ -264,33 +293,42 @@ public class GoodsServiceImpl implements GoodsService {
                     goodsDetailModel.setAwardUserCityName(awardUser.getCityName());
                     String head = awardUser.getUserHead();
                     if (head != null) {
-                        goodsDetailModel.setAwardUserHead(staticResourceService.getResource(head).toString());
+                        goodsDetailModel.setAwardUserHead(commonConfigService.getHuoBanPlusManagerWebUrl()  + head);
                     }
-                    goodsDetailModel.setAwardUserJoinCount(10L);  //todo 获取中奖用户的参与次数
+                    goodsDetailModel.setAwardUserJoinCount(userBuyFlowService.findByUserIdAndIssuId(awardUser.getId(), issue.getId()).size() + 0L);
                 }
 
-                goodsDetailModel.setAwardTime(new Date());  //todo
-                goodsDetailModel.setLuckNumber(100001L);
-                //goodsDetailModel.setAwardTime(issue.getAwardingDate());
-                //goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
+                goodsDetailModel.setAwardTime(issue.getAwardingDate());
+                goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
             }
 
             //3.获取用户当前参与次数
-            //3.1获取当前用户 todo
-            User user = new User();
+            //3.1获取当前用户
+            User user = webPublicModel.getCurrentUser();
+            if(user != null){
+                map.put("userId", user.getId());
 
-            //3.2获取用户参与次数 todo
-            goodsDetailModel.setJoinCount(0);
+                //3.2获取用户参与次数
+                RaiderNumbersModel myRaiderNumbers = userNumberService.getMyRaiderNumbers(user.getId(), issueId);
+                if(myRaiderNumbers.getAmount() != null){
+                    int amount = myRaiderNumbers.getAmount().intValue();
+                    goodsDetailModel.setJoinCount(amount);
+                    if(amount == 1){
+                        goodsDetailModel.setNumber(myRaiderNumbers.getNumbers().get(0));
+                    }
+                }else{
+                   goodsDetailModel.setJoinCount(0);
+                }
+            }else{
+                goodsDetailModel.setJoinCount(0);
+            }
 
             //4.获取首次购买的时间 todo
             goodsDetailModel.setFirstBuyTime(new Date());
         }
 
         map.put("goodsDetailModel", goodsDetailModel);
-        //todo 用户id赋值到页面 by xhk
-        map.put("userId",3);
-        map.put("issueId", 2);
-        map.put("customerId", 3447);
+        map.put("customerId", webPublicModel.getCustomerId());
     }
 
     /**
@@ -312,7 +350,7 @@ public class GoodsServiceImpl implements GoodsService {
             buyListModel.setCity("杭州");
             buyListModel.setDate(new Date());
             buyListModel.setIp("192.168.1.254");
-            buyListModel.setUserHeadUrl(staticResourceService.getResource("resources/goods/defaultH.jpg").toString());
+            buyListModel.setUserHeadUrl(commonConfigService.getHuoBanPlusManagerWebUrl()  + "resources/goods/defaultH.jpg");
             buyListModelList.add(buyListModel);
         }
         //结束模拟数据
@@ -353,8 +391,6 @@ public class GoodsServiceImpl implements GoodsService {
         countResultModel.setUserNumbers(countResultUserNumberListModelList);
         //结束模拟数据
 
-
-
 /*        if (countResult != null) {
             countResultModel.setIssueNo(countResult.getIssueNo());
             countResultModel.setNumberA(countResult.getNumberA() == null ? "" : countResult.getNumberA().toString());
@@ -381,5 +417,51 @@ public class GoodsServiceImpl implements GoodsService {
         }
         countResultModel.setLuckNumber(issue.getLuckyNumber());*/
         map.put("countResultModel", countResultModel);
+    }
+
+    /**
+     * 获取商品图文详情 todo
+     * @param goodsId
+     * @param map
+     */
+    @Override
+    public void jumpToImageTextDetail(Long goodsId, Map<String, Object> map) {
+
+    }
+
+    @Override
+    public SelGoodsSpecModel getSelGoodsSpecModelByIssueId(Long issueId) throws Exception {
+        if(issueId == null) return null;
+        SelGoodsSpecModel selGoodsSpecModel = new SelGoodsSpecModel();
+
+        //1.获取期号对用的期
+        Issue issue = issueRepository.getOne(issueId);
+
+        //2.获取期号对应的活动商品
+        if(issue != null){
+            Goods goods = issue.getGoods();
+
+            if(goods != null){
+                selGoodsSpecModel.setId(goods.getId());
+                selGoodsSpecModel.setTitle(goods.getTitle());
+                selGoodsSpecModel.setMallGoodsId(goods.getToMallGoodsId());
+                selGoodsSpecModel.setMerchantId(goods.getMerchantId());
+
+                String pictureUrls = goods.getPictureUrls();
+                List<String> pictureUrlList = new ArrayList<>();
+                if(pictureUrls != null){
+                    String[] pics = pictureUrls.split(",");
+                    for(int i = 0; i < pics.length; ++i){
+                        pictureUrlList.add(commonConfigService.getHuoBanPlusManagerWebUrl() + pics[i]);
+                    }
+                }
+                selGoodsSpecModel.setPictureUrlList(pictureUrlList);
+                //3.获取商城商品
+                com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
+                selGoodsSpecModel.setIntroduce(mallGoods.getIntro());
+            }
+        }
+
+        return selGoodsSpecModel;
     }
 }

@@ -11,7 +11,7 @@ package com.huotu.duobaoweb.service;
 
 
 /**
- * 通用变量定义
+ * 通用变量定义 todo 没有用到？
  * Created by lgh on 2015/9/23.
  */
 public interface CommonConfigService {
@@ -26,55 +26,41 @@ public interface CommonConfigService {
 
 
     /**
-     * 静态资源域名地址
-     *
-     * @return
-     */
-    String getResourcesUri();
-
-    /**
-     * 上传资源的服务地址
-     *
-     * @return
-     */
-    String getResourcesHome();
-
-
-    /**
-     * 接受被提供错误信息的手机号
-     * 比如抓取异常会发送到此手机
-     *
-     * @return
-     */
-    String getErrorPrividedMobile();
-
-
-    /**
      * 商城的商家Id
      * @return
      */
     String getMallCustomerId();
 
-    /**
-     * 商城mallapi地址
-     *
-     * @return
-     */
-    String getMallApiUrl();
 
     /**
-     * 商城安全keysecret
-     *
+     * 夺宝的apikey
      * @return
      */
-    String getMallAuthKeySecret();
+    String getDuobaoApiKey();
 
     /**
-     * 商城地址
-     *
+     * 伙伴商城管理Web地址
+     */
+    String getHuoBanPlusManagerWebUrl();
+
+
+
+    /**
+     * 夺宝的key
      * @return
      */
-    String getMallUrl();
+    String getDuobaoKey();
 
+    /**
+     * 得到商城的顶级域名
+     * @return
+     */
+    String getMaindomain();
+
+    /**
+     * 支付秘钥
+     * @return
+     */
+    String getPaySecret();
 
 }

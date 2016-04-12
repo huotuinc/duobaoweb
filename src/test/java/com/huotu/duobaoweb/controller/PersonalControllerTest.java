@@ -187,7 +187,7 @@ public class PersonalControllerTest extends BaseTest {
         currentIssue = goods.getIssue();
 
         //创建用户
-        currentUser = generateUserWithoutMobile(UUID.randomUUID().toString(), userRepository);
+        currentUser = generateUser(UUID.randomUUID().toString(), userRepository);
         //创建订单
         generateOrdersWithPayed(currentUser, goods.getIssue(), goodsAmount, ordersRepository, ordersItemRepository, issueRepository);
 
@@ -205,12 +205,9 @@ public class PersonalControllerTest extends BaseTest {
 
 
     @Test
-    public void testGetMyLotteryList() throws Exception
-        {
+    public void testGetMyLotteryList() throws Exception {
 
-
-
-        }
+    }
 
     @Test
     public void testGetOneLotteryInfo ()throws Exception {

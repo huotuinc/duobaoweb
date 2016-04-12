@@ -20,6 +20,7 @@ var turnToBalance = function (cartId, buyNum, userId, issueId, customerId) {
 }
 //todo 加入必须的信息
 var payToService = function (payMoney, detail, cartsId, payType, type, userId, issueId, customerId) {
+    alert("in payservice!");
     var cooOID = getCookie("qbdbopenid");
     var cooSIGN = getCookie("qbdbosign");
 
@@ -32,6 +33,7 @@ var payToService = function (payMoney, detail, cartsId, payType, type, userId, i
     //"&payModel=" + payModel;
     //window.location.href = url;
 
+    alert(payMoney+detail+cartsId+payType+type);
     $.jBox.tip("正在支付...", "loading");
     $.ajax({
         url: "../shopping/pay",
@@ -47,6 +49,7 @@ var payToService = function (payMoney, detail, cartsId, payType, type, userId, i
         dataType: "json",
         success: function (data) {
             if (data.code == 200) {
+                alert("success"+ data.url);
                 $.jBox.tip(data.message);
                 window.location = data.url;
             } else {

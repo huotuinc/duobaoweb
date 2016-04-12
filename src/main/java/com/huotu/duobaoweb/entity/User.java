@@ -121,4 +121,13 @@ public class User {
     @Column(length = 50)
     private String cityName;
 
+    /**
+     * 对应商城的Id
+     */
+    private Long mallUserId;
+
+    /**
+     * 商城Id
+     */
+    private Long merchantId;
 }

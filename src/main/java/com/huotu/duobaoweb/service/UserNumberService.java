@@ -1,6 +1,8 @@
 package com.huotu.duobaoweb.service;
 
 
+import com.huotu.duobaoweb.entity.Issue;
+import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.entity.UserNumber;
 import com.huotu.duobaoweb.model.RaiderNumbersModel;
 
@@ -29,6 +31,11 @@ public interface UserNumberService {
      */
     List<UserNumber> getLotteryBeforeTop50(Long date);
 
-
-
+    /**
+     * 找到对应期号的所有号码
+     * @param user
+     * @param issue
+     * @return
+     */
+    List<Long> getUserNumbersByUserAndIssue(User user, Issue issue);
 }

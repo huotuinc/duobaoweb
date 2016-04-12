@@ -19,7 +19,9 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         String requestURI = request.getRequestURI().substring(request.getContextPath().length());
-        if (requestURI.startsWith("/personal/") || requestURI.startsWith("/goods/")) {
+        if (requestURI.startsWith("/personal/") || requestURI.startsWith("/goods/")
+                || requestURI.startsWith("/user/") || requestURI.startsWith("/shopping/")
+                || requestURI.startsWith("/pay/") || requestURI.startsWith("/api/")) {
             try {
                 try {
                     throw ex;

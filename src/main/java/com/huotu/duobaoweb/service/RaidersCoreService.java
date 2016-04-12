@@ -88,6 +88,6 @@ public interface RaidersCoreService {
     /**
      * 处理用户购买失败
      */
-    void doUserBuyFail();
+    void doUserBuyFail() throws IOException;
 
 }

@@ -1,5 +1,6 @@
 package com.huotu.duobaoweb.model;
 
+import com.huotu.duobaoweb.common.CommonEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,4 +22,9 @@ public class PayResultModel {
      * 成功支付得到的号码
      */
     private List<Long> resultNumber;
+
+    /**
+     *支付结果类型
+     */
+    private CommonEnum.PayResult resultType;
 }
