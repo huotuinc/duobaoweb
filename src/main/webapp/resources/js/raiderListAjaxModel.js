@@ -1,5 +1,5 @@
-var data1 = { type: $("#type").val(), pageSize: 10 ,page: 1,userId: $("#userId").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
-var data2 = { pageSize: 10 ,page: 1,userId: $("#userId").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
+var data1 = { type: $("#type").val(), pageSize: 10 ,page: 1,issueId: $("#issueId").val(),customerId: $("#customerId").val()};
+var data2 = { pageSize: 10 ,page: 1,issueId: $("#issueId").val(),customerId: $("#customerId").val()};
 
 $(function () {
     var url = "getMyInvolvedRecordAjax";

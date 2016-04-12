@@ -283,6 +283,8 @@ public class BaseTest {
         goods.setShareTitle("分享标题");
         goods.setShareDescription("分享描述");
         goods.setSharePictureUrl("/resources/images/dsds.jpg");
+        goods.setMerchantId(3447L);
+        goods.setToMallGoodsId(17066L);
         return goodsRepository.saveAndFlush(goods);
     }
 
@@ -304,6 +306,7 @@ public class BaseTest {
                 issue.setAwardingDate(new Date());
                 issue.setLuckyNumber(20160121l + i);
 
+
             } else {
                 issue.setStatus(CommonEnum.IssueStatus.going);
             }
@@ -313,14 +316,16 @@ public class BaseTest {
         issue.setBuyAmount(12l);
         issue.setDefaultAmount(1l);
         issue.setGoods(goods);
+        issue.setStepAmount(1L);
         issue = issueRepository.saveAndFlush(issue);
         if (i % 3 == 0) {
             Delivery delivery = new Delivery();
             delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.GetPrize);
-//            delivery.setDeliveryTime(new Date());
             delivery.setUser(user);
             delivery.setIssue(issue);
             delivery.setIsCommit(false);
+            goods.setIssue(issue);
+            goodsRepository.saveAndFlush(goods);
             deliveryRepository.saveAndFlush(delivery);
         }
         return issue;

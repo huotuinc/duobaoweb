@@ -84,4 +84,9 @@ public class DeliveryModel {
      * 商品规格
      */
     private String productSpec;
+
+    /**
+     * 商城订单id
+     */
+    private String mallOrderId;
 }

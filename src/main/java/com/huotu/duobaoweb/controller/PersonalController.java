@@ -1,22 +1,13 @@
 package com.huotu.duobaoweb.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.huotu.common.base.HttpHelper;
 import com.huotu.duobaoweb.common.PublicParameterHolder;
-import com.huotu.duobaoweb.entity.Delivery;
 import com.huotu.duobaoweb.model.*;
 import com.huotu.duobaoweb.repository.CityRepository;
 import com.huotu.duobaoweb.repository.DeliveryRepository;
-import com.huotu.duobaoweb.service.DeliveryService;
-import com.huotu.duobaoweb.service.GoodsService;
-import com.huotu.duobaoweb.service.UserBuyFlowService;
-import com.huotu.duobaoweb.service.UserNumberService;
-import com.huotu.huobanplus.common.entity.Goods;
-import com.huotu.huobanplus.common.entity.support.SpecDescription;
-import com.huotu.huobanplus.common.entity.support.SpecDescriptions;
+import com.huotu.duobaoweb.service.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
-import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,7 +47,11 @@ public class PersonalController {
     @Autowired
     GoodsService goodsService;
 
+    @Autowired
+    CommonConfigService commonConfigService;
 
+    @Autowired
+    MerchantRestRepository merchantRestRepository;
     /**
      * 跳转到我的参与记录页面
      * @param model
@@ -155,6 +148,9 @@ public class PersonalController {
         WebPublicModel common = PublicParameterHolder.getParameters();
         DeliveryModel deliveryModel = deliveryService.findByIssueId(common.getIssueId());
         model.addAttribute("customerId",common.getCustomerId());
+        //todo lhx
+        String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMaindomain().trim();
+        model.addAttribute("mallOrderUrl",url);
         model.addAttribute("issueId",common.getIssueId());
         model.addAttribute("deliveryModel",deliveryModel);
         return "/html/personal/lotteryInfo";
@@ -171,6 +167,7 @@ public class PersonalController {
     public String selGoodsSpec(Model model)  throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
         SelGoodsSpecModel selGoodsSpecModel = goodsService.getSelGoodsSpecModelByIssueId(common.getIssueId());
+        //todo lhx 1L 改商城商品真实id
         Map<String,Object> map = userBuyFlowService.getGoodsSpec(1L);
         model.addAttribute("goodsAndSpecModel", selGoodsSpecModel);
         model.addAttribute("list",map.get("mgsList"));

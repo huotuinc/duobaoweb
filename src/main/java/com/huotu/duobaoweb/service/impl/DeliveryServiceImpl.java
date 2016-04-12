@@ -1,13 +1,10 @@
 package com.huotu.duobaoweb.service.impl;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.huotu.common.base.HttpHelper;
 import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.common.PublicParameterHolder;
-import com.huotu.duobaoweb.common.WeixinPayUrl;
 import com.huotu.duobaoweb.entity.Delivery;
-import com.huotu.duobaoweb.entity.pk.DeliveryPK;
 import com.huotu.duobaoweb.model.DeliveryModel;
 import com.huotu.duobaoweb.model.WebPublicModel;
 import com.huotu.duobaoweb.repository.DeliveryRepository;
@@ -21,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +70,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             deliveryModel.setTitle(delivery.getIssue().getGoods().getTitle());
             deliveryModel.setToAmount(delivery.getIssue().getToAmount());
             deliveryModel.setProductSpec(delivery.getProductSpec());
+            deliveryModel.setMallOrderId(delivery.getMallOrderId());
             deliveryModel.setDefaultPictureUrl(staticResourceService.getResource(delivery.getIssue().getGoods().getDefaultPictureUrl()).toString());
             deliveryModel.setLuckyNumber(delivery.getIssue().getLuckyNumber());
         }
@@ -96,33 +94,46 @@ public class DeliveryServiceImpl implements DeliveryService {
     public boolean addRecpeiptAddress(Long customerId,Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         Delivery delivery = deliveryRepository.findByIssueId(deliveryId);
+        if (delivery.getIsCommit()){
+            return false;
+        }
         Date date = new Date();
         Map<String,String> map = new HashMap<>();
         String [] detail = details.split(",");
         map.put("action","submit");
-        map.put("customerid",customerId+"");
-        map.put("goodsid",delivery.getIssue().getGoods().getToMallGoodsId()+"");
-        map.put("productid", delivery.getProductId()+"");
+        //todo lhx
+//        map.put("customerid",customerId+"");
+        map.put("customerid",3447+"");
+        //todo lhx
+//        map.put("goodsid",delivery.getIssue().getGoods().getToMallGoodsId()+"");
+        map.put("goodsid",17066+"");
+        //todo lhx
+//        map.put("productid", delivery.getProductId()+"");
+        //todo lhx
+        map.put("productid", 13281+"");
         map.put("nums","1");
-        map.put("shipname",receiver);
+        map.put("shipname",URLEncoder.encode(receiver,"utf-8"));
         map.put("shipmobile",mobile);
-        map.put("shipaddr",detail[detail.length-1]);
-        map.put("shipprovince",detail[0]);
-        map.put("shipcity",detail[1]);
-        map.put("shiparea",detail[2]);
-        map.put("memo",remark);
-        map.put("openid",common.getOpenId());
+        map.put("shipaddr",URLEncoder.encode(detail[detail.length-1],"utf-8"));
+        map.put("shipprovince",URLEncoder.encode(detail[0],"utf-8"));
+        map.put("shipcity", URLEncoder.encode(detail[1],"utf-8"));
+        map.put("shiparea",URLEncoder.encode(detail[2],"utf-8"));
+        map.put("memo",URLEncoder.encode(remark,"utf-8"));
+//        map.put("openid",common.getOpenId());
+        //todo lhx 用户openid
+        map.put("openid","oJtvet5XBcAG3J9EK9N4llL_dwaA");
         map.put("memberid","0");
         map.put("srctype","5");
         map.put("srcid",delivery.getIssue().getGoods().getId()+"");
         map.put("timestamp", date.getTime()+ "");
         String sign = getSign(map);
         map.put("sign", sign);
+        //todo lhx
         String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMaindomain().trim()+"/api/order.aspx";
-        System.out.println(url);
+//        url = "http://192.168.1.16:8899/api/order.aspx";
         String json = HttpHelper.postRequest(url, map);
-        String code = JsonPath.read(json, "$.code");
-        if (code.equals("1")){
+        int code = JsonPath.read(json, "$.code");
+        if (code==1){
             delivery.setReceiver(receiver);
             delivery.setMobile(mobile);
             delivery.setDetails(details);
