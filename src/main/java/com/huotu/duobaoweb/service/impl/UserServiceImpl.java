@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     public WebPublicModel getWebPublicModel(User user, Issue issue) {
         String sign=this.getSign(user);
         WebPublicModel webPublicModel=new WebPublicModel();
-        if(issue!=null) {
+        if(issue!=null&&issue.getId()!=null) {
             webPublicModel.setCustomerId(issue.getGoods().getMerchantId());
             webPublicModel.setIssueId(issue.getId());
             webPublicModel.setOpenId(user.getWeixinOpenId());
