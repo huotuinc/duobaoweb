@@ -67,11 +67,6 @@ public class CoreTest extends BaseTest {
     private User currentUser;
     private Issue currentIssue;
 
-    @Test
-    public void tt(){
-        String a=null;
-        System.out.print(a.equals(""));
-    }
 
     @Test
     public void drawLottery() throws Exception {
