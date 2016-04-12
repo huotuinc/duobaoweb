@@ -132,7 +132,7 @@ public class GoodsController {
             request.getSession(true).setAttribute("totest",System.currentTimeMillis());
             log.info("update curent The Value ");
         }
-        CookieHelper.set(response, "test", "1", request.getLocalName(), request.getContextPath(), 1000 * 60);
+        CookieHelper.set(response, "test", "1", request.getLocalName(), request.getContextPath(), 60000);
         return "/html/default";
     }
 

@@ -5,7 +5,10 @@ import com.huotu.duobaoweb.entity.Delivery;
 import com.huotu.duobaoweb.model.DeliveryModel;
 import org.springframework.data.domain.Page;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 /**
  * Created by lhx on 2016/2/20.
@@ -47,5 +50,20 @@ public interface DeliveryService {
      * @param mobile
      * @param details
      */
-    void addRecpeiptAddress(Long deliveryId, String receiver, String mobile, String details);
+    boolean addRecpeiptAddress(Long customerId,Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException;
+
+    /**
+     * 对数据进行签名
+     * @param map
+     * @return
+     */
+    String getSign(Map<String, String> map) throws UnsupportedEncodingException;
+    /**
+     * 添加货品信息
+     * @param issueId
+     * @param productId
+     * @param productName
+     */
+    void addDeliveryProductInfo(Long issueId, Long productId, String productName);
+
 }

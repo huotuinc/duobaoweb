@@ -34,7 +34,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getIndexUrl(Long issueId) {
-        String url=commonConfigService.getWebUrl()+"/user/getOpid?issueId="+issueId;
+        String url = commonConfigService.getWebUrl()+ "/user/getOpid?issueId=";
+        if(issueId!=null) {
+            url =url + issueId;
+        }
         return url;
     }
 

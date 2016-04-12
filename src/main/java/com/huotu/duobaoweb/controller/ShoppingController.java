@@ -85,7 +85,7 @@ public class ShoppingController {
     }
 
     /**
-     * 全额购买购物车 直接跳转到支付界面 pay.html
+     * 全额购买购物车 直接跳转到支付界面 pay.html 暂时废弃
      */
     @RequestMapping(value = "/allToCarts", method = RequestMethod.POST)
     @ResponseBody
@@ -124,19 +124,15 @@ public class ShoppingController {
         String openidUrl = userService.getWeixinAuthUrl(common);
 
         resultModel.setUrl("../shopping/toAllPay?shoppingCartId=" + shoppingCart.getId() +
-                "&userId=" + common.getCurrentUser().getId() +
                 "&issueId=" + common.getIssueId() +
-                "&customerId" + common.getCustomerId() +
-                "&openId=" + common.getOpenId() +
-                "&sign=" + common.getSign() +
-                "&openidUrl" + openidUrl);
+                "&customerId" + common.getCustomerId());
         resultModel.setMessage("添加成功！");
         resultModel.setCode(200);
         return resultModel;
     }
 
     /**
-     * 全额支付跳转到支付页面
+     * 全额支付跳转到支付页面 暂时废弃
      *
      * @return
      */
@@ -146,15 +142,9 @@ public class ShoppingController {
         WebPublicModel common = PublicParameterHolder.getParameters();
         payModel.setType(2);
         if (payModel != null) {
-            String openidUrl = userService.getWeixinAuthUrl(common);
-
-            model.addAttribute("openidUrl", openidUrl);
             model.addAttribute("payModel", payModel);
-            model.addAttribute("userId", common.getCurrentUser().getId());
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
-            model.addAttribute("openId", common.getOpenId());
-            model.addAttribute("sign", common.getSign());
 
             return "html/shopping/pay";
         } else {
@@ -183,16 +173,9 @@ public class ShoppingController {
             shoppingCartsModel.setBuyNum(0L);
             shoppingCartsModel.setBuyMoney(0.0);
         }
-        //微信授权回调url，跳转到index
-        String openidUrl = userService.getWeixinAuthUrl(common);
-
-        model.addAttribute("openidUrl", openidUrl);
         model.addAttribute("shoppingCarts", shoppingCartsModel);
-        model.addAttribute("userId", common.getCurrentUser().getId());
         model.addAttribute("issueId", common.getIssueId());
         model.addAttribute("customerId", common.getCustomerId());
-        model.addAttribute("openId", common.getOpenId());
-        model.addAttribute("sign", common.getSign());
         return "html/shopping/cartsList";
     }
 
@@ -205,18 +188,11 @@ public class ShoppingController {
     public String balance(Model model, Long cartId, Integer buyNum) throws UnsupportedEncodingException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         PayModel payModel = shoppingService.balance(cartId, buyNum);
-        payModel.setType(1);
         if (payModel != null) {
-            //微信授权回调url，跳转到index
-            String openidUrl = userService.getWeixinAuthUrl(common);
-
-            model.addAttribute("openidUrl", openidUrl);
+            payModel.setType(1);
             model.addAttribute("payModel", payModel);
-            model.addAttribute("userId", common.getCurrentUser().getId());
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
-            model.addAttribute("openId", common.getOpenId());
-            model.addAttribute("sign", common.getSign());
             return "html/shopping/pay";
         } else {
             //返回购物车提示错误
@@ -254,15 +230,5 @@ public class ShoppingController {
         return resultModel;
     }
 
-    /**
-     * 结算购物车
-     *
-     * @return
-     */
-    @RequestMapping(value = "/showResult", method = RequestMethod.GET)
-    public String showResult(String orderNo,Model model) throws UnsupportedEncodingException {
-        PaysResultShowModel paysResultShowModel=shoppingService.getPayResultShowModel(orderNo);
-        model.addAttribute("paysResultShowModel", paysResultShowModel);
-        return "/html/shopping/payResult";
-    }
+
 }

@@ -308,6 +308,7 @@ public class BaseTest {
                 issue.setStatus(CommonEnum.IssueStatus.going);
             }
         }
+        issue.setPricePercentAmount(new BigDecimal(1));
         issue.setToAmount(20l);
         issue.setBuyAmount(12l);
         issue.setDefaultAmount(1l);
@@ -319,6 +320,7 @@ public class BaseTest {
 //            delivery.setDeliveryTime(new Date());
             delivery.setUser(user);
             delivery.setIssue(issue);
+            delivery.setIsCommit(false);
             deliveryRepository.saveAndFlush(delivery);
         }
         return issue;

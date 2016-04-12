@@ -43,9 +43,5 @@ public class SelGoodsSpecModel {
      */
     private String introduce;
 
-    /**
-     *
-     */
-    //List<MallGoodsSpecificationsModel> mallGoodsSpecificationsModelList;
 
 }

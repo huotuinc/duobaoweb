@@ -45,7 +45,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://localhost:8080/huobanplusmanager/");}
+    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://localhost:8888/duobaoweb");}
 
     @Override
     public String getDuobaoKey() {
@@ -57,10 +57,10 @@ public class CommonConfigServiceImpl implements CommonConfigService {
         return env.getProperty("duobao.maindomain", " 51flashmall.com");
     }
 
+
     @Override
-    public String getPaySecret() {
-        //todo 待提供秘钥
-        return null;
+    public String getMallKey() {
+        return env.getProperty("mall.key", "1165a8d240b29af3f418b8d10599d0dc");
     }
 
 

@@ -4,8 +4,10 @@ import com.huotu.duobaoweb.entity.UserBuyFlow;
 import com.huotu.duobaoweb.model.*;
 import org.springframework.data.domain.Page;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lhx on 2016/2/2.
@@ -46,8 +48,23 @@ public interface UserBuyFlowService {
      */
     UserBuyFlow findOne(Long issueId);
 
-
+    /**
+     * 我的参与列表
+     * @param userId
+     * @param type
+     * @param page
+     * @param pageSize
+     * @return
+     */
     Page<UserBuyFlow> getMyInvolvedRecordAjax(Long userId, Integer type, Integer page, Integer pageSize);
 
+
     RaiderListModelAjax toListRaiderListModel(Integer type,Long userId, Integer pageSize, Integer page) throws URISyntaxException;
+
+    /**
+     * 商城商品id
+     * @param goodsId
+     * @return
+     */
+    Map<String,Object> getGoodsSpec(Long goodsId) throws IOException;
 }

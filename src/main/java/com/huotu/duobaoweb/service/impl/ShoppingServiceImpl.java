@@ -146,21 +146,24 @@ public class ShoppingServiceImpl implements ShoppingService {
     public String getWeixinPayUrl(Orders orders) throws IOException {
         //http://{subdomain}.{maindomain}/weixin/pay/payment_delegate.aspx
         Date date=new Date();
-        String notifyurl = commonConfigService.getWebUrl() + "pay/payCallbackWeixin";
-        String returnurl=commonConfigService.getWebUrl()+"shopping/showResult";
+        String notifyurl = commonConfigService.getWebUrl() + "/pay/payCallbackWeixin";
+        String returnurl=commonConfigService.getWebUrl()+"/user/showResult";
         notifyurl = notifyurl + "?orderNo=" + orders.getId();
         returnurl= returnurl + "?orderNo=" + orders.getId();
-        notifyurl = URLEncoder.encode(notifyurl);
-        returnurl = URLEncoder.encode(returnurl);
-        WeixinPayUrl.subdomain=merchantRestRepository.getOne(String.valueOf(WeixinPayUrl.customerid)).getSubDomain();
+//        notifyurl = URLEncoder.encode(notifyurl,"UTF-8");
+//        returnurl = URLEncoder.encode(returnurl,"UTF-8");
+        WeixinPayUrl.subdomain=merchantRestRepository.getOneByPK(String.valueOf(WeixinPayUrl.customerid)).getSubDomain();
         WeixinPayUrl.notifyurl=notifyurl;
         WeixinPayUrl.returnurl=returnurl;
-        WeixinPayUrl.outradeno=orders.getId();
+        WeixinPayUrl.outtradeno=orders.getId();
         WeixinPayUrl.timestamp=date.getTime();
         WeixinPayUrl.totalfee=orders.getMoney().doubleValue();
-        WeixinPayUrl.title="夺宝活动";
+        WeixinPayUrl.title="夺宝活动";//URLEncoder.encode("夺宝活动","UTF-8");
         Map<String,String> paramMap=this.putParamToPayMap();
         WeixinPayUrl.sign=securityService.getPaySign(paramMap);
+        WeixinPayUrl.notifyurl = URLEncoder.encode(notifyurl, "UTF-8");
+        WeixinPayUrl.returnurl = URLEncoder.encode(returnurl,"UTF-8");
+        WeixinPayUrl.title=URLEncoder.encode("夺宝活动","UTF-8");
         String url = WeixinPayUrl.getWeixinPayUrl();
         return url;
     }
@@ -170,7 +173,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         Map<String,String> result=new HashMap<String,String>();
         result.put("customerid",String.valueOf(WeixinPayUrl.customerid));
         result.put("returnurl",WeixinPayUrl.returnurl);
-        result.put("outradeno",WeixinPayUrl.outradeno);
+        result.put("outtradeno",WeixinPayUrl.outtradeno);
         result.put("openid",WeixinPayUrl.openid);
         result.put("title",WeixinPayUrl.title);
         result.put("timestamp",String.valueOf(WeixinPayUrl.timestamp));
@@ -182,7 +185,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
     public Orders createOrders(PayModel payModel) throws IOException {
         ShoppingCart shoppingCart = shoppingCartRepository.findOne(payModel.getCartsId());
-        if (payModel.getType() == 1) {
+        if (payModel.getType()!=null&&payModel.getType() == 1) {
             //如果是正常购买
             if (shoppingCart == null ||
                     shoppingCart.getIssue().getStatus() != CommonEnum.IssueStatus.going ||
@@ -195,7 +198,9 @@ public class ShoppingServiceImpl implements ShoppingService {
                 orders.setId(raidersCoreService.createOrderNo(new Date(), shoppingCart.getUser().getId()));
                 orders.setUser(shoppingCart.getUser());
                 orders.setTime(new Date());
-                orders.setMoney(shoppingCart.getIssue().getPricePercentAmount().multiply(new BigDecimal(String.valueOf(shoppingCart.getBuyAmount()))));
+                //todo 测试都是付一分钱
+                //orders.setMoney(shoppingCart.getIssue().getPricePercentAmount().multiply(new BigDecimal(String.valueOf(shoppingCart.getBuyAmount()))));
+                orders.setMoney(new BigDecimal("0.01"));
                 orders.setOrderType(CommonEnum.OrderType.raiders);
                 orders.setPayType(payModel.getPayType() == 1 ? CommonEnum.PayType.weixin : CommonEnum.PayType.alipay);
                 orders.setTotalMoney(orders.getMoney());
@@ -213,7 +218,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                 return orders;
             }
-        } else if (payModel.getType() == 2) {
+        } else if (payModel.getType()!=null&&payModel.getType() == 2) {
             //全额购买暂时废弃 by Xhk
             //商品库存如果不够则不能全额购买
             com.huotu.huobanplus.common.entity.Goods goods=goodsRestRepository.getOneByPK(shoppingCart.getIssue().getGoods().getToMallGoodsId());

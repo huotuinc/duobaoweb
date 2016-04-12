@@ -77,4 +77,5 @@ public class RaiderListModel {
      */
     private Date time;
 
+
 }

@@ -1,0 +1,218 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="description" content=""/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/commfont.css"
+          th:href="@{/resources/css/commfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"
+          th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/scfd.css" th:href="@{/resources/css/scfd.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/dediy.css" th:href="@{/resources/css/dediy.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/js/jBox/Skins/Green/jbox.css" th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resources/js/jquery-1.7.2.min.js"
+            th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+
+    <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resources/js/jBox/jquery.tipsy.js}"></script>
+    <script type="text/javascript" src="../../resources/js/TouchSlide.1.1.js"
+            th:src="@{/resources/js/TouchSlide.1.1.js}"></script>
+    <title></title>
+</head>
+<style>
+
+    .jmola {
+        border-bottom: 1px solid #e5e5e5;
+        color: #111
+    }
+
+    .jsols {
+        display: block;
+        position: absolute;
+        position: absolute;
+        right: 3px;
+        top: 0px;
+        padding: 10px;
+    }
+
+    .wx-fm-title {
+        text-align: center;
+        padding: 10px 0;
+        font-size: 1.5rem;
+        font-family: inherit;
+    }
+</style>
+<body>
+<form id="form1" class="js-wx-fm wx-ui wx-fm" th:action="addDeliveryProductInfo" th:method="get">
+    <input type="hidden"  th:value="${issueId}" id="issueId" name="issueId"/>
+    <input type="hidden"  th:value="${customerId}" id="customerId" name="customerId"/>
+    <input type="hidden"  name="productId" id="productId"/>
+    <input type="hidden"  name="productName" id="productName"/>
+</form>
+<aside class="detail_standard_wx" style="margin:0px">
+
+    <div id="container" style="" th:object="${goodsAndSpecModel}">
+        <div class="jmola">
+            <h4 class="wx-fm-title">选择奖品规格</h4>
+            <span class="jsols"><a href="javascript:history.go(-1);"><img src="../../resources/images/colos.gif" th:src="@{/resources/images/colos.gif}" style="width:20px"/></a></span>
+        </div>
+        <div class="superli clearfix editing">
+            <div class="control-group">
+                <div id="focus-duobao" class="focus-duobao">
+                    <div class="hd">
+                        <ul>
+                        </ul>
+                    </div>
+                    <div class="bd">
+                        <ul>
+                            <li th:each="url:*{pictureUrlList}">
+                                <a href="#"><img src="../../resources/images/dsds.jpg" th:src="${url}" style="width:100%"/></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p style="clear:both"></p>
+            </div>
+        </div>
+        <script type="text/javascript" th:inline="javascript">
+            TouchSlide({
+                slideCell: "#focus-duobao",
+                titCell: ".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+                mainCell: ".bd ul",
+                effect: "leftLoop",
+                interTime: 15000,
+                pnLoop: true,
+                autoPlay: true,//自动播放
+                autoPage: true //自动分页
+            });
+
+            $(function(){
+                var productList = /*[[${productList}]]*/'';
+                var mgslist = /*[[${list}]]*/'';
+                var flag = false;
+                var productId=0;
+                //选择规格
+                $(".option").click(function(){
+                    $(this).siblings().removeClass("option_selected current");
+                    $(this).addClass("option_selected current");
+                    if($(".option_selected").length==mgslist.length){
+                        var spec = "";
+                        productId=0;
+                        //循环所有被选规则
+                        $(".option_selected").each(function(){
+                            flag = true;
+                            spec = spec+$(this).text()+",";
+                        });
+                        if(flag){
+                            //
+                            for(var i=0; productList.length>i; i++){
+                                if(productList[i].spec==spec.substring(0,spec.length-1)){
+                                    if(productList[i].stock-productList[i].freeze>0){
+                                        productId = productList[i].id;
+                                        $("#productId").val(productId);
+                                        $("#productName").val(spec);
+                                        $("#skuStock").show();
+                                        $("#quehuo").hide();
+                                    }else{
+                                        $("#skuStock").hide();
+                                        $("#quehuo").show();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                //提交
+                $("#submit").click(function(){
+                    if(flag){
+                        if(productId!=0){
+                            $("#form1").submit();
+                        }
+                    }else{
+                        $.jBox.tip("请选择规格，如库存不足请联系客服。")
+                    }
+                });
+            });
+        </script>
+
+        <div class="buy_area" style="border: 0;">
+            <div class="fn_wrap">
+                <h1 class="fn" id="proName" style="font-size: 16px;" th:text="*{title}">【企业团购】林家铺子 果锦 糖水黄桃罐头425g*12罐/一箱 16101301001</h1>
+            </div>
+            <div class="sku_container sku_container_on" id="skuCont">
+                <div class="sku_wrap" style="margin-top: 10px;">
+                    <div id="prop-list">
+                        <div class="sku" th:each="mgs:${list}">
+                            <h3 th:text="${mgs.name+':'}">规格1：</h3>
+                            <div class="sku_list">
+                                <span class="option " id=""  th:each="spec:${mgs.specDescriptionList}" th:text="${spec.specValue}" >红色</span>
+                                <!--<span class="option option_selected current">黑色</span>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sku sku_num">
+                        <h3>数量：</h3>
+                        <div class="stock_num" style="margin-left:0px">
+                            <div class="inner">
+                                <div id="skuStock" style="display:none;"><span id="stock-num">库存充足</span></div>
+                                <div id="quehuo" style="display:none;"><span id="quehuo-num">缺货（可通过公众号联系客服为你解决）</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--新增-->
+        <div style="height:1px; background-color:#f1f1f1; width:100%; margin-top:10px;"></div>
+        <div class="g-box">
+            <div class="g-boxs">
+                <!--循环-->
+                <div class="tl"><a>
+                    <div class="top11">
+                        <p class="f-lefto"><img class="imgsize" src="../../resources/images/iconfont-graphic-lesson.png" th:src="@{/resources/images/iconfont-graphic-lesson.png}"/><i>商品详情</i>
+                        </p>
+
+                        <p class="xian-f"></p>
+                    </div>
+                </a></div>
+                <!--循环-->
+            </div>
+        </div>
+        <div style="height:6px; background-color:#f1f1f1; width:100%;"></div>
+        <!--新增-->
+        <div class="detail_info_wrap">
+            <div class="detail_list" id="detailCont">
+                <!-- 商品介绍 -->
+                <div class="detail_item p_desc padding_none"><!--新增-padding_none-->
+                    <div id="proDesc" class="detail_pc" th:utext="*{introduce}"><p style="text-align: center;"><span
+                            style="color: rgb(255, 0, 0);"></span></p>
+                    </div>
+                    <div style="z-index: 999;"></div>
+                    <div style="height: 42px"></div>
+                </div>
+                <!-- /商品介绍 -->
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!--向上-->
+<div style="position:fixed;bottom:80px;right:10px; z-index:999999;"><a href="#"><img
+        src="../../resources/images/iconfont-xiangshang.png" th:src="@{/resources/images/iconfont-xiangshang.png}" style="width:34px"/></a></div>
+<!--向上 -->
+<!--新增-->
+<div class="item-action" style="height:42px;">
+    <div class="buy-now yuanjiaoo" id="submit" style="width:100%; margin:0px; border-radius:0px; height:42px; line-height:42px">
+        提交
+    </div>
+</div>
+<!--新增-->
+</body>
+</html>

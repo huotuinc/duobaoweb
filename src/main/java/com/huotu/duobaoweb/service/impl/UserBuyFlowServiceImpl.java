@@ -1,5 +1,7 @@
 package com.huotu.duobaoweb.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.huotu.duobaoweb.common.CommonEnum;
 import com.huotu.duobaoweb.entity.Delivery;
 import com.huotu.duobaoweb.entity.UserBuyFlow;
@@ -8,26 +10,28 @@ import com.huotu.duobaoweb.repository.DeliveryRepository;
 import com.huotu.duobaoweb.repository.UserBuyFlowRepository;
 import com.huotu.duobaoweb.service.StaticResourceService;
 import com.huotu.duobaoweb.service.UserBuyFlowService;
+import com.huotu.huobanplus.common.entity.Goods;
+import com.huotu.huobanplus.common.entity.Product;
+import com.huotu.huobanplus.common.entity.support.SpecDescription;
+import com.huotu.huobanplus.common.entity.support.SpecDescriptions;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by admin on 2016/2/2.
@@ -43,6 +47,9 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
 
     @Autowired
     DeliveryRepository deliveryRepository;
+
+    @Autowired
+    GoodsRestRepository goodsRestRepository;
 
     public List<UserBuyFlow> findByUserIdAndIssuId(Long userId, Long issueId) {
         List<UserBuyFlow> userBuyFlows = null;
@@ -240,6 +247,50 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
         raiderListModelAjax.setTotal(Integer.parseInt(userBuyFlows.getTotalElements() + ""));
         raiderListModelAjax.setPageSize(pageSize);
         return raiderListModelAjax;
+    }
+
+    @Autowired
+    ProductRestRepository productRestRepository;
+
+    @Override
+    public Map<String,Object> getGoodsSpec(Long goodsId) throws IOException {
+        Goods goods = goodsRestRepository.getOneByPK(goodsId + "");
+        Map<String,Object> returnMap = new HashMap<>();
+        Map<Long,String> map = JSONObject.toJavaObject(JSON.parseObject(goods.getSpec()), Map.class);
+        List<MallGoodsSpecificationsModel> mgsList = null;
+        if(map!=null) {
+            returnMap = new HashMap<>();
+            mgsList = new ArrayList<>();
+            List<Product> productList = productRestRepository.findByGoods(goods);
+
+            for (Map.Entry<Long,String> entry: map.entrySet()){
+                MallGoodsSpecificationsModel mgs = new MallGoodsSpecificationsModel();
+                mgs.setId(entry.getKey() + "");
+                mgs.setName(entry.getValue());
+                mgsList.add(mgs);
+            }
+            SpecDescriptions specDescriptions = goods.getSpecDescriptions();
+            for(Map.Entry<Long,List<SpecDescription>> entry:specDescriptions.entrySet()){
+                for (int i=0; i< mgsList.size(); i++){
+                    if (mgsList.get(i).getId().equals(entry.getKey()+"")){
+                        mgsList.get(i).setSpecDescriptionList(entry.getValue());
+                        break;
+                    }
+                }
+            }
+            returnMap.put("mgsList",mgsList);
+            List<MallProductSpecModel> list = new ArrayList<>();
+            for(Product product :productList){
+                MallProductSpecModel mallSpecModel = new MallProductSpecModel();
+                mallSpecModel.setFreeze(product.getFreeze());
+                mallSpecModel.setId(product.getId());
+                mallSpecModel.setSpec(product.getSpec());
+                mallSpecModel.setStock(product.getStock());
+                list.add(mallSpecModel);
+            }
+            returnMap.put("productList",list);
+        }
+        return returnMap;
     }
 
 }

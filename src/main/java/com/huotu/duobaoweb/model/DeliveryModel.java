@@ -80,4 +80,8 @@ public class DeliveryModel {
      */
     private String defaultPictureUrl;
 
+    /**
+     * 商品规格
+     */
+    private String productSpec;
 }

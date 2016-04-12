@@ -57,10 +57,12 @@ public interface CommonConfigService {
      */
     String getMaindomain();
 
+
+
     /**
-     * 支付秘钥
+     * 商城对接秘钥
      * @return
      */
-    String getPaySecret();
+    String getMallKey();
 
 }

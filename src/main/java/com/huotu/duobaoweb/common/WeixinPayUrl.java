@@ -29,7 +29,7 @@ public class WeixinPayUrl {
     /**
      * 订单号
      */
-    public static String outradeno = "";
+    public static String outtradeno = "";
 
     /**
      * 微信用户id
@@ -69,7 +69,7 @@ public class WeixinPayUrl {
         String weixinAuthUrl = "http://" + subdomain + "." + maindomain
                 + "/weixin/pay/payment_delegate.aspx?customerid=" + customerid
                 + "&returnurl=" + returnurl
-                + "&outradeno=" + outradeno
+                + "&outtradeno=" + outtradeno
                 + "&openid=" + openid
                 + "&title=" + title
                 + "&timestamp=" + timestamp
