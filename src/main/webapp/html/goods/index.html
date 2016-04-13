@@ -17,7 +17,7 @@
             th:src="@{/resources/js/shopping.js}"></script>
     <script type="text/javascript" src="../../resources/js/user.js"
             th:src="@{/resources/js/user.js}"></script>
-    <title>用1元买iphone 6S</title>
+    <title>夺宝首页</title>
 </head>
 
 <body>
@@ -52,13 +52,13 @@
     <div th:if="*{joined}" class="syabk" style="display:block">
         <button class="buttonan tit_rem_big_s" type="button">
             <a href="goods/detail.html"
-               th:href="@{/goods/detailByIssueId(issueId=*{issueId}, userId=${userId}, customerId=${customerId})}">继续购买</a>
+               th:href="@{/goods/detailByIssueId(issueId=*{issueId}, customerId=${customerId})}">继续购买</a>
         </button>
     </div>
     <div th:if="*{!joined}" class="syabk" style="display:block">
         <button class="buttonan tit_rem_big_s" type="button">
             <a href="goods/detail.html"
-               th:href="@{/goods/detailByGoodsId(goodsId=*{id}, issueId=*{issueId}, userId=${userId}, customerId=${customerId})}">参与1元夺宝</a>
+               th:href="@{/goods/detailByGoodsId(goodsId=*{id}, issueId=*{issueId}, customerId=${customerId})}">参与1元夺宝</a>
         </button>
     </div>
 
