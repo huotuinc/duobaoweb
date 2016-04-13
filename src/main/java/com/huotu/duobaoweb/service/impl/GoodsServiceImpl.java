@@ -8,6 +8,7 @@ import com.huotu.duobaoweb.entity.User;
 import com.huotu.duobaoweb.model.*;
 import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.repository.IssueRepository;
+import com.huotu.duobaoweb.repository.UserBuyFlowRepository;
 import com.huotu.duobaoweb.service.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,10 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private UserNumberService userNumberService;
+
+    @Autowired
+    private UserBuyFlowRepository userBuyFlowRepository;
+
 
     @Autowired
     private GoodsRestRepository goodsRestRepository;
@@ -192,6 +197,12 @@ public class GoodsServiceImpl implements GoodsService {
 
                     goodsDetailModel.setAwardTime(issue.getAwardingDate());
                     goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
+
+                    Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
+                    if(firstBuyTimeByIssueId != null){
+                        goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
+                    }
+
                 }
 
                 //3.获取用户当前参与次数
@@ -212,10 +223,6 @@ public class GoodsServiceImpl implements GoodsService {
                 }else{
                     goodsDetailModel.setJoinCount(0);
                 }
-
-                //4.获取首次购买的时间 todo
-                goodsDetailModel.setFirstBuyTime(new Date());
-
             }
         }
         map.put("goodsDetailModel", goodsDetailModel);
@@ -272,6 +279,11 @@ public class GoodsServiceImpl implements GoodsService {
             goodsDetailModel.setDefaultAmount(issue.getDefaultAmount());
             goodsDetailModel.setStepAmount(issue.getStepAmount());
 
+            Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
+            if(firstBuyTimeByIssueId != null){
+                goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
+            }
+
             //进行中
             if (status == 0) {
                 goodsDetailModel.setToAmount(toAmount);
@@ -319,9 +331,6 @@ public class GoodsServiceImpl implements GoodsService {
             }else{
                 goodsDetailModel.setJoinCount(0);
             }
-
-            //4.获取首次购买的时间 todo
-            goodsDetailModel.setFirstBuyTime(new Date());
         }
 
         map.put("goodsDetailModel", goodsDetailModel);
@@ -479,9 +488,9 @@ public class GoodsServiceImpl implements GoodsService {
 
        BuyListModelAjax buyListModelAjax = new BuyListModelAjax();
         buyListModelAjax.setRows(buyListModelList);
-        buyListModelAjax.setPageCount(5);
+        buyListModelAjax.setPageCount(1);
         buyListModelAjax.setPageIndex(page.intValue());
-        buyListModelAjax.setTotal(50);
+        buyListModelAjax.setTotal(10);
         buyListModelAjax.setPageSize(pageSize.intValue());
         //结束模拟数据*/
         return buyListModelAjax;

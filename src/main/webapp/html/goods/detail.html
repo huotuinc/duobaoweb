@@ -187,13 +187,8 @@
     <div style="display:block">
       <P class="sy" ><span class="fl">所有参与纪录</span><span th:if="*{firstBuyTime ne null}" class="hui fr "><span th:text="*{#dates.format(firstBuyTime, 'yyyy-MM-dd HH:mm:ss')}">2016-12-12 12:12:12</span>开始</span></P>
       <P class="clear"></P>
-      <div class="zjjl-all-lq tit_rem">
-      <div id="content">
+      <div id="content" class="zjjl-all-lq tit_rem">
 
-
-      </div>
-
-        <p class="clear"></p>
       </div>
     </div>
     <!--参与纪录end-->
@@ -462,11 +457,12 @@
   </div>
   <div class="zjjl-left_s-lq" style="overflow: hidden;">
     {{each Rows as row i}}
-    <div >
+    <div>
       <img src="{{row.userHeadUrl}}" class="tututu" />
     </div>
     {{/each}}
   </div>
+  <p class="clear"></p>
 </script>
 <script type="text/javascript" src="resources/js/buyListAjaxModel.js" th:src="@{/resources/js/buyListAjaxModel.js}"></script>
 
