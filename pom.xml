@@ -8,7 +8,12 @@
     <artifactId>mallduobao</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>duobao-web</module>
+        <module>duobao-model</module>
+    </modules>
     <properties>
         <spring.version>4.2.2.RELEASE</spring.version>
         <lib.version>1.11-SNAPSHOT</lib.version>
@@ -42,12 +47,22 @@
             <name>JiangCai Repository</name>
             <url>http://115.29.228.62:8082/nexus/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>repo-huotu</id>
-            <name>Hot Repository</name>
-            <url>http://repo.51flashmall.com:8081/nexus/content/groups/public/</url>
-        </repository>
+
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>huotu-nexus</id>
+            <name>Nexus Release Repository</name>
+            <url>http://repo.51flashmall.com:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>huotu-nexus</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://repo.51flashmall.com:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <dependencies>
         <dependency>
@@ -203,16 +218,9 @@
     </dependencies>
 
     <build>
-        <finalName>ROOT</finalName>
+
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -223,14 +231,36 @@
 
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
 </project>
