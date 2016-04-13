@@ -1,8 +1,8 @@
 package com.huotu.mallduobao.controller.page;
 
-import com.huotu.duobaoweb.entity.Goods;
-import com.huotu.duobaoweb.entity.Issue;
-import com.huotu.duobaoweb.entity.User;
+import com.huotu.mallduobao.entity.Goods;
+import com.huotu.mallduobao.entity.Issue;
+import com.huotu.mallduobao.entity.User;
 import com.sun.deploy.security.DeployURLClassPathCallback;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
