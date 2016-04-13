@@ -37,8 +37,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +81,7 @@ public class GoodsControllerTestGetCountResultByIssueId extends BaseTest {
     private UserBuyFlow mockUserBuyFlowB;
 
     @Before
-    public void setUp() throws ParseException, UnsupportedEncodingException {
+    public void setUp() throws Exception {
         //模拟出一个商品
         mockGoods = daisyMockGoods();
         //模拟一个期号.
