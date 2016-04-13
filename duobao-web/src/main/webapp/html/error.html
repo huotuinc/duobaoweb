@@ -8,15 +8,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="format-detection" content="telephone=no"/>
     <meta name="description" content=""/>
-    <link rel="stylesheet" type="text/css" href="../resource/css/common.css" th:href="@{/resource/css/common.css}"/>
-    <link rel="stylesheet" type="text/css" href="../resource/css/404baocuo.css" th:href="@{/resource/css/404baocuo.css}"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/common.css" th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/404baocuo.css" th:href="@{/resources/css/404baocuo.css}"/>
     <title>报错</title>
 
 </head>
 
 <body>
 <div class="baocuo">
-    <img class="baocuotb" src="/resource/images/baocuo_tu_9.png"/>
+    <img class="baocuotb" src="../resources/images/baocuo_tu_9.png" th:src="/resources/images/baocuo_tu_9.png"/>
 
     <p class="baocuo_tishi" th:text="'抱歉 出错了 '+${message}">
         抱歉 出错了

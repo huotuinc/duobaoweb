@@ -23,8 +23,8 @@ public class GetMyRaiderNumbersPage {
 
 
     public void to(WebDriver driver, Long userId, Long issueId) {
-        driver.get("http://localhost/personal/getMyRaiderNumbers?userId=" + userId + "&issueId=" + issueId);
-        PageFactory.initElements(driver, GetMyRaiderNumbersPage.class);
+        driver.get("http://localhost:8080/personal/getMyRaiderNumbers?userId=" + userId + "&issueId=" + issueId);
+        PageFactory.initElements(driver,this);
         List<WebElement> webElement = driver.findElements(By.cssSelector("div.commfont"));
         log.info(webElement.size());
     }

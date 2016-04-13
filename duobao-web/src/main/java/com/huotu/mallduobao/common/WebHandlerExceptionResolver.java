@@ -7,7 +7,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Created by lgh on 2016/3/28.
@@ -22,16 +21,12 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
         if (requestURI.startsWith("/personal/") || requestURI.startsWith("/goods/")
                 || requestURI.startsWith("/user/") || requestURI.startsWith("/shopping/")
                 || requestURI.startsWith("/pay/") || requestURI.startsWith("/api/")) {
-            try {
                 try {
                     throw ex;
                 } catch (Exception e) {
                     log.error("web request error", e);
                 }
-                response.sendRedirect("/html/error.html");
-            } catch (IOException e) {
-
-            }
+                return new ModelAndView("redirect:/html/error.html");
         }
         return null;
     }
