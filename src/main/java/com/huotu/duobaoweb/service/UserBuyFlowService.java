@@ -24,14 +24,16 @@ public interface UserBuyFlowService {
      */
     List<UserBuyFlow> findByUserIdAndIssuId(Long userId, Long issueId)throws  Exception;
 
+
     /**
-     * 参与记录，获取某期的参与记录列表
-     * @param issueId  期号id
-     * @param lastId 分页最后一条id、
-     * @return AppBuyListModel[]
+     * 异步获取某一期的参与记录
+     * @param issueId
+     * @param page
+     * @param pageSize
+     * @return
      * @throws Exception
      */
-    BuyListModel[] findByIssuIdList(Long issueId, Long lastId) throws Exception;
+    BuyListModelAjax ajaxFindBuyListByIssueId(Long issueId, Long page, Long pageSize) throws  Exception;
 
 
     /**

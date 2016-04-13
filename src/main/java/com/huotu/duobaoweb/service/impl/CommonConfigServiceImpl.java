@@ -29,10 +29,8 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getWebUrl() {
-        return env.getProperty("duobao.web.url", "http://192.168.1.41:8080/duobaoweb");
+        return env.getProperty("duobao.web.url", "http://mallduobao.51flashmall.com:8091");
     }
-
-
 
     @Override
     public String getMallCustomerId() {
@@ -45,7 +43,12 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://localhost:8888/duobaoweb");}
+    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://192.168.3.86:8088/huobanplusmanager/");}
+
+    @Override
+    public String getHuoBanPlusNetWebUrl() {
+        return env.getProperty("huobanplusmanager.net.web.url", "http://192.168.3.86:8088/huobanplusmanagerNet/");
+    }
 
     @Override
     public String getDuobaoKey() {

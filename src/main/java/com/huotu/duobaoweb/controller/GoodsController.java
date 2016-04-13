@@ -1,6 +1,8 @@
 package com.huotu.duobaoweb.controller;
 
 import com.huotu.common.base.CookieHelper;
+import com.huotu.duobaoweb.model.BuyListModel;
+import com.huotu.duobaoweb.model.BuyListModelAjax;
 import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.service.GoodsService;
 import com.huotu.duobaoweb.service.UserService;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,14 +42,14 @@ public class GoodsController {
     /**
      * 跳转到商品活动的首页
      *
-     * @param goodsId
+     * @param issueId
      * @param map
      * @return
      * @throws Exception
      */
     @RequestMapping("/index")
-    public String jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception {
-        goodsService.jumpToGoodsActivityIndex(goodsId, map);
+    public String jumpToGoodsActivityIndex(Long issueId, Map<String, Object> map) throws Exception {
+        goodsService.jumpToGoodsActivityIndex(issueId, map);
         return "/html/goods/index";
     }
 
@@ -97,16 +100,14 @@ public class GoodsController {
      * 获取某一期的参与记录
      *
      * @param issueId 期号
-     * @param lastId  排序依据(购买时间)
      * @return
      * @throws Exception
      */
     @RequestMapping("/getBuyListByIssueId")
     @ResponseBody
-    public Map<String, Object> getBuyListByIssueId(Long issueId, Long lastId) throws Exception {
-        Map<String, Object> map = new HashMap<>();
-        goodsService.getBuyListByIssueId(issueId, lastId, map);
-        return map;
+    public BuyListModelAjax getBuyListByIssueId(Long issueId, Long pageSize, Long page) throws Exception {
+        BuyListModelAjax buyListModelAjax = goodsService.getBuyListByIssueId(issueId, page, pageSize);
+        return buyListModelAjax;
     }
 
 

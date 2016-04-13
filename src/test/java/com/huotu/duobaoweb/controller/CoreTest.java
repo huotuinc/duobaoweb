@@ -67,6 +67,7 @@ public class CoreTest extends BaseTest {
     private User currentUser;
     private Issue currentIssue;
 
+
     @Test
     public void drawLottery() throws Exception {
         //模拟数据

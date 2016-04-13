@@ -62,6 +62,42 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
         return userBuyFlows;
     }
 
+    @Override
+    public BuyListModelAjax ajaxFindBuyListByIssueId(Long issueId, Long page, Long pageSize) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = new Sort(direction, "time");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Page<UserBuyFlow> userBuyFlowPage = userBuyFlowRepository.findAll(new Specification<UserBuyFlow>() {
+            @Override
+            public Predicate toPredicate(Root<UserBuyFlow> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Predicate predicate =  cb.equal(root.get("issue").get("id").as(Long.class), issueId);
+                return predicate;
+            }
+        }, new PageRequest(page.intValue() -1, pageSize.intValue(), sort));
+        BuyListModelAjax buyListModelAjax = new BuyListModelAjax();
+        if(userBuyFlowPage != null){
+            List<BuyListModel> rows = new ArrayList<>();
+            for(UserBuyFlow userBuyFlow : userBuyFlowPage){
+                BuyListModel buyListModel = new BuyListModel();
+                buyListModel.setUserHeadUrl(staticResourceService.getResource(userBuyFlow.getUser().getUserHead()).toString());
+                buyListModel.setCity(userBuyFlow.getUser().getCityName());
+                buyListModel.setIp(userBuyFlow.getUser().getIp());
+                buyListModel.setAttendAmount(userBuyFlow.getAmount());
+                buyListModel.setDate(simpleDateFormat.format(userBuyFlow.getTime()));
+                buyListModel.setNickName(userBuyFlow.getUser().getRealName());
+                buyListModel.setPid(userBuyFlow.getId());
+                rows.add(buyListModel);
+            }
+            buyListModelAjax.setRows(rows);
+            buyListModelAjax.setPageCount(userBuyFlowPage.getTotalPages());
+            buyListModelAjax.setPageIndex(page.intValue());
+            buyListModelAjax.setTotal(Integer.parseInt(userBuyFlowPage.getTotalElements() + ""));
+            buyListModelAjax.setPageSize(pageSize.intValue());
+        }
+        return buyListModelAjax;
+    }
+
 
     @Override
     public UserBuyFlowModelAjax findByUserAjax(Long userId, Integer pageSize, Integer page) throws Exception {
@@ -120,45 +156,6 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
             return list.get(0);
         }
         return null;
-    }
-
-
-
-    @Override
-    public BuyListModel[] findByIssuIdList(Long issueId, Long lastId) throws URISyntaxException {
-        StringBuilder hql = new StringBuilder();
-        List<UserBuyFlow> ordersItemList = null;
-        Query query = null;
-        String hq = "select uby from UserBuyFlow as uby where  uby.issue.id = ?1 ";
-        if (lastId != null && lastId.intValue() != 0) {
-            hql.append(hq + "  and uby.time <?2 order by uby.time desc");
-        } else {
-            hql.append(hq + "  order by uby.time desc");
-        }
-        query = entityManager.createQuery(hql.toString());
-        query.setParameter(1, issueId);
-        if (lastId != null && lastId.intValue() != 0) {
-            query.setParameter(2, lastId);
-        }
-        query.setMaxResults(10);
-        List<UserBuyFlow> list = query.getResultList();
-        BuyListModel[] appBuyListModels = null;
-        if (list != null && list.size() > 0) {
-            appBuyListModels = new BuyListModel[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                BuyListModel buyListModel = new BuyListModel();
-                UserBuyFlow userBuyFlow = list.get(i);
-                buyListModel.setUserHeadUrl(staticResourceService.getResource(userBuyFlow.getUser().getUserHead()).toString());
-                buyListModel.setAttendAmount(userBuyFlow.getAmount());
-                buyListModel.setCity(userBuyFlow.getUser().getCityName());
-                buyListModel.setIp(userBuyFlow.getUser().getIp());
-                buyListModel.setDate(new Date(userBuyFlow.getTime()));
-                buyListModel.setNickName(userBuyFlow.getUser().getRealName());
-                buyListModel.setPid(userBuyFlow.getId());
-                appBuyListModels[i] = buyListModel;
-            }
-        }
-        return appBuyListModels;
     }
 
     @Override

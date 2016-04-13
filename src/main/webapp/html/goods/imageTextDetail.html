@@ -11,15 +11,12 @@
     <link rel="stylesheet" type="text/css" href="css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
     <link rel="stylesheet" type="text/css" href="css/common.css" th:href="@{/resources/css/common.css}"/>
     <link rel="stylesheet" type="text/css" href="css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
-    <script type="text/javascript" src="js/TouchSlide.1.1.js" th:href="@{/resources/js/TouchSlide.1.1.js}"></script>
+    <script type="text/javascript" src="js/TouchSlide.1.1.js" th:src="@{/resources/js/TouchSlide.1.1.js}"></script>
     <title>图文详情</title>
 </head>
 <body>
 <div class="commfont">
-    <div class="tuxq">
-        <img src="images/dsds.jpg" th:src="@{/resources/images/dsds.jpg}"/>
-        <img src="images/dsds.jpg" th:src="@{/resources/images/dsds.jpg}"/>
-        <img src="images/dsds.jpg" th:src="@{/resources/images/dsds.jpg}"/>
+    <div class="tuxq" th:utext="${introduce}">
     </div>
 </div>
 </body>

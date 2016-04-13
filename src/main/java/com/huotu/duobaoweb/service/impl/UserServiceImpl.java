@@ -33,16 +33,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String getIndexUrl(Long issueId) {
+    public String getIndexUrl(Long issueId,Long customerId) {
         String url = commonConfigService.getWebUrl()+ "/user/getOpid?issueId=";
         if(issueId!=null) {
             url =url + issueId;
         }
-        return url;
+        return url+"&customerId="+customerId;
     }
 
     @Override
-    public User registerUser(String openid) {
+    public User registerUser(String openid,String customerId) {
         User user=userRepository.findByWeixinOpenId(openid);
         //如果在数据库中没有这个微信信息则注册一个新的用户
         if(user==null){
@@ -52,6 +52,10 @@ public class UserServiceImpl implements UserService {
             user.setUsername(UUID.randomUUID().toString().replace("-",""));
             user.setWeixinOpenId(openid);
             user.setWeixinBinded(true);
+            if(customerId!=null&&!customerId.equals("null")){
+                //如果商家id不为空并且不是null字符串在进行一下操作
+                user.setMerchantId(Long.parseLong(customerId));
+            }
             user=userRepository.saveAndFlush(user);
         }
 
@@ -62,7 +66,7 @@ public class UserServiceImpl implements UserService {
     public WebPublicModel getWebPublicModel(User user, Issue issue) {
         String sign=this.getSign(user);
         WebPublicModel webPublicModel=new WebPublicModel();
-        if(issue!=null) {
+        if(issue!=null&&issue.getId()!=null) {
             webPublicModel.setCustomerId(issue.getGoods().getMerchantId());
             webPublicModel.setIssueId(issue.getId());
             webPublicModel.setOpenId(user.getWeixinOpenId());
@@ -92,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public String getWeixinAuthUrl(WebPublicModel common) throws UnsupportedEncodingException {
 
         //微信授权回调url，跳转到index
-        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(common.getIssueId()), "utf-8");
+        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(common.getIssueId(),common.getCustomerId()), "utf-8");
         WeixinAuthUrl.customerid=common.getCustomerId();
         String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
         return apiUrl;

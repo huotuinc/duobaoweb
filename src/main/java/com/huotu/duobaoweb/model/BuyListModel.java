@@ -36,7 +36,7 @@ public class BuyListModel {
     /**
      * 时间
      */
-    private Date date;
+    private String date;
 
     /**
      * 参与次数

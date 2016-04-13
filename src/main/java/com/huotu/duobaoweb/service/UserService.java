@@ -18,14 +18,14 @@ public interface UserService {
      * @param issueId
      * @return
      */
-    String getIndexUrl(Long issueId);
+    String getIndexUrl(Long issueId,Long customerId);
 
     /**
      * 通过openid注册一个用户
      * @param openid
      * @return
      */
-    User registerUser(String openid);
+    User registerUser(String openid,String customerId);
 
     /**
      * 获取公用model

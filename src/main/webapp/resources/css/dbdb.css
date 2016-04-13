@@ -1038,7 +1038,7 @@ outline: 0; border-radius:0px}
 	color: #c9c9c9;
 	width: 24px;
 	height: 24px;
-	overflow:hidd;
+	overflow:hidden;
 	background-position: 0px -24px; 
 	display: block
 }
@@ -1047,3 +1047,4 @@ outline: 0; border-radius:0px}
 	color: #c9c9c9; width:24px; height:24px; overflow:hidden; background-position:0px 0px;	 
 	color: #09bb07
 }
+.weui_icon_checked{ display:block; height:24px; width:24px;}
