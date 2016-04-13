@@ -43,6 +43,11 @@ public interface CommonConfigService {
      */
     String getHuoBanPlusManagerWebUrl();
 
+    /**
+     * 商城.Net地址
+     */
+    String getHuoBanPlusNetWebUrl();
+
 
 
     /**

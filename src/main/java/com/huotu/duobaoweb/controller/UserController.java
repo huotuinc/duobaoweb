@@ -58,7 +58,7 @@ public class UserController {
         Issue issue=new Issue();
         if(issueId!=null&&!issueId.equals("")) {
             issue= issueService.getIssueById(issueId);
-            goodsId=issue.getGoods().getId();
+            goodsId = issue.getId();
         }
         //将当前用户写入ThreadLocal
         WebPublicModel webPublicModel=userService.getWebPublicModel(user,issue);

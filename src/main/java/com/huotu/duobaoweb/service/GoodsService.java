@@ -1,5 +1,6 @@
 package com.huotu.duobaoweb.service;
 
+import com.huotu.duobaoweb.model.BuyListModelAjax;
 import com.huotu.duobaoweb.model.SelGoodsSpecModel;
 
 import java.net.URISyntaxException;
@@ -12,11 +13,11 @@ public interface GoodsService {
 
     /**
      * 跳转到商品活动首页
-     * @param goodsId  商品Id
+     * @param issueId  商品Id
      * @param map
      * @throws Exception
      */
-    void jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception;
+    void jumpToGoodsActivityIndex(Long issueId, Map<String, Object> map) throws Exception;
 
     /**
      * 通过商品Id跳转到商品详情
@@ -39,7 +40,7 @@ public interface GoodsService {
      * @param lastId
      * @param map
      */
-    void getBuyListByIssueId(Long issueId, Long lastId, Map<String, Object> map) throws Exception;
+    //void getBuyListByIssueId(Long issueId, Long lastId, Map<String, Object> map) throws Exception;
 
     /**
      * 计算详情
@@ -57,4 +58,14 @@ public interface GoodsService {
 
 
     SelGoodsSpecModel getSelGoodsSpecModelByIssueId(Long issueId) throws Exception;
+
+    /**
+     * 异步获取参与记录
+     * @param issueId
+     * @param page
+     * @param pageSize
+     * @return
+     * @throws Exception
+     */
+    BuyListModelAjax getBuyListByIssueId(Long issueId, Long page, Long pageSize) throws Exception;
 }
