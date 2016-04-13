@@ -1,10 +1,10 @@
 /*
- *  * 版权所有:杭州火图科技有限公司
- *  * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼在地图中查看
- *  *
- *  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
- *  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- *  * 2013-2015. All rights reserved.
+ * 版权所有:杭州火图科技有限公司
+ * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼在地图中查看
+ *
+ * (c) Copyright Hangzhou Hot Technology Co., Ltd.
+ * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+ * 2013-2015. All rights reserved.
  */
 package com.huotu.duobaoweb.controller;
 
@@ -87,7 +87,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods.setPricePercentAmount(new BigDecimal(1L)); //购买每人次单价
         mockGoods.setStatus(CommonEnum.GoodsStatus.up); //商品状态
         mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-01-27 00:00:00")); //活动开始时间
-        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-05-27 00:00:00")); //活动截止时间
+        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-05-27 00:00:00")); //活动截止时间
         mockGoods.setShareTitle("丹青测试商品的分享标题"); //分享标题
         mockGoods.setShareDescription("丹青测试商品的分享描述"); //分享描述
         mockGoods.setSharePictureUrl("http://XXXXX.jpg"); //分享图片地址
@@ -125,13 +125,11 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     @Test
     public void TestUserNotJoined() throws Exception {
 
-        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2018-03-27 00:00:00"));
-        MvcResult result = mockMvc.perform(get("/goods/index").param("goodsId", mockGoods.getId().toString())
+        MvcResult result = mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/html/goods/index"))
                 .andExpect(model().attributeExists("goodsIndexModel"))
-                .andExpect(model().attribute("customerId", 3447L))
                 .andExpect(model().attribute("issueId", mockIssue.getId()))
                 .andReturn();
         GoodsIndexModel goodsIndexModel = (GoodsIndexModel) result.getModelAndView().getModel().get("goodsIndexModel");
@@ -151,8 +149,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     public void TestUserLoginAndBuy() throws Exception {
         //模拟一条用户购买记录
         mockUserBuyFlow = saveUserBuyFlow(mockUserA, mockIssue);
-        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2018-03-27 00:00:00"));
-        MvcResult result = mockMvc.perform(get("/goods/index").param("goodsId", mockGoods.getId().toString())
+        MvcResult result = mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/html/goods/index"))
@@ -176,8 +173,8 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     //  GoodID不传，错误页面未定义
     @Test
     public void TestNoGoodsID() throws Exception {
-        mockMvc.perform(get("/index").param("goodsId", "")
-                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+        mockMvc.perform(get("/goods/index")
+                .param("customerId", "3447").param("issueId", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
@@ -185,8 +182,8 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     //上传GoodID格式错误
     @Test
     public void TestWrongGoodsID() throws Exception {
-        mockMvc.perform(get("/index").param("goodsId", "abc")
-                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+        mockMvc.perform(get("/goods/index")
+                .param("customerId", "3447").param("issueId", "bac"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
@@ -194,8 +191,8 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     //测试商品ID在数据库中不存在，错误码和错误信息还未定义
     @Test
     public void TestNotFindGoodsID() throws Exception {
-        mockMvc.perform(get("/index").param("goodsId", "999999999")
-                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+        mockMvc.perform(get("/goods/index")
+                .param("customerId", "3447").param("issueId", "999999999"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
@@ -204,7 +201,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     @Test
     public void TestGoodUnCheck() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.uncheck);
-        mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString())
+        mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
@@ -215,11 +212,10 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     @Test
     public void TestGoodsDown() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.down);
-        mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString())
+        mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
-
     }
 
     //测试商品已过截止期，错误码和错误信息暂未定义
@@ -227,22 +223,23 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     public void TestExpired() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.up);
         mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-03-27 00:00:00"));
-        mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("redirect:/html/goods/XXXX"));
-    }
-
-    //测试商品活动还未开始，错误码和错误信息暂未定义
-    @Test
-    public void TestNotStart() throws Exception {
-        mockGoods.setStatus(CommonEnum.GoodsStatus.up);
-        mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2018-03-27 00:00:00"));
-        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-03-27 00:00:00"));
-        mockMvc.perform(get("/index").param("goodsId", mockGoods.getId().toString())
+        mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("redirect:/html/goods/XXXX"))
-                .andDo(print());
+                .andExpect(view().name("/html/goods/XXXXX"));
     }
+
+//    //测试商品活动还未开始，错误码和错误信息暂未定义
+//    @Test
+//    public void TestNotStart() throws Exception {
+//        mockGoods.setStatus(CommonEnum.GoodsStatus.up);
+//        mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2018-03-27 00:00:00"));
+//        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-03-27 00:00:00"));
+//        mockMvc.perform(get("/goods/index")
+//                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("/html/goods/XXX"))
+//                .andDo(print());
+//    }
 
 }
