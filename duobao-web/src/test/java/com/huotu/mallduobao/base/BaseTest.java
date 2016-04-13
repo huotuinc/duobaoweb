@@ -125,6 +125,7 @@ public class BaseTest {
         user.setWeixinBinded(true);
         user.setUserFromType(CommonEnum.UserFromType.register);
         user.setMoney(new BigDecimal("1000000"));
+        user.setMerchantId(3447L);
         return userRepository.saveAndFlush(user);
     }
 
