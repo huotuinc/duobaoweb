@@ -52,7 +52,7 @@ public class UserController {
     public String getOpid(String issueId,String customerId,String openid,Map<String, Object> map) throws Exception {
 
         //进行用户注册(如果用户存在则不注册，不存在才注册)
-        User user =userService.registerUser(openid);
+        User user =userService.registerUser(openid,customerId);
 
         Long goodsId=null;
         Issue issue=new Issue();

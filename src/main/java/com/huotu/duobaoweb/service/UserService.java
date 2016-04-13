@@ -25,7 +25,7 @@ public interface UserService {
      * @param openid
      * @return
      */
-    User registerUser(String openid);
+    User registerUser(String openid,String customerId);
 
     /**
      * 获取公用model

@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(String openid) {
+    public User registerUser(String openid,String customerId) {
         User user=userRepository.findByWeixinOpenId(openid);
         //如果在数据库中没有这个微信信息则注册一个新的用户
         if(user==null){
@@ -52,6 +52,10 @@ public class UserServiceImpl implements UserService {
             user.setUsername(UUID.randomUUID().toString().replace("-",""));
             user.setWeixinOpenId(openid);
             user.setWeixinBinded(true);
+            if(customerId!=null&&!customerId.equals("null")){
+                //如果商家id不为空并且不是null字符串在进行一下操作
+                user.setMerchantId(Long.parseLong(customerId));
+            }
             user=userRepository.saveAndFlush(user);
         }
 
