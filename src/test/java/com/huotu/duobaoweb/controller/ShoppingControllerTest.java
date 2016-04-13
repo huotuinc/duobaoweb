@@ -1,20 +1,21 @@
-package com.huotu.duobaoweb.controller;
+package com.huotu.mallduobao.controller;
 
-import com.huotu.duobaoweb.boot.MVCConfig;
-import com.huotu.duobaoweb.boot.RootConfig;
-import com.huotu.duobaoweb.common.CommonEnum;
+import com.huotu.mallduobao.base.BaseTest;
+import com.huotu.mallduobao.boot.MVCConfig;
+import com.huotu.mallduobao.boot.RootConfig;
+import com.huotu.mallduobao.common.CommonEnum;
 import com.huotu.duobaoweb.controller.page.GetBalancePage;
 import com.huotu.duobaoweb.controller.page.ShowShoppingCartsPage;
-import com.huotu.duobaoweb.entity.Delivery;
-import com.huotu.duobaoweb.entity.Goods;
-import com.huotu.duobaoweb.entity.Issue;
-import com.huotu.duobaoweb.entity.ShoppingCart;
-import com.huotu.duobaoweb.entity.User;
-import com.huotu.duobaoweb.entity.UserBuyFlow;
-import com.huotu.duobaoweb.repository.GoodsRepository;
-import com.huotu.duobaoweb.repository.IssueRepository;
-import com.huotu.duobaoweb.repository.ShoppingCartRepository;
-import com.huotu.duobaoweb.repository.UserRepository;
+import com.huotu.mallduobao.entity.Delivery;
+import com.huotu.mallduobao.entity.Goods;
+import com.huotu.mallduobao.entity.Issue;
+import com.huotu.mallduobao.entity.ShoppingCart;
+import com.huotu.mallduobao.entity.User;
+import com.huotu.mallduobao.entity.UserBuyFlow;
+import com.huotu.mallduobao.repository.GoodsRepository;
+import com.huotu.mallduobao.repository.IssueRepository;
+import com.huotu.mallduobao.repository.ShoppingCartRepository;
+import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,7 +44,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {RootConfig.class, MVCConfig.class, BaseClientSpringConfig.class})
 @ActiveProfiles("development")
 @Transactional
-public class ShoppingControllerTest {
+public class ShoppingControllerTest extends BaseTest{
     private Log log = LogFactory.getLog(ShoppingControllerTest.class);
 
 
@@ -85,7 +86,7 @@ public class ShoppingControllerTest {
         currentUser.setMobile("13600541783");
         currentUser.setMobileBinded(true);
         currentUser.setMoney(new BigDecimal(100));
-        userRepository.saveAndFlush(currentUser);
+        currentUser=userRepository.saveAndFlush(currentUser);
 
         //用户2，用于测试购物车中无商品
 
@@ -95,7 +96,7 @@ public class ShoppingControllerTest {
         currentUser2.setMobile("13600541783");
         currentUser2.setMobileBinded(true);
         currentUser2.setMoney(new BigDecimal(100));
-        userRepository.saveAndFlush(currentUser2);
+        currentUser2=userRepository.saveAndFlush(currentUser2);
 
 
         //期号1
@@ -108,7 +109,7 @@ public class ShoppingControllerTest {
         currentIssue.setAttendAmount(10L);
         currentIssue.setStatus(CommonEnum.IssueStatus.drawed);
         currentIssue.setAwardingUser(currentUser);
-        issueRepository.saveAndFlush(currentIssue);
+        currentIssue=issueRepository.saveAndFlush(currentIssue);
 
         //期号2
         currentIssue2=new Issue();
@@ -120,7 +121,7 @@ public class ShoppingControllerTest {
         currentIssue2.setAttendAmount(10L);
         currentIssue2.setStatus(CommonEnum.IssueStatus.drawed);
         currentIssue2.setAwardingUser(currentUser2);
-        issueRepository.saveAndFlush(currentIssue2);
+        currentIssue2= issueRepository.saveAndFlush(currentIssue2);
 
 
         //将商品添加到购物车
@@ -128,7 +129,7 @@ public class ShoppingControllerTest {
         shoppingCart.setUser(currentUser);
         shoppingCart.setIssue(currentIssue);
         shoppingCart.setBuyAmount(10l);
-        shoppingCartRepository.saveAndFlush(shoppingCart);
+        shoppingCart=shoppingCartRepository.saveAndFlush(shoppingCart);
     }
 
 

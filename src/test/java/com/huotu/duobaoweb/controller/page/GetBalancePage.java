@@ -1,7 +1,7 @@
 package com.huotu.duobaoweb.controller.page;
 
-import com.huotu.duobaoweb.entity.Issue;
-import com.huotu.duobaoweb.entity.ShoppingCart;
+import com.huotu.mallduobao.entity.Issue;
+import com.huotu.mallduobao.entity.ShoppingCart;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
