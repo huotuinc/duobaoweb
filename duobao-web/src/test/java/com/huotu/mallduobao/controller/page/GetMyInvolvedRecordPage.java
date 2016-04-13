@@ -1,4 +1,4 @@
-package com.huotu.duobaoweb.controller.page;
+package com.huotu.mallduobao.controller.page;
 
 import com.huotu.duobaoweb.entity.Goods;
 import com.huotu.duobaoweb.entity.Issue;
