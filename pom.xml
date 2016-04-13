@@ -47,7 +47,11 @@
             <name>JiangCai Repository</name>
             <url>http://115.29.228.62:8082/nexus/content/groups/public/</url>
         </repository>
-
+        <repository>
+            <id>repo-huotu</id>
+            <name>Hot Repository</name>
+            <url>http://repo.51flashmall.com:8081/nexus/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <distributionManagement>
