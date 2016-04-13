@@ -14,7 +14,7 @@
 
         <property name="packagesToScan">
             <array>
-                <value>com.huotu.duobaoweb.entity</value>
+                <value>com.huotu.mallduobao.entity</value>
             </array>
         </property>
         <property name="persistenceProvider">

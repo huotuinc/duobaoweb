@@ -6,7 +6,7 @@
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="packagesToScan">
             <array>
-                <value>com.huotu.duobaoweb.entity</value>
+                <value>com.huotu.mallduobao.entity</value>
             </array>
         </property>
         <property name="persistenceProvider">
