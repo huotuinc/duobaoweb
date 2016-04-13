@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -385,6 +387,32 @@ public class BaseTest {
         userBuyFlow.setIssue(issue);
         userBuyFlow.setAmount(10L);
         return userBuyFlowRepository.saveAndFlush(userBuyFlow);
+    }
+    //丹青测试转用，不准修改
+    public Goods daisyMockGoods() throws Exception {
+        Goods mockGoods = new Goods();
+        //模拟出一个商品
+        mockGoods = new Goods();
+        mockGoods.setTitle("daisy测试商品");
+        mockGoods.setDefaultPictureUrl("Default.jpg");
+        mockGoods.setPictureUrls("13.jpg,456.jpg");
+        mockGoods.setCharacters("商品特征是红色");
+        mockGoods.setStepAmount(1L); //单次购买最低量
+        mockGoods.setDefaultAmount(1L); //购买时缺省人次
+        mockGoods.setToAmount(20L);//总需人数
+        mockGoods.setPricePercentAmount(new BigDecimal(1L)); //购买每人次单价
+        mockGoods.setStatus(CommonEnum.GoodsStatus.up); //商品状态
+        mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-01-27 00:00:00")); //活动开始时间
+        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-05-27 00:00:00")); //活动截止时间
+        mockGoods.setShareTitle("丹青测试商品的分享标题"); //分享标题
+        mockGoods.setShareDescription("丹青测试商品的分享描述"); //分享描述
+        mockGoods.setSharePictureUrl("http://XXXXX.jpg"); //分享图片地址
+        mockGoods.setToMallGoodsId(123456L);
+        mockGoods.setAttendAmount(10L); //购买次数
+        mockGoods.setViewAmount(2L); //浏览量
+        mockGoods.setMerchantId(3447L); //设置商城ID
+        mockGoods = goodsRepository.saveAndFlush(mockGoods);
+        return mockGoods;
     }
 
 

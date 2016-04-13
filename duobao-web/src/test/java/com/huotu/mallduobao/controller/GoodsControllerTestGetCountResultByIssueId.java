@@ -12,7 +12,6 @@ package com.huotu.mallduobao.controller;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
-import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.mallduobao.entity.CountResult;
 import com.huotu.mallduobao.entity.Goods;
 import com.huotu.mallduobao.entity.Issue;
@@ -25,6 +24,7 @@ import com.huotu.mallduobao.repository.GoodsRepository;
 import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserNumberRepository;
 import com.huotu.mallduobao.repository.UserRepository;
+import com.huotu.mallduobao.utils.CommonEnum;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,28 +85,8 @@ public class GoodsControllerTestGetCountResultByIssueId extends BaseTest {
     @Before
     public void setUp() throws ParseException, UnsupportedEncodingException {
         //模拟出一个商品
-        mockGoods = new Goods();
-        mockGoods.setTitle("daisy测试商品");
-        mockGoods.setDefaultPictureUrl("/Default.jpg");
-        mockGoods.setPictureUrls("/13.jpg,456.jpg");
-        mockGoods.setCharacters("商品特征是红色");
-        mockGoods.setStepAmount(2L); //单次购买最低量
-        mockGoods.setDefaultAmount(2L); //购买时缺省人次
-        mockGoods.setToAmount(2L);//总需人数
-        mockGoods.setPricePercentAmount(new BigDecimal(1L)); //购买每人次单价
-        mockGoods.setStatus(CommonEnum.GoodsStatus.up); //商品状态
-        mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-01-27 00:00:00")); //活动开始时间
-        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-05-27 00:00:00")); //活动截止时间
-        mockGoods.setShareTitle("丹青测试商品的分享标题"); //分享标题
-        mockGoods.setShareDescription("丹青测试商品的分享描述"); //分享描述
-        mockGoods.setSharePictureUrl("http://XXXXX.jpg"); //分享图片地址
-        mockGoods.setToMallGoodsId(123456L);
-        mockGoods.setAttendAmount(0L); //购买次数
-        mockGoods.setViewAmount(2L); //浏览器
-        mockGoods.setMerchantId(3447L); //设置商城ID
-        mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
-
-        //模拟一个期号
+        mockGoods = daisyMockGoods();
+        //模拟一个期号.
         mockIssue = new Issue();
         mockIssue.setGoods(mockGoods);//所属活动商品
         mockIssue.setStepAmount(mockGoods.getStepAmount());//单次购买最低量

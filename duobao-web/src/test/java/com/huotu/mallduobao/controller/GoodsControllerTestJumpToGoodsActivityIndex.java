@@ -1,4 +1,4 @@
-package com.huotu.mallduobao.controller;/*
+/*
  * 版权所有:杭州火图科技有限公司
  * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼在地图中查看
  *
@@ -6,6 +6,7 @@ package com.huotu.mallduobao.controller;/*
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
  * 2013-2015. All rights reserved.
  */
+package com.huotu.mallduobao.controller;
 
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
@@ -39,9 +40,7 @@ import java.text.SimpleDateFormat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by daisy.zhang on 2016/4/6.
@@ -61,9 +60,9 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
     IssueRepository mockIssueRep;
     @Autowired
     UserRepository mockUserRep;
-    @Autowired
-    CommonConfigService commonConfigService;
 
+    @Autowired
+    private CommonConfigService commonConfigService;
 
     private Issue mockIssue;
     private Goods mockGoods;
@@ -76,31 +75,9 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
 
 
     @Before
-    public void setUp() throws ParseException, UnsupportedEncodingException {
-
-
+    public void setUp() throws Exception {
         //模拟出一个商品
-        mockGoods = new Goods();
-        mockGoods.setTitle("daisy测试商品");
-        mockGoods.setDefaultPictureUrl("/Default.jpg");
-        mockGoods.setPictureUrls("/13.jpg");
-        mockGoods.setCharacters("商品特征是红色");
-        mockGoods.setStepAmount(1L); //单次购买最低量
-        mockGoods.setDefaultAmount(1L); //购买时缺省人次
-        mockGoods.setToAmount(10L);//总需人数
-        mockGoods.setPricePercentAmount(new BigDecimal(1L)); //购买每人次单价
-        mockGoods.setStatus(CommonEnum.GoodsStatus.up); //商品状态
-        mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-01-27 00:00:00")); //活动开始时间
-        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-05-27 00:00:00")); //活动截止时间
-        mockGoods.setShareTitle("丹青测试商品的分享标题"); //分享标题
-        mockGoods.setShareDescription("丹青测试商品的分享描述"); //分享描述
-        mockGoods.setSharePictureUrl("http://XXXXX.jpg"); //分享图片地址
-        mockGoods.setToMallGoodsId(123456L);
-        mockGoods.setAttendAmount(0L); //购买次数
-        mockGoods.setViewAmount(2L); //浏览器
-        mockGoods.setMerchantId(3447L); //设置商城ID
-        mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
-
+        mockGoods = daisyMockGoods();
         //模拟一个期号
         mockIssue = new Issue();
         mockIssue.setGoods(mockGoods);//所属活动商品
@@ -117,6 +94,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
         //模拟一个用户
         mockUserA = generateUserWithOpenId("123456", "7777777", mockUserRep);
+
         //计算商品原价，后面case断言使用
         costPrice = mockGoods.getPricePercentAmount().multiply(new BigDecimal(mockGoods.getToAmount()));
         //计算商品现价，后面case断言使用
@@ -138,13 +116,14 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
                 .andReturn();
         GoodsIndexModel goodsIndexModel = (GoodsIndexModel) result.getModelAndView().getModel().get("goodsIndexModel");
         Assert.assertEquals("商品ID错误", mockGoods.getId(), goodsIndexModel.getId());
-        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerWebUrl() + mockGoods.getDefaultPictureUrl(), goodsIndexModel.getDefaultPictureUrl());
+        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerWebUrl() + mockGoods.getDefaultPictureUrl(),
+                goodsIndexModel.getDefaultPictureUrl());
         Assert.assertEquals("原价计算错误", costPrice, goodsIndexModel.getCostPrice());
         Assert.assertEquals("现价计算错误", currentPrice, goodsIndexModel.getCurrentPrice());
         Assert.assertNotNull("时间戳不存在", goodsIndexModel.getStartTime());
         Assert.assertNotNull("时间戳不存在", goodsIndexModel.getEndTime());
         Assert.assertEquals("参与人数错误", mockGoods.getAttendAmount(), goodsIndexModel.getJoinCount());
-        Assert.assertTrue("用户登陆状态错误", goodsIndexModel.isLogined());
+//        Assert.assertTrue("用户登陆状态错误", goodsIndexModel.isLogined());
         Assert.assertFalse("用户参与状态错误", goodsIndexModel.isJoined());
     }
 
@@ -164,41 +143,67 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
                 .andReturn();
         GoodsIndexModel goodsIndexModel = (GoodsIndexModel) result.getModelAndView().getModel().get("goodsIndexModel");
         Assert.assertEquals("商品ID错误", mockGoods.getId(), goodsIndexModel.getId());
-        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerWebUrl() + mockGoods.getDefaultPictureUrl(), goodsIndexModel.getDefaultPictureUrl());
+        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerWebUrl() + mockGoods.getDefaultPictureUrl(),
+                goodsIndexModel.getDefaultPictureUrl());
         Assert.assertEquals("原价计算错误", costPrice, goodsIndexModel.getCostPrice());
         Assert.assertEquals("现价计算错误", currentPrice, goodsIndexModel.getCurrentPrice());
         Assert.assertNotNull("时间戳不存在", goodsIndexModel.getStartTime());
         Assert.assertNotNull("时间戳不存在", goodsIndexModel.getEndTime());
         Assert.assertEquals("参与人数错误", mockGoods.getAttendAmount(), goodsIndexModel.getJoinCount());
-       // Assert.assertTrue("用户登陆状态错误", goodsIndexModel.isLogined());
-       // Assert.assertTrue("用户参与状态错误", goodsIndexModel.isJoined());
+//        Assert.assertTrue("用户登陆状态错误", goodsIndexModel.isLogined());
+        Assert.assertTrue("用户参与状态错误", goodsIndexModel.isJoined());
     }
 
-
-
-    //  GoodID不传，错误页面未定义
+    //  期号不传，错误页面未定义
     @Test
-    public void TestNoGoodsID() throws Exception {
+    public void TestNoIssueID() throws Exception {
         mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
-    //上传GoodID格式错误
+    //上传期号格式错误
     @Test
-    public void TestWrongGoodsID() throws Exception {
+    public void TestWrongIssueID() throws Exception {
         mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", "bac"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
-    //测试商品ID在数据库中不存在，错误码和错误信息还未定义
+    //测试期号在数据库中不存在，错误码和错误信息还未定义
     @Test
-    public void TestNotFindGoodsID() throws Exception {
+    public void TestNotFindIssueID() throws Exception {
         mockMvc.perform(get("/goods/index")
                 .param("customerId", "3447").param("issueId", "999999999"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
+    }
+
+    //customerId不传
+    @Test
+    public void TestNoCustomerID() throws Exception {
+        mockMvc.perform(get("/goods/index")
+                .param("customerId", "").param("issueId", mockIssue.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
+    }
+
+    //customerId错误
+    @Test
+    public void TestCustomerIDWrong() throws Exception {
+        mockMvc.perform(get("/goods/index")
+                .param("customerId", "abc").param("issueId", mockIssue.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
+    }
+
+    //customerId在数据库中不存在
+    @Test
+    public void TestCustomerIDNotFind() throws Exception {
+        mockMvc.perform(get("/goods/index")
+                .param("customerId", "999999999").param("issueId", mockIssue.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
