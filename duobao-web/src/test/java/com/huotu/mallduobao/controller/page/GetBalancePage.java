@@ -1,4 +1,4 @@
-package com.huotu.duobaoweb.controller.page;
+package com.huotu.mallduobao.controller.page;
 
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.ShoppingCart;
