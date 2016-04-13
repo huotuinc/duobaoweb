@@ -83,7 +83,6 @@ public class GoodsControllerTestGetCountResultByIssueId extends BaseTest {
     private UserBuyFlow mockUserBuyFlowA;
     private UserBuyFlow mockUserBuyFlowB;
 
-
     @Before
     public void setUp() throws ParseException, UnsupportedEncodingException {
         //模拟出一个商品
@@ -138,17 +137,18 @@ public class GoodsControllerTestGetCountResultByIssueId extends BaseTest {
         mockUserNumB = saveUserNumber(mockUserB, mockIssue, 2);
         //设置该期的中奖号码
         mockIssue.setLuckyNumber(mockUserNumB.getNumber());//设置中奖号码、
-        //将模拟的两个号码放进list，用来模拟号码列表
-        List<UserNumber> mockUserNumList = new ArrayList<>();
-        mockUserNumList.add(mockUserNumA);
-        mockUserNumList.add(mockUserNumB);
+
+        //将模拟两个userNumber放进list
+        List<UserNumber> UserNumberlist = new ArrayList<>();
+        UserNumberlist.add(mockUserNumA);
+        UserNumberlist.add(mockUserNumB);
 
         //模拟开奖结果
         mockCountRes = new CountResult();
         mockCountRes.setIssueNo("20160812");
         mockCountRes.setNumberA(1234567L);
         mockCountRes.setNumberB(81256L);
-        mockCountRes.setUserNumbers(mockUserNumList);
+        mockCountRes.setUserNumbers(UserNumberlist);
         mockCountRes.setIssueAmount(mockIssue.getToAmount().intValue());
         mockCountRes = mockCRR.saveAndFlush(mockCountRes);
 
@@ -170,11 +170,10 @@ public class GoodsControllerTestGetCountResultByIssueId extends BaseTest {
 
         CountResultModel countResultModel = (CountResultModel) result.getModelAndView().getModel().get("countResultModel");
         Assert.assertEquals("时时彩期号出错", mockCountRes.getIssueNo(), countResultModel.getIssueNo());
-        Assert.assertEquals("不知道NumberA是啥意思，先忽略这个错误", 1, countResultModel.getNumberA());
+        Assert.assertNotNull("NumberA不存在", countResultModel.getNumberA());
         Assert.assertEquals("时时彩开奖结果出错", mockCountRes.getNumberB(), countResultModel.getNumberB());
         Assert.assertEquals("最后50条错了", mockCountRes.getUserNumbers(), countResultModel.getUserNumbers());
         Assert.assertEquals("中奖号码错了", mockIssue.getLuckyNumber(), countResultModel.getLuckNumber());
-
 
     }
 }
