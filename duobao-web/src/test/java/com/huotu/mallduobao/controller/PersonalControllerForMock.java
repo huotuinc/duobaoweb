@@ -358,6 +358,4 @@ public class PersonalControllerForMock extends BaseTest {
         Assert.assertEquals("aaaaa",delivery.getDetails());
         Assert.assertEquals("bbbbbb",delivery.getRemark());
     }
-
-
 }
