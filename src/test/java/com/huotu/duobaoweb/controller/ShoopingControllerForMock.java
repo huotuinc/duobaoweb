@@ -1,25 +1,20 @@
 package com.huotu.duobaoweb.controller;
 
+import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
 import com.huotu.mallduobao.common.CommonEnum;
-import com.huotu.duobaoweb.controller.page.GetBalancePage;
-import com.huotu.duobaoweb.controller.page.ShowShoppingCartsPage;
-import com.huotu.mallduobao.entity.Delivery;
 import com.huotu.mallduobao.entity.Goods;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.ShoppingCart;
 import com.huotu.mallduobao.entity.User;
-import com.huotu.mallduobao.entity.UserBuyFlow;
 import com.huotu.mallduobao.repository.GoodsRepository;
 import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.ShoppingCartRepository;
 import com.huotu.mallduobao.repository.UserRepository;
-import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -32,11 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
-
 /**
- * Created by cosy on 2016/4/6.
+ * Created by cosy on 2016/4/13.
  */
+
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @WebAppConfiguration
@@ -44,7 +38,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {RootConfig.class, MVCConfig.class, BaseClientSpringConfig.class})
 @ActiveProfiles("development")
 @Transactional
-public class ShoppingControllerTest extends BaseTest{
+public class ShoopingControllerForMock extends BaseTest {
+
     private Log log = LogFactory.getLog(ShoppingControllerTest.class);
 
 
@@ -63,10 +58,9 @@ public class ShoppingControllerTest extends BaseTest{
     private Issue currentIssue2;
     private Goods goods;
     private ShoppingCart shoppingCart;
-    private  WebDriver driver;
+    private WebDriver driver;
 
-
-    @Before
+    @Test
     public void before()
     {
         //商品
@@ -130,30 +124,7 @@ public class ShoppingControllerTest extends BaseTest{
         shoppingCart.setIssue(currentIssue);
         shoppingCart.setBuyAmount(10l);
         shoppingCart=shoppingCartRepository.saveAndFlush(shoppingCart);
-    }
-
-
-   //得到购物车
-    @Test
-    public void testShowShoppingCarts() throws Exception {
-      //购物车中有商品
-        ShowShoppingCartsPage showShoppingCartsPage=new ShowShoppingCartsPage();
-        showShoppingCartsPage.existGoods(driver,currentUser,currentIssue);
-
-        //购物车中无商品
-        showShoppingCartsPage.nollGoods(driver,currentUser2);
-    }
-
-
-    //测试跳转到页面
-    @Test
-    public void testBalance() throws Exception {
-        GetBalancePage getBalancePage=new GetBalancePage();
-        getBalancePage.to(driver,shoppingCart);
-    }
-
-    @Test
-    public void testPay() throws Exception {
 
     }
+
 }
