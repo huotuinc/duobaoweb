@@ -151,7 +151,7 @@ public class GoodsControllerTestGetCountResultByIssueId extends BaseTest {
         mockCountRes.setUserNumbers(UserNumberlist);
         mockCountRes.setIssueAmount(mockIssue.getToAmount().intValue());
         mockCountRes = mockCRR.saveAndFlush(mockCountRes);
-
+        mockIssue.setCountResult(mockCountRes);
 
     }
 

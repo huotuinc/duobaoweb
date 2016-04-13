@@ -291,7 +291,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
                 .andExpect(view().name("/html/goods/detail"))
                 .andExpect(model().attribute("issueId", mockIssue.getId()))
                 .andExpect(model().attributeExists("goodsDetailModel"))
-//                .andExpect(model().attribute("customerId",3447L))
+                .andExpect(model().attribute("customerId", 3447L))
                 .andDo(print())
                 .andReturn();
         GoodsDetailModel goodsDetailModel = (GoodsDetailModel) result.getModelAndView().getModel().get("goodsDetailModel");
