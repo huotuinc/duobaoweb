@@ -24,7 +24,6 @@ import com.huotu.mallduobao.repository.GoodsRepository;
 import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserNumberRepository;
 import com.huotu.mallduobao.repository.UserRepository;
-import com.huotu.mallduobao.utils.CommonEnum;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,17 +84,7 @@ public class GoodsControllerTestGetCountResultByIssueId extends BaseTest {
         //模拟出一个商品
         mockGoods = daisyMockGoods();
         //模拟一个期号.
-        mockIssue = new Issue();
-        mockIssue.setGoods(mockGoods);//所属活动商品
-        mockIssue.setStepAmount(mockGoods.getStepAmount());//单次购买最低量
-        mockIssue.setDefaultAmount(mockGoods.getDefaultAmount()); //缺省购买人次
-        mockIssue.setToAmount(mockGoods.getToAmount()); //总需购买人次
-        mockIssue.setBuyAmount(2L); //已购买的人次
-        mockIssue.setPricePercentAmount(mockGoods.getPricePercentAmount()); //每人次单价
-        mockIssue.setAttendAmount(mockGoods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
-        mockIssue.setStatus(CommonEnum.IssueStatus.drawed);//状态
-        mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-11 05:00:00"));//开奖日期
-        mockIssue = mockIssueRep.saveAndFlush(mockIssue);
+        mockIssue = daisyMockIssue(mockGoods);
         mockGoods.setIssue(mockIssue);
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
         //模拟用户

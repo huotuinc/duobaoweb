@@ -18,7 +18,6 @@ import com.huotu.mallduobao.entity.UserBuyFlow;
 import com.huotu.mallduobao.entity.UserNumber;
 import com.huotu.mallduobao.model.GoodsDetailModel;
 import com.huotu.mallduobao.repository.GoodsRepository;
-import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserBuyFlowRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.mallduobao.service.CommonConfigService;
@@ -35,8 +34,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -57,8 +54,6 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
 
     @Autowired
     private GoodsRepository mockGoodsRep;
-    @Autowired
-    private IssueRepository mockIssueRep;
     @Autowired
     private UserRepository mockUserRep;
     @Autowired
@@ -84,17 +79,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
         //模拟出一个商品
         mockGoods = daisyMockGoods();
         //模拟一个期号
-        mockIssue = new Issue();
-        mockIssue.setGoods(mockGoods);//所属活动商品
-        mockIssue.setStepAmount(mockGoods.getStepAmount());//单次购买最低量
-        mockIssue.setDefaultAmount(mockGoods.getDefaultAmount()); //缺省购买人次
-        mockIssue.setToAmount(mockGoods.getToAmount()); //总需购买人次
-        mockIssue.setBuyAmount(0L); //已购买的人次
-        mockIssue.setPricePercentAmount(mockGoods.getPricePercentAmount()); //每人次单价
-        mockIssue.setAttendAmount(mockGoods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
-        mockIssue.setStatus(CommonEnum.IssueStatus.going);//状态
-        mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-28 05:00:00"));//开奖日期
-        mockIssue = mockIssueRep.saveAndFlush(mockIssue);
+        mockIssue = daisyMockIssue(mockGoods);
         mockGoods.setIssue(mockIssue);
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
         //模拟一个用户
