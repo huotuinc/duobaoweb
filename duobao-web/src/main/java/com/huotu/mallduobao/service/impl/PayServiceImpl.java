@@ -134,8 +134,9 @@ public class PayServiceImpl implements PayService {
         orders.setPayType(purchaseSource);
         orders.setOutOrderNo(outOrderNo);
         orders.setStatus(CommonEnum.OrderStatus.payed);
-        orders = ordersRepository.saveAndFlush(orders);
+
         ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
+        orders = ordersRepository.saveAndFlush(orders);
 
 
         //用户购买流水

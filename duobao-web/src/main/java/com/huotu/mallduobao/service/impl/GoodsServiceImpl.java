@@ -171,6 +171,11 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsDetailModel.setDefaultAmount(issue.getDefaultAmount());
                 goodsDetailModel.setStepAmount(issue.getStepAmount());
 
+                Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
+                if(firstBuyTimeByIssueId != null){
+                    goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
+                }
+
                 //进行中
                 if (status == 0) {
                     goodsDetailModel.setToAmount(toAmount);
@@ -197,12 +202,6 @@ public class GoodsServiceImpl implements GoodsService {
 
                     goodsDetailModel.setAwardTime(issue.getAwardingDate());
                     goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
-
-                    Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
-                    if(firstBuyTimeByIssueId != null){
-                        goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
-                    }
-
                 }
 
                 //3.获取用户当前参与次数
