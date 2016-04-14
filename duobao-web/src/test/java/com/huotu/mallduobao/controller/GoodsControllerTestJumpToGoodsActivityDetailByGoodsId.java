@@ -6,6 +6,7 @@
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
  * 2013-2015. All rights reserved.
  */
+<<<<<<< HEAD
 package com.huotu.duobaoweb.controller;
 
 import com.huotu.duobaoweb.base.BaseTest;
@@ -22,6 +23,24 @@ import com.huotu.duobaoweb.repository.GoodsRepository;
 import com.huotu.duobaoweb.repository.IssueRepository;
 import com.huotu.duobaoweb.repository.UserBuyFlowRepository;
 import com.huotu.duobaoweb.repository.UserRepository;
+=======
+package com.huotu.mallduobao.controller;
+
+import com.huotu.mallduobao.base.BaseTest;
+import com.huotu.mallduobao.boot.MVCConfig;
+import com.huotu.mallduobao.boot.RootConfig;
+import com.huotu.mallduobao.entity.Goods;
+import com.huotu.mallduobao.entity.Issue;
+import com.huotu.mallduobao.entity.User;
+import com.huotu.mallduobao.entity.UserBuyFlow;
+import com.huotu.mallduobao.entity.UserNumber;
+import com.huotu.mallduobao.model.GoodsDetailModel;
+import com.huotu.mallduobao.repository.GoodsRepository;
+import com.huotu.mallduobao.repository.UserBuyFlowRepository;
+import com.huotu.mallduobao.repository.UserRepository;
+import com.huotu.mallduobao.service.CommonConfigService;
+import com.huotu.mallduobao.utils.CommonEnum;
+>>>>>>> origin/master
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,9 +53,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+=======
+>>>>>>> origin/master
 import java.text.SimpleDateFormat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -57,8 +79,6 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
 
     @Autowired
     private GoodsRepository mockGoodsRep;
-    @Autowired
-    private IssueRepository mockIssueRep;
     @Autowired
     private UserRepository mockUserRep;
     @Autowired
@@ -102,17 +122,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
 
         //模拟一个期号
-        mockIssue = new Issue();
-        mockIssue.setGoods(mockGoods);//所属活动商品
-        mockIssue.setStepAmount(mockGoods.getStepAmount());//单次购买最低量
-        mockIssue.setDefaultAmount(mockGoods.getDefaultAmount()); //缺省购买人次
-        mockIssue.setToAmount(mockGoods.getToAmount()); //总需购买人次
-        mockIssue.setBuyAmount(0L); //已购买的人次
-        mockIssue.setPricePercentAmount(mockGoods.getPricePercentAmount()); //每人次单价
-        mockIssue.setAttendAmount(mockGoods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
-        mockIssue.setStatus(CommonEnum.IssueStatus.going);//状态
-        mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-28 05:00:00"));//开奖日期
-        mockIssue = mockIssueRep.saveAndFlush(mockIssue);
+        mockIssue = daisyMockIssue(mockGoods);
         mockGoods.setIssue(mockIssue);
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
         //模拟一个用户

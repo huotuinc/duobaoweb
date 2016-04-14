@@ -34,9 +34,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -102,17 +100,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
 
         //模拟一个期号
-        mockIssue = new Issue();
-        mockIssue.setGoods(mockGoods);//所属活动商品
-        mockIssue.setStepAmount(mockGoods.getStepAmount());//单次购买最低量
-        mockIssue.setDefaultAmount(mockGoods.getDefaultAmount()); //缺省购买人次
-        mockIssue.setToAmount(mockGoods.getToAmount()); //总需购买人次
-        mockIssue.setBuyAmount(1L); //已购买的人次
-        mockIssue.setPricePercentAmount(mockGoods.getPricePercentAmount()); //每人次单价
-        mockIssue.setAttendAmount(mockGoods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
-        mockIssue.setStatus(CommonEnum.IssueStatus.going);//状态
-        mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-28 05:00:00"));//开奖日期
-        mockIssue = mockIssueRep.saveAndFlush(mockIssue);
+        mockIssue = daisyMockIssue(mockGoods);
         mockGoods.setIssue(mockIssue);
         mockGoods = mockGoodsRep.saveAndFlush(mockGoods);
         //模拟一个用户
@@ -245,5 +233,15 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
 //                .andExpect(view().name("/html/goods/XXX"))
 //                .andDo(print());
 //    }
+    //线上测试
+    @Test
+    public void TestOnline() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/goods/index")
+                .param("customerId", "3447").param("issueId", "1"))
+                .andExpect(status().isOk()).andDo(print()).andReturn();
+//        GoodsIndexModel goodsIndexModel = (GoodsIndexModel) result.getModelAndView().getModel().get("goodsIndexModel");
+//        System.out.println();
+    }
 
 }
