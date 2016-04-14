@@ -1,8 +1,10 @@
+package com.huotu.mallduobao.controller;
 
-
+import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
+import com.huotu.mallduobao.common.CommonEnum;
 import com.huotu.mallduobao.entity.Delivery;
 import com.huotu.mallduobao.entity.Goods;
 import com.huotu.mallduobao.entity.Issue;
@@ -11,6 +13,7 @@ import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.entity.UserBuyFlow;
 import com.huotu.mallduobao.entity.UserNumber;
 import com.huotu.mallduobao.model.DeliveryModel;
+import com.huotu.mallduobao.model.RaiderListModel;
 import com.huotu.mallduobao.model.RaiderNumbersModel;
 import com.huotu.mallduobao.repository.CachedIssueLeaveNumberRepository;
 import com.huotu.mallduobao.repository.DeliveryRepository;
@@ -23,6 +26,8 @@ import com.huotu.mallduobao.repository.UserNumberRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.mallduobao.service.CacheService;
 import com.huotu.mallduobao.service.RaidersCoreService;
+
+import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import com.huotu.mallduobao.utils.CommonEnum;
 import org.apache.commons.logging.Log;
@@ -355,6 +360,4 @@ public class PersonalControllerForMock extends BaseTest {
         Assert.assertEquals("aaaaa",delivery.getDetails());
         Assert.assertEquals("bbbbbb",delivery.getRemark());
     }
-
-
 }

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
+import com.huotu.mallduobao.common.CommonEnum;
 import com.huotu.mallduobao.entity.Goods;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;

@@ -9,6 +9,8 @@ import com.huotu.mallduobao.service.GoodsService;
 import com.huotu.mallduobao.service.IssueService;
 import com.huotu.mallduobao.service.ShoppingService;
 import com.huotu.mallduobao.service.UserService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +28,8 @@ import java.util.Map;
 @RequestMapping(value="/user")
 @Controller
 public class UserController {
+
+    private static final Log log = LogFactory.getLog(UserController.class);
 
     @Autowired
     private GoodsService goodsService;
@@ -51,14 +55,13 @@ public class UserController {
     @RequestMapping(value = "/getOpid", method = RequestMethod.GET)
     public String getOpid(String issueId,String customerId,String openid,Map<String, Object> map) throws Exception {
 
+        log.info("issueId:"+issueId+";customerId:"+customerId+";openid:"+openid);
         //进行用户注册(如果用户存在则不注册，不存在才注册)
         User user =userService.registerUser(openid,customerId);
 
-        Long goodsId=null;
         Issue issue=new Issue();
         if(issueId!=null&&!issueId.equals("")) {
             issue= issueService.getIssueById(issueId);
-            goodsId = issue.getId();
         }
         //将当前用户写入ThreadLocal
         WebPublicModel webPublicModel=userService.getWebPublicModel(user,issue);
@@ -66,23 +69,23 @@ public class UserController {
 
 
         Cookie custId=new Cookie("customerId",customerId);
-        custId.setMaxAge(60*2); //单位是秒 todo 正式上线的时候时间设置长一点
+        custId.setMaxAge(60*10); //单位是秒 todo 正式上线的时候时间设置长一点
         custId.setPath("/");
         Cookie userId=new Cookie("userId",String.valueOf(webPublicModel.getCurrentUser().getId()));
-        userId.setMaxAge(60*2);
+        userId.setMaxAge(60*10);
         userId.setPath("/");
         Cookie openId=new Cookie("openId",openid);
-        openId.setMaxAge(60*2);
+        openId.setMaxAge(60*10);
         openId.setPath("/");
         Cookie sign=new Cookie("sign",webPublicModel.getSign());
-        sign.setMaxAge(60*2);
+        sign.setMaxAge(60*10);
         sign.setPath("/");
         response.addCookie(custId);
         response.addCookie(userId);
         response.addCookie(openId);
         response.addCookie(sign);
 
-        goodsService.jumpToGoodsActivityIndex(goodsId, map);
+        goodsService.jumpToGoodsActivityIndex(Long.parseLong(issueId), map);
 
         return "/html/goods/index";
     }

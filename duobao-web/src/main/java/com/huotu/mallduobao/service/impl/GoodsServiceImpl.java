@@ -50,6 +50,8 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private UserBuyFlowRepository userBuyFlowRepository;
 
+    @Autowired
+    private StaticResourceService staticResourceService;
 
     @Autowired
     private GoodsRestRepository goodsRestRepository;
@@ -171,6 +173,11 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsDetailModel.setDefaultAmount(issue.getDefaultAmount());
                 goodsDetailModel.setStepAmount(issue.getStepAmount());
 
+                Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
+                if(firstBuyTimeByIssueId != null){
+                    goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
+                }
+
                 //进行中
                 if (status == 0) {
                     goodsDetailModel.setToAmount(toAmount);
@@ -189,7 +196,7 @@ public class GoodsServiceImpl implements GoodsService {
                         goodsDetailModel.setAwardUserCityName(awardUser.getCityName());
                         String head = awardUser.getUserHead();
                         if (head != null) {
-                            goodsDetailModel.setAwardUserHead(commonConfigService.getHuoBanPlusManagerWebUrl()  + head);
+                            goodsDetailModel.setAwardUserHead(staticResourceService.getResource(head).toString());
                         }
 
                         goodsDetailModel.setAwardUserJoinCount(userBuyFlowService.findByUserIdAndIssuId(awardUser.getId(), issue.getId()).size() + 0L);
@@ -197,12 +204,11 @@ public class GoodsServiceImpl implements GoodsService {
 
                     goodsDetailModel.setAwardTime(issue.getAwardingDate());
                     goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
+                }
 
-                    Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
-                    if(firstBuyTimeByIssueId != null){
-                        goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
-                    }
-
+                Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
+                if(firstBuyTimeByIssueId != null){
+                    goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
                 }
 
                 //3.获取用户当前参与次数
@@ -302,7 +308,7 @@ public class GoodsServiceImpl implements GoodsService {
                     goodsDetailModel.setAwardUserCityName(awardUser.getCityName());
                     String head = awardUser.getUserHead();
                     if (head != null) {
-                        goodsDetailModel.setAwardUserHead(commonConfigService.getHuoBanPlusManagerWebUrl()  + head);
+                        goodsDetailModel.setAwardUserHead(staticResourceService.getResource(head).toString());
                     }
                     goodsDetailModel.setAwardUserJoinCount(userBuyFlowService.findByUserIdAndIssuId(awardUser.getId(), issue.getId()).size() + 0L);
                 }
@@ -452,8 +458,13 @@ public class GoodsServiceImpl implements GoodsService {
                 }
                 selGoodsSpecModel.setPictureUrlList(pictureUrlList);
                 //3.获取商城商品
-                com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK("1");
-                selGoodsSpecModel.setIntroduce(mallGoods.getIntro());
+                com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
+                String introduce = mallGoods.getIntro();
+                if(introduce != null){
+                    introduce = introduce.replaceAll("\"", "'");
+                    introduce = introduce.replaceAll("src='/", "src='" + commonConfigService.getHuoBanPlusNetWebUrl());
+                }
+                selGoodsSpecModel.setIntroduce(introduce);
             }
         }
         return selGoodsSpecModel;
@@ -482,11 +493,11 @@ public class GoodsServiceImpl implements GoodsService {
             buyListModel.setCity("杭州");
             buyListModel.setDate(simpleDateFormat.format(new Date()));
             buyListModel.setIp("192.168.1.254");
-            buyListModel.setUserHeadUrl(commonConfigService.getHuoBanPlusManagerWebUrl()  + "resources/goods/defaultH.jpg");
+            buyListModel.setUserHeadUrl(staticResourceService.getResource("resources/goods/defaultH.jpg").toString());
             buyListModelList.add(buyListModel);
         }
 
-       BuyListModelAjax buyListModelAjax = new BuyListModelAjax();
+        BuyListModelAjax buyListModelAjax = new BuyListModelAjax();
         buyListModelAjax.setRows(buyListModelList);
         buyListModelAjax.setPageCount(1);
         buyListModelAjax.setPageIndex(page.intValue());

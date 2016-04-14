@@ -1,6 +1,26 @@
+package com.huotu.mallduobao.controller;
+
+import com.huotu.mallduobao.base.BaseTest;
+import com.huotu.mallduobao.boot.MVCConfig;
+import com.huotu.mallduobao.boot.RootConfig;
+
+import com.huotu.mallduobao.controller.page.GetMyInvolvedRecordPage;
+import com.huotu.mallduobao.controller.page.GetMyRaiderNumbersPage;
+import com.huotu.mallduobao.controller.page.GetOneLotteryInfoPage;
+import com.huotu.mallduobao.entity.Goods;
+import com.huotu.mallduobao.entity.Issue;
+import com.huotu.mallduobao.entity.User;
+import com.huotu.mallduobao.entity.UserNumber;
+import com.huotu.mallduobao.repository.*;
+import com.huotu.mallduobao.entity.*;
+
+import com.huotu.mallduobao.service.CacheService;
+import com.huotu.mallduobao.service.RaidersCoreService;
+import com.huotu.mallduobao.service.StaticResourceService;
 package com.huotu.duobaoweb.controller;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 
+import com.huotu.mallduobao.utils.CommonEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
@@ -197,7 +217,7 @@ public class PersonalControllerTest extends BaseTest {
         delivery = new Delivery();
         delivery.setIssue(currentIssue);
         delivery.setUser(currentUser);
-        delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.RecieveGoods);
+        delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.GetPrize);
         delivery.setReceiver(currentUser.getId().toString());
         delivery.setMobile("13600541783");
         delivery.setDetails("浙江省杭州市阡陌路智慧E谷");

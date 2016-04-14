@@ -24,6 +24,8 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -83,8 +85,8 @@ public class BaseTest {
     @Autowired
     WebApplicationContext context;
 
-//    @Autowired
-  protected   MockMvc mockMvc;
+    //    @Autowired
+    protected MockMvc mockMvc;
 
     /**
      * 初始化webdriver
@@ -125,6 +127,7 @@ public class BaseTest {
         user.setWeixinBinded(true);
         user.setUserFromType(CommonEnum.UserFromType.register);
         user.setMoney(new BigDecimal("1000000"));
+        user.setMerchantId(3447L);
         return userRepository.saveAndFlush(user);
     }
 
@@ -368,10 +371,10 @@ public class BaseTest {
      */
     public OrdersItem saveOrderItem(Orders orders, Issue issue) {
         OrdersItem oi = new OrdersItem();
-        oi.setAmount(1l);
+        oi.setAmount(10L);
         oi.setOrder(orders);
         oi.setIssue(issue);
-        oi.setStatus(CommonEnum.OrderStatus.payed);
+        oi.setStatus(CommonEnum.OrderStatus.paying);
         return ordersItemRepository.saveAndFlush(oi);
     }
 
@@ -391,5 +394,46 @@ public class BaseTest {
         return userBuyFlowRepository.saveAndFlush(userBuyFlow);
     }
 
+    //丹青测试专用，创建商品，不准修改，谢谢配合
+    public Goods daisyMockGoods() throws Exception {
+        Goods mockGoods = new Goods();
+        //模拟出一个商品
+        mockGoods.setTitle("daisy测试商品");
+        mockGoods.setDefaultPictureUrl("Default.jpg");
+        mockGoods.setPictureUrls("13.jpg,456.jpg");
+        mockGoods.setCharacters("商品特征是红色");
+        mockGoods.setStepAmount(1L); //单次购买最低量
+        mockGoods.setDefaultAmount(1L); //购买时缺省人次
+        mockGoods.setToAmount(20L);//总需人数
+        mockGoods.setPricePercentAmount(new BigDecimal(1L)); //购买每人次单价
+        mockGoods.setStatus(CommonEnum.GoodsStatus.up); //商品状态
+        mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-01-27 00:00:00")); //活动开始时间
+        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-05-27 00:00:00")); //活动截止时间
+        mockGoods.setShareTitle("丹青测试商品的分享标题"); //分享标题
+        mockGoods.setShareDescription("丹青测试商品的分享描述"); //分享描述
+        mockGoods.setSharePictureUrl("http://XXXXX.jpg"); //分享图片地址
+        mockGoods.setToMallGoodsId(123456L);
+        mockGoods.setAttendAmount(10L); //购买次数
+        mockGoods.setViewAmount(2L); //浏览量
+        mockGoods.setMerchantId(3447L); //设置商城ID
+        mockGoods = goodsRepository.saveAndFlush(mockGoods);
+        return mockGoods;
+    }
+
+    //丹青测试用于模拟期号，不准修改，谢谢配合
+    public Issue daisyMockIssue(Goods goods) throws ParseException {
+        Issue mockIssue = new Issue();
+        mockIssue.setGoods(goods);//所属活动商品
+        mockIssue.setStepAmount(goods.getStepAmount());//单次购买最低量
+        mockIssue.setDefaultAmount(goods.getDefaultAmount()); //缺省购买人次
+        mockIssue.setToAmount(goods.getToAmount()); //总需购买人次
+        mockIssue.setBuyAmount(2L); //已购买的人次
+        mockIssue.setPricePercentAmount(goods.getPricePercentAmount()); //每人次单价
+        mockIssue.setAttendAmount(goods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
+        mockIssue.setStatus(CommonEnum.IssueStatus.drawing);//状态
+        mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-11 05:00:00"));//开奖日期
+        mockIssue = issueRepository.saveAndFlush(mockIssue);
+        return mockIssue;
+    }
 
 }
