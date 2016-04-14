@@ -1,10 +1,7 @@
 package com.huotu.mallduobao.service.impl;
 
 import com.huotu.mallduobao.common.PublicParameterHolder;
-import com.huotu.mallduobao.entity.CountResult;
-import com.huotu.mallduobao.entity.Goods;
-import com.huotu.mallduobao.entity.Issue;
-import com.huotu.mallduobao.entity.User;
+import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.*;
 import com.huotu.mallduobao.repository.GoodsRepository;
 import com.huotu.mallduobao.repository.IssueRepository;
@@ -182,7 +179,7 @@ public class GoodsServiceImpl implements GoodsService {
                 if (status == 0) {
                     goodsDetailModel.setToAmount(toAmount);
                     goodsDetailModel.setRemainAmount(toAmount - buyAmount);
-                    goodsDetailModel.setProgress(toAmount == 0 ? 0 : (int) (buyAmount / toAmount));
+                    goodsDetailModel.setProgress(toAmount == 0 ? 0 : (int) (buyAmount * 100 / toAmount));
                 } else if (status == 1) {
                     //倒计时
                     goodsDetailModel.setToAwardTime(raidersCoreService.getAwardingTime() * 1000);
@@ -289,7 +286,7 @@ public class GoodsServiceImpl implements GoodsService {
             if (status == 0) {
                 goodsDetailModel.setToAmount(toAmount);
                 goodsDetailModel.setRemainAmount(toAmount - buyAmount);
-                goodsDetailModel.setProgress(toAmount == 0 ? 0 : (int) (buyAmount / toAmount));
+                goodsDetailModel.setProgress(toAmount == 0 ? 0 : (int) (buyAmount * 100 / toAmount));
             } else if (status == 1) {
                 //倒计时
                 goodsDetailModel.setToAwardTime(raidersCoreService.getAwardingTime() * 1000);
@@ -356,23 +353,7 @@ public class GoodsServiceImpl implements GoodsService {
         CountResult countResult = issue.getCountResult();
         CountResultModel countResultModel = new CountResultModel();
 
-        //开始模拟数据
-        countResultModel.setIssueNo("20160330043");
-        countResultModel.setLuckNumber(10000001L);
-        countResultModel.setNumberA("5659130125");
-        countResultModel.setNumberB("24956");
-        List<CountResultUserNumberListModel> countResultUserNumberListModelList = new ArrayList<>();
-        for(int i = 0; i < 50; ++i){
-            CountResultUserNumberListModel countResultUserNumberListModel = new CountResultUserNumberListModel();
-            countResultUserNumberListModel.setBuyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
-            countResultUserNumberListModel.setNumber(new SimpleDateFormat("HHmmssSSS").format(new Date()));
-            countResultUserNumberListModel.setNickName("紫风飘雪");
-            countResultUserNumberListModelList.add(countResultUserNumberListModel);
-        }
-        countResultModel.setUserNumbers(countResultUserNumberListModelList);
-        //结束模拟数据
-
-/*        if (countResult != null) {
+       if (countResult != null) {
             countResultModel.setIssueNo(countResult.getIssueNo());
             countResultModel.setNumberA(countResult.getNumberA() == null ? "" : countResult.getNumberA().toString());
             String numberB = countResult.getNumberB() == null ? "" : countResult.getNumberB().toString();
@@ -396,12 +377,12 @@ public class GoodsServiceImpl implements GoodsService {
             }
             countResultModel.setUserNumbers(countResultUserNumberListModelList);
         }
-        countResultModel.setLuckNumber(issue.getLuckyNumber());*/
+        countResultModel.setLuckNumber(issue.getLuckyNumber());
         map.put("countResultModel", countResultModel);
     }
 
     /**
-     * 获取商品图文详情 todo
+     * 获取商品图文详情
      * @param goodsId
      * @param map
      */
@@ -475,30 +456,7 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public BuyListModelAjax getBuyListByIssueId(Long issueId, Long page, Long pageSize) throws Exception{
-
-       // BuyListModelAjax buyListModelAjax = userBuyFlowService.ajaxFindBuyListByIssueId(issueId, page, pageSize);
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //开始模拟数据
-        List<BuyListModel> buyListModelList = new ArrayList<>();
-        for(int i = 0; i < 10; ++i){
-            BuyListModel buyListModel = new BuyListModel();
-            buyListModel.setNickName("紫风飘雪");
-            buyListModel.setAttendAmount(10L);
-            buyListModel.setCity("杭州");
-            buyListModel.setDate(simpleDateFormat.format(new Date()));
-            buyListModel.setIp("192.168.1.254");
-            buyListModel.setUserHeadUrl(staticResourceService.getResource("resources/goods/defaultH.jpg").toString());
-            buyListModelList.add(buyListModel);
-        }
-
-        BuyListModelAjax buyListModelAjax = new BuyListModelAjax();
-        buyListModelAjax.setRows(buyListModelList);
-        buyListModelAjax.setPageCount(1);
-        buyListModelAjax.setPageIndex(page.intValue());
-        buyListModelAjax.setTotal(10);
-        buyListModelAjax.setPageSize(pageSize.intValue());
-        //结束模拟数据*/
+        BuyListModelAjax buyListModelAjax = userBuyFlowService.ajaxFindBuyListByIssueId(issueId, page, pageSize);
         return buyListModelAjax;
     }
 }
