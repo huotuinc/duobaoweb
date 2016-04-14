@@ -13,6 +13,22 @@
     <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"
           th:href="@{/resources/css/common.css}"/>
     <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/js/jBox/Skins/Green/jbox.css" th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resources/js/jquery-1.7.2.min.js"
+            th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" src="../../resources/js/jquery.utils.js"
+            th:src="@{/resources/js/jquery.utils.js}"></script>
+    <link href="../../resources/js/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+    <script>
+        $(function(){
+            $(".zuijia").click(function(){
+                $.jBox.tip("正在加载...", "loading");
+            });
+        });
+    </script>
     <title>中奖确认</title>
 </head>
 
@@ -89,7 +105,7 @@
                         </p>
                         <div class="zjj_all_left_s">
                             <div class="zjj_all_left_in_s">
-                                <p class=" hui" th:if="*{productSpec!=''}" th:text="*{'规格：'+productSpec}">规格：M,红色</p>
+                                <p class=" hui" th:if="*{productSpec!='' and productSpec!=null}" th:text="*{'规格：'+productSpec}">规格：M,红色</p>
                                 <p class=" hui" th:text="*{'参与期号：'+issueId}">参与期号：324323232</p>
                             </div>
                         </div>

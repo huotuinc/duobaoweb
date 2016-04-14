@@ -1,51 +1,30 @@
 package com.huotu.mallduobao.controller;
-
+import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
-
 import com.huotu.mallduobao.controller.page.GetMyInvolvedRecordPage;
 import com.huotu.mallduobao.controller.page.GetMyRaiderNumbersPage;
 import com.huotu.mallduobao.controller.page.GetOneLotteryInfoPage;
-import com.huotu.mallduobao.entity.Goods;
-import com.huotu.mallduobao.entity.Issue;
-import com.huotu.mallduobao.entity.User;
-import com.huotu.mallduobao.entity.UserNumber;
-import com.huotu.mallduobao.repository.*;
 import com.huotu.mallduobao.entity.*;
-
+import com.huotu.mallduobao.repository.*;
 import com.huotu.mallduobao.service.CacheService;
 import com.huotu.mallduobao.service.RaidersCoreService;
-import com.huotu.mallduobao.service.StaticResourceService;
-package com.huotu.duobaoweb.controller;
-import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
-
 import com.huotu.mallduobao.utils.CommonEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.math.BigDecimal;
-
 import java.util.Date;
 import java.util.UUID;
-
 
 /**
  * Created by lgh on 2016/3/30.

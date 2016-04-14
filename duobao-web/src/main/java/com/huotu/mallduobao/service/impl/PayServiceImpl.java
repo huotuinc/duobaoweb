@@ -1,5 +1,6 @@
 package com.huotu.mallduobao.service.impl;
 
+import com.huotu.huobanplus.common.entity.*;
 import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.PayResultModel;
@@ -14,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;

@@ -13,12 +13,15 @@
     <link rel="stylesheet" type="text/css" href="../../resources/css/common.css"
           th:href="@{/resources/css/common.css}"/>
     <link rel="stylesheet" type="text/css" href="../../resources/css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
-
+    <link rel="stylesheet" type="text/css" href="../../resources/js/jBox/Skins/Green/jbox.css" th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
     <script type="text/javascript" src="../../resources/js/jquery-1.7.2.min.js"
             th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" src="../../resources/js/jquery.utils.js"
+            th:src="@{/resources/js/jquery.utils.js}"></script>
+    <link href="../../resources/js/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/js/jBox/Skins/Green/jbox.css}"/>
     <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
             th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
-
 
     <script type="text/javascript" th:inline="javascript">
         $(function () {
@@ -76,9 +79,11 @@
             });
 
             $("#submitFrom").click(function () {
+                $.jBox.tip("正在提交...", "loading");
                 $("#details").val($("#province  option:selected").text()+','+$("#city  option:selected").text()+','+$("#county  option:selected").text()+','+$("#details").val());
                 $("#form1").submit();
             });
+
         });
     </script>
 
