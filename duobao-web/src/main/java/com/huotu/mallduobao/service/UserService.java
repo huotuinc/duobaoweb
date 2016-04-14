@@ -1,11 +1,14 @@
 package com.huotu.mallduobao.service;
 
 
+import com.huotu.mallduobao.common.AuthEntity;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.model.WebPublicModel;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 
 /**
  * Created by xhk on 2016/3/25.
@@ -22,10 +25,10 @@ public interface UserService {
 
     /**
      * 通过openid注册一个用户
-     * @param openid
+     * @param authEntity
      * @return
      */
-    User registerUser(String openid,String customerId);
+    User registerUser(AuthEntity authEntity,String customerId) throws IOException, URISyntaxException;
 
     /**
      * 获取公用model

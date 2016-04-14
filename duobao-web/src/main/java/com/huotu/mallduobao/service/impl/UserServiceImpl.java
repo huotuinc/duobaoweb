@@ -1,19 +1,25 @@
 package com.huotu.mallduobao.service.impl;
 
 
+import com.huotu.mallduobao.common.AuthEntity;
 import com.huotu.mallduobao.common.WeixinAuthUrl;
 import com.huotu.mallduobao.common.thirdparty.MD5Util;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.model.WebPublicModel;
 import com.huotu.mallduobao.repository.UserRepository;
+import com.huotu.mallduobao.service.StaticResourceService;
 import com.huotu.mallduobao.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
 import java.util.UUID;
 
@@ -24,6 +30,9 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private static final Log log = LogFactory.getLog(UserServiceImpl.class);
+
+    @Autowired
+    private StaticResourceService staticResourceService;
 
     @Autowired
     UserRepository userRepository;
@@ -42,15 +51,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(String openid,String customerId) {
-        User user=userRepository.findByWeixinOpenId(openid);
+    public User registerUser(AuthEntity authEntity,String customerId) throws IOException, URISyntaxException {
+        User user=userRepository.findByWeixinOpenId(authEntity.getOpenid());
         //如果在数据库中没有这个微信信息则注册一个新的用户
         if(user==null){
             user=new User();
             user.setRegTime(new Date());
             user.setEnabled(true);
             user.setUsername(UUID.randomUUID().toString().replace("-",""));
-            user.setWeixinOpenId(openid);
+            user.setWeixinOpenId(authEntity.getOpenid());
+            user.setRealName(authEntity.getNickname());
+
+            //设置用户头像
+            String head=authEntity.getHeadimgurl();
+            String fileName = head.substring(head.lastIndexOf("/") + 1);
+            String headPath = StaticResourceService.USER_HEAD_PATH + UUID.randomUUID().toString() + fileName;
+            //String pat="http://wx.qlogo.cn/mmopen/HAVcjF9mzkWewuoejVjwuBtDgLMxYbiafyMZmk0ZmU3VeWy6micgDeiadOIug6heOmHPKibILKibZzEvqXp0NOuF73PK5UIehDNyd/0";
+            if (head != null) {
+                URL uri = new URL(head);
+                InputStream in = uri.openStream();
+                BufferedImage bufferedImage = ImageIO.read(in);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "jpg", baos);
+                staticResourceService.uploadResource(headPath, new ByteArrayInputStream(baos.toByteArray()));
+                user.setUserHead(headPath);
+            }
+
             user.setWeixinBinded(true);
             if(customerId!=null&&!customerId.equals("null")){
                 //如果商家id不为空并且不是null字符串在进行一下操作

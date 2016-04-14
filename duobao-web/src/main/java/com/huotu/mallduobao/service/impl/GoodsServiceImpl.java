@@ -206,11 +206,6 @@ public class GoodsServiceImpl implements GoodsService {
                     goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
                 }
 
-                Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
-                if(firstBuyTimeByIssueId != null){
-                    goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
-                }
-
                 //3.获取用户当前参与次数
                 //3.1获取当前用户
                 User user = webPublicModel.getCurrentUser();

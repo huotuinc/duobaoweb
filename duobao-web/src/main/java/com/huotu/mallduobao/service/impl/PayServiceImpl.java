@@ -72,9 +72,14 @@ public class PayServiceImpl implements PayService {
         log.info("进入支付主流程，in doPay()!");
         Date date = new Date();
         PayResultModel resultModel = new PayResultModel();
+        if (orders == null){//如果订单不存在
+            log.info("订单不存在，支付失败!");
+            resultModel.setSuccess(false);
+            return resultModel;
+        }
         OrdersItem ordersItem = ordersItemRepository.findByOrderId(orders.getId());
 
-        if (orders == null || ordersItem == null) { //如果订单不存在
+        if (ordersItem == null) { //如果详情订单不存在
             log.info("订单不存在，支付失败!");
             resultModel.setSuccess(false);
             return resultModel;

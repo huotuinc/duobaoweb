@@ -6,41 +6,17 @@
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
  * 2013-2015. All rights reserved.
  */
-<<<<<<< HEAD
-package com.huotu.duobaoweb.controller;
-
-import com.huotu.duobaoweb.base.BaseTest;
-import com.huotu.duobaoweb.boot.MVCConfig;
-import com.huotu.duobaoweb.boot.RootConfig;
-import com.huotu.duobaoweb.common.CommonEnum;
-import com.huotu.duobaoweb.entity.Goods;
-import com.huotu.duobaoweb.entity.Issue;
-import com.huotu.duobaoweb.entity.User;
-import com.huotu.duobaoweb.entity.UserBuyFlow;
-import com.huotu.duobaoweb.entity.UserNumber;
-import com.huotu.duobaoweb.model.GoodsDetailModel;
-import com.huotu.duobaoweb.repository.GoodsRepository;
-import com.huotu.duobaoweb.repository.IssueRepository;
-import com.huotu.duobaoweb.repository.UserBuyFlowRepository;
-import com.huotu.duobaoweb.repository.UserRepository;
-=======
 package com.huotu.mallduobao.controller;
 
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
-import com.huotu.mallduobao.entity.Goods;
-import com.huotu.mallduobao.entity.Issue;
-import com.huotu.mallduobao.entity.User;
-import com.huotu.mallduobao.entity.UserBuyFlow;
-import com.huotu.mallduobao.entity.UserNumber;
+import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.GoodsDetailModel;
 import com.huotu.mallduobao.repository.GoodsRepository;
 import com.huotu.mallduobao.repository.UserBuyFlowRepository;
 import com.huotu.mallduobao.repository.UserRepository;
-import com.huotu.mallduobao.service.CommonConfigService;
 import com.huotu.mallduobao.utils.CommonEnum;
->>>>>>> origin/master
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,15 +28,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
-
-<<<<<<< HEAD
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
-=======
->>>>>>> origin/master
 import java.text.SimpleDateFormat;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
