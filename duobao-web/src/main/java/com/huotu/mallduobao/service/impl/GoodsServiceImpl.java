@@ -173,6 +173,11 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsDetailModel.setDefaultAmount(issue.getDefaultAmount());
                 goodsDetailModel.setStepAmount(issue.getStepAmount());
 
+                Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
+                if(firstBuyTimeByIssueId != null){
+                    goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
+                }
+
                 //进行中
                 if (status == 0) {
                     goodsDetailModel.setToAmount(toAmount);

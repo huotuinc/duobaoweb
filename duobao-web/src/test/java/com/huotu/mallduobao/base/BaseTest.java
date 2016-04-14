@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ParseException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -25,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -85,8 +85,8 @@ public class BaseTest {
     @Autowired
     WebApplicationContext context;
 
-//    @Autowired
-  protected   MockMvc mockMvc;
+    //    @Autowired
+    protected MockMvc mockMvc;
 
     /**
      * 初始化webdriver
@@ -366,10 +366,10 @@ public class BaseTest {
      */
     public OrdersItem saveOrderItem(Orders orders, Issue issue) {
         OrdersItem oi = new OrdersItem();
-        oi.setAmount(1l);
+        oi.setAmount(10L);
         oi.setOrder(orders);
         oi.setIssue(issue);
-        oi.setStatus(CommonEnum.OrderStatus.payed);
+        oi.setStatus(CommonEnum.OrderStatus.paying);
         return ordersItemRepository.saveAndFlush(oi);
     }
 
@@ -388,11 +388,11 @@ public class BaseTest {
         userBuyFlow.setAmount(10L);
         return userBuyFlowRepository.saveAndFlush(userBuyFlow);
     }
-    //丹青测试转用，不准修改
+
+    //丹青测试专用，创建商品，不准修改，谢谢配合
     public Goods daisyMockGoods() throws Exception {
         Goods mockGoods = new Goods();
         //模拟出一个商品
-        mockGoods = new Goods();
         mockGoods.setTitle("daisy测试商品");
         mockGoods.setDefaultPictureUrl("Default.jpg");
         mockGoods.setPictureUrls("13.jpg,456.jpg");
@@ -415,5 +415,20 @@ public class BaseTest {
         return mockGoods;
     }
 
+    //丹青测试用于模拟期号，不准修改，谢谢配合
+    public Issue daisyMockIssue(Goods goods) throws ParseException {
+        Issue mockIssue = new Issue();
+        mockIssue.setGoods(goods);//所属活动商品
+        mockIssue.setStepAmount(goods.getStepAmount());//单次购买最低量
+        mockIssue.setDefaultAmount(goods.getDefaultAmount()); //缺省购买人次
+        mockIssue.setToAmount(goods.getToAmount()); //总需购买人次
+        mockIssue.setBuyAmount(2L); //已购买的人次
+        mockIssue.setPricePercentAmount(goods.getPricePercentAmount()); //每人次单价
+        mockIssue.setAttendAmount(goods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
+        mockIssue.setStatus(CommonEnum.IssueStatus.drawing);//状态
+        mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-11 05:00:00"));//开奖日期
+        mockIssue = issueRepository.saveAndFlush(mockIssue);
+        return mockIssue;
+    }
 
 }

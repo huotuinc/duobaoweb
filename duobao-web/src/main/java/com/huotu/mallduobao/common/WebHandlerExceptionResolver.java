@@ -26,7 +26,7 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
                 } catch (Exception e) {
                     log.error("web request error", e);
                 }
-                return new ModelAndView("redirect:/html/error.html");
+                //return new ModelAndView("redirect:/html/error.html");
         }
         return null;
     }
