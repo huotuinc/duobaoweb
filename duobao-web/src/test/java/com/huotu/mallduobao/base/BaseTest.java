@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ParseException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -365,10 +364,10 @@ public class BaseTest {
      */
     public OrdersItem saveOrderItem(Orders orders, Issue issue) {
         OrdersItem oi = new OrdersItem();
-        oi.setAmount(1l);
+        oi.setAmount(10L);
         oi.setOrder(orders);
         oi.setIssue(issue);
-        oi.setStatus(CommonEnum.OrderStatus.payed);
+        oi.setStatus(CommonEnum.OrderStatus.paying);
         return ordersItemRepository.saveAndFlush(oi);
     }
 
@@ -387,7 +386,7 @@ public class BaseTest {
         userBuyFlow.setAmount(10L);
         return userBuyFlowRepository.saveAndFlush(userBuyFlow);
     }
-    //丹青测试转用，不准修改
+    //丹青测试专用，创建商品，不准修改
     public Goods daisyMockGoods() throws Exception {
         Goods mockGoods = new Goods();
         //模拟出一个商品
@@ -413,6 +412,5 @@ public class BaseTest {
         mockGoods = goodsRepository.saveAndFlush(mockGoods);
         return mockGoods;
     }
-
 
 }
