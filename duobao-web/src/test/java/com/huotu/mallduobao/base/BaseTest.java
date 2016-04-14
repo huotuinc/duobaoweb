@@ -85,8 +85,8 @@ public class BaseTest {
     @Autowired
     WebApplicationContext context;
 
-//    @Autowired
-  protected   MockMvc mockMvc;
+    //    @Autowired
+    protected MockMvc mockMvc;
 
     /**
      * 初始化webdriver
@@ -387,6 +387,7 @@ public class BaseTest {
         userBuyFlow.setAmount(10L);
         return userBuyFlowRepository.saveAndFlush(userBuyFlow);
     }
+
     //丹青测试专用，创建商品，不准修改，谢谢配合
     public Goods daisyMockGoods() throws Exception {
         Goods mockGoods = new Goods();
@@ -412,6 +413,7 @@ public class BaseTest {
         mockGoods = goodsRepository.saveAndFlush(mockGoods);
         return mockGoods;
     }
+
     //丹青测试用于模拟期号，不准修改，谢谢配合
     public Issue daisyMockIssue(Goods goods) throws ParseException {
         Issue mockIssue = new Issue();
