@@ -1,5 +1,7 @@
 package com.huotu.mallduobao.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.huotu.mallduobao.common.AuthEntity;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -48,16 +51,16 @@ public class UserController {
     /**
      * 获取微信的Auth2认证之后的用户openid
      * @param issueId 期号id
-     * @param openid 认证后拿到的openid
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/getOpid", method = RequestMethod.GET)
-    public String getOpid(String issueId,String customerId,String openid,Map<String, Object> map) throws Exception {
-
-        log.info("issueId:"+issueId+";customerId:"+customerId+";openid:"+openid);
+    public String getOpid(HttpServletRequest request,String customerId,String issueId,Map<String, Object> map) throws Exception {
+        String info=request.getParameter("retuinfo");
+        log.info("issueId:"+issueId+";retuinfo:"+info);
+        AuthEntity retuinfo=JSON.parseObject(info, AuthEntity.class);
         //进行用户注册(如果用户存在则不注册，不存在才注册)
-        User user =userService.registerUser(openid,customerId);
+        User user = userService.registerUser(retuinfo, customerId);
 
         Issue issue=new Issue();
         if(issueId!=null&&!issueId.equals("")) {
@@ -74,7 +77,7 @@ public class UserController {
         Cookie userId=new Cookie("userId",String.valueOf(webPublicModel.getCurrentUser().getId()));
         userId.setMaxAge(60*10);
         userId.setPath("/");
-        Cookie openId=new Cookie("openId",openid);
+        Cookie openId=new Cookie("openId",retuinfo.getOpenid());
         openId.setMaxAge(60*10);
         openId.setPath("/");
         Cookie sign=new Cookie("sign",webPublicModel.getSign());

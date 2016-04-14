@@ -5,6 +5,8 @@ import com.huotu.mallduobao.model.PayResultModel;
 import com.huotu.mallduobao.repository.OrdersItemRepository;
 import com.huotu.mallduobao.repository.OrdersRepository;
 import com.huotu.mallduobao.service.PayService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,9 @@ import java.io.IOException;
 @RequestMapping(value = "/pay")
 @Controller
 public class PayCallBackController {
+
+    private static Log log = LogFactory.getLog(PayCallBackController.class);
+
 
     @Autowired
     private HttpServletResponse response;
@@ -38,12 +43,13 @@ public class PayCallBackController {
     @RequestMapping("/payCallbackWeixin")
     public PayResult payCallbackWeixin(HttpServletRequest request) throws Exception {
         //网页授权后获取传递的参数
+        String tradeno=request.getParameter("tradeno");
         String orderNo = request.getParameter("orderNo");
         float money = Float.parseFloat(request.getParameter("totalfee"));
-        String outOrderNo = request.getParameter("outOrderNo");
-
+        String outOrderNo = request.getParameter("outtradeno");
+        log.info("进入支付提示接口orderNo："+orderNo+";totalfee:"+money+";outOrderNo"+outOrderNo+";tradeno:"+tradeno);
         PayResult payResultModel=new PayResult();
-        PayResultModel payResult = payService.solveWeixinPayResult(orderNo, money, outOrderNo);
+        PayResultModel payResult = payService.solveWeixinPayResult(tradeno, money, outOrderNo);
 
         //PaysResultShowModel paysResultShowModel = new PaysResultShowModel();
         if (payResult.isSuccess()) {

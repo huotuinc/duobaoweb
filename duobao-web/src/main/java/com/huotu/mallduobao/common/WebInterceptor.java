@@ -89,7 +89,7 @@ public class WebInterceptor implements HandlerInterceptor {
         webPublicModel.setCurrentUser(userRepository.findOne(1L));
         webPublicModel.setIp(getIp(request));
 
-        if(request.getParameter("issueId")!=null) {
+        if(request.getParameter("issueId")!=null&&request.getParameter("issueId")!="") {
             webPublicModel.setIssueId(Long.parseLong(request.getParameter("issueId")));
         }else {
             log.info("issueId为空异常！issueId is null!");

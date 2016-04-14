@@ -24,12 +24,12 @@ public class WeixinAuthUrl {
     /**
      * 授权方式
      */
-    public static int scope=0;
+    public static int scope=1;
 
     /**
      * 返回
      */
-    public static int retuinfo=0;
+    public static int retuinfo=1;
 
     /**
      * 伙伴商城微信授权接口地址
