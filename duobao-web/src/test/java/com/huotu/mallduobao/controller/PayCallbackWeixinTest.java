@@ -13,22 +13,10 @@ package com.huotu.mallduobao.controller;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
-import com.huotu.mallduobao.entity.Goods;
-import com.huotu.mallduobao.entity.Issue;
-import com.huotu.mallduobao.entity.Orders;
-import com.huotu.mallduobao.entity.OrdersItem;
-import com.huotu.mallduobao.entity.User;
-import com.huotu.mallduobao.entity.UserBuyFlow;
-import com.huotu.mallduobao.entity.UserMoneyFlow;
+import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.PayResult;
-import com.huotu.mallduobao.repository.IssueRepository;
-import com.huotu.mallduobao.repository.OrdersItemRepository;
-import com.huotu.mallduobao.repository.OrdersRepository;
-import com.huotu.mallduobao.repository.UserBuyFlowRepository;
-import com.huotu.mallduobao.repository.UserMoneyFlowRepository;
-import com.huotu.mallduobao.repository.UserRepository;
-import com.huotu.mallduobao.service.PayService;
-import com.huotu.mallduobao.service.impl.PayServiceImpl;
+import com.huotu.mallduobao.repository.*;
+import com.huotu.mallduobao.service.UserMoneyFlowService;
 import com.huotu.mallduobao.utils.CommonEnum;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,12 +33,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -88,6 +74,8 @@ public class PayCallbackWeixinTest extends BaseTest {
     private UserBuyFlowRepository userBuyFlowRepository;
     @Autowired
     private UserMoneyFlowRepository userMoneyFlowRepository;
+    @Autowired
+    private UserMoneyFlowService userMoneyFlowService;
 
     private User mockUser;
     private Goods mockGoods;
@@ -129,7 +117,7 @@ public class PayCallbackWeixinTest extends BaseTest {
     public void testPayCallBackWeiXinSuccess() throws Exception {
         Long BuyAmount = mockIssue.getBuyAmount();
         MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
-                .param("orderNo", mockOrder.getId()).param("money", mockOrder.getMoney().toString())
+                .param("orderNo", mockOrder.getId()).param("totalfee", mockOrder.getMoney().toString())
                 .param("outOrderNo", "7777777777"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("payResult"))
@@ -151,9 +139,11 @@ public class PayCallbackWeixinTest extends BaseTest {
         Assert.assertEquals("购买不是对应的期号", mockIssue, userBuyFlow.getIssue());
         Assert.assertNotNull("购买时间缺失", userBuyFlow.getTime());
         //获取金额流水
+        List<UserMoneyFlow> userMoneyFlowList=userMoneyFlowService.getUserMoneyFlowByUserId(mockUser.getId());
+
         UserMoneyFlow userMoneyFlow = userMoneyFlowRepository.findAll().get(0);
         //判断金额流水中的各属性值是否正确
-        Assert.assertEquals("流水类型错误", CommonEnum.MoneyFlowType.weixin, userMoneyFlow.getMoneyFlowType());
+        Assert.assertEquals("流水类型错误", CommonEnum.MoneyFlowType.buy, userMoneyFlow.getMoneyFlowType());
         Assert.assertEquals("金额出错", mockOrder.getMoney(), userMoneyFlow.getMoney());
         Assert.assertEquals("用户余额出错", mockUser.getMoney(), userMoneyFlow.getCurrentMoney());
         Assert.assertNotNull("购买时间缺失", userMoneyFlow.getTime());

@@ -39,7 +39,7 @@ public class PayCallBackController {
     public PayResult payCallbackWeixin(HttpServletRequest request) throws Exception {
         //网页授权后获取传递的参数
         String orderNo = request.getParameter("orderNo");
-        float money = Float.parseFloat(request.getParameter("money"));
+        float money = Float.parseFloat(request.getParameter("totalfee"));
         String outOrderNo = request.getParameter("outOrderNo");
 
         PayResult payResultModel=new PayResult();
