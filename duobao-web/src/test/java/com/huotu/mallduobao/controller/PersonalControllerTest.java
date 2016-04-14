@@ -1,22 +1,4 @@
 package com.huotu.duobaoweb.controller;
-
-import com.huotu.duobaoweb.base.BaseTest;
-import com.huotu.duobaoweb.boot.MVCConfig;
-import com.huotu.duobaoweb.boot.RootConfig;
-import com.huotu.duobaoweb.common.CommonEnum;
-import com.huotu.duobaoweb.controller.page.GetMyInvolvedRecordPage;
-import com.huotu.duobaoweb.controller.page.GetMyRaiderNumbersPage;
-import com.huotu.duobaoweb.controller.page.GetOneLotteryInfoPage;
-import com.huotu.duobaoweb.entity.Goods;
-import com.huotu.duobaoweb.entity.Issue;
-import com.huotu.duobaoweb.entity.User;
-import com.huotu.duobaoweb.entity.UserNumber;
-import com.huotu.duobaoweb.repository.*;
-import com.huotu.duobaoweb.entity.*;
-
-import com.huotu.duobaoweb.service.CacheService;
-import com.huotu.duobaoweb.service.RaidersCoreService;
-import com.huotu.duobaoweb.service.StaticResourceService;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 
 import org.apache.commons.logging.Log;

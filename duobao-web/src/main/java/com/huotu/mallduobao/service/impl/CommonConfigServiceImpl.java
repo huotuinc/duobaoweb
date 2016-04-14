@@ -43,7 +43,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://192.168.3.86:8088/huobanplusmanager/");}
+    public String getHuoBanPlusManagerWebUrl() {return env.getProperty("huobanplusmanager.web.url", "http://192.168.3.30:8888/duobaoweb");}
 
     @Override
     public String getHuoBanPlusNetWebUrl() {

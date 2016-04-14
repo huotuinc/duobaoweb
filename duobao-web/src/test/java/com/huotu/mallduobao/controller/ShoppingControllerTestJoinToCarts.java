@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
-import com.huotu.mallduobao.common.CommonEnum;
 import com.huotu.mallduobao.entity.Goods;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
@@ -15,6 +14,7 @@ import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserBuyFlowRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
+import com.huotu.mallduobao.utils.CommonEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
@@ -29,13 +29,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.ws.rs.GET;
-
 import java.math.BigDecimal;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**

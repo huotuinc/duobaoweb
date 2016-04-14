@@ -19,10 +19,10 @@
         <property name="jpaPropertyMap">
             <map>
                 <entry key="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mallduobao?useUnicode=true&amp;characterEncoding=UTF8"/>
-                <entry key="javax.persistence.jdbc.user" value="root"/>
-                <entry key="javax.persistence.jdbc.password" value="cosylj" />
+                <entry key="javax.persistence.jdbc.user" value="dbuser"/>
+                <entry key="javax.persistence.jdbc.password" value="ddbbuusseerr" />
                 <entry key="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-                <entry key="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+                <entry key="javax.persistence.schema-generation.database.action" value="create"/>
                 <entry key="eclipselink.weaving" value="false"/>
                 <entry key="eclipselink.logging.level" value="FINE"/>
             </map>

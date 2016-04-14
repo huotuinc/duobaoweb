@@ -39,7 +39,7 @@ public class WebInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         WebPublicModel webPublicModel = initPublicParam(request);
 
-        if(!environment.acceptsProfiles("development")) {
+        if(environment.acceptsProfiles("development")) {
             //在非测试环境下进行正常请求
             if (request.getParameter("customerId") == null || webPublicModel.getIssueId() == null) {
                 log.info("初始化认证失败啦！！！！！！");
