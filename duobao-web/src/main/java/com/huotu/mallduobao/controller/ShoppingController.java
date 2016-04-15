@@ -145,7 +145,6 @@ public class ShoppingController {
             model.addAttribute("payModel", payModel);
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
-
             return "html/shopping/pay";
         } else {
             //返回购物车提示错误
@@ -156,6 +155,8 @@ public class ShoppingController {
             return "html/shopping/cartsList";
         }
     }
+
+
 
     /**
      * 得到购物车
