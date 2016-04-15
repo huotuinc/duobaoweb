@@ -174,7 +174,8 @@
           <span style="color:#ACACAC;" class="tit_rem fr">建议在wifi下查看</span>
         </li>
         <li >
-          <a href="#">
+          <a href="../personal/list.html"
+             th:href="@{/personal/getMyInvolvedRecord(issueId=*{issueId},customerId=${customerId},type=0)}">
             <span class="fl">参与记录</span>
             <span class="fr"><img src="images/db003.png" th:src="@{/resources/images/db003.png}" /></span>
           </a>
