@@ -151,6 +151,8 @@ public class ShoppingController {
             //返回购物车提示错误
             model.addAttribute("overTime", "1");
             model.addAttribute("notShow", "1");
+            model.addAttribute("issueId", common.getIssueId());
+            model.addAttribute("customerId", common.getCustomerId());
             return "html/shopping/cartsList";
         }
     }
@@ -169,6 +171,8 @@ public class ShoppingController {
         //如果不存在，则让前端不显示购物车，同时支付变为0
         if (shoppingCartsModel == null) {
             model.addAttribute("notShow", "1");
+            model.addAttribute("issueId", common.getIssueId());
+            model.addAttribute("customerId", common.getCustomerId());
             shoppingCartsModel = new ShoppingCartsModel();
             shoppingCartsModel.setBuyNum(0L);
             shoppingCartsModel.setBuyMoney(0.0);
@@ -198,6 +202,8 @@ public class ShoppingController {
             //返回购物车提示错误
             model.addAttribute("overTime", "1");
             model.addAttribute("notShow", "1");
+            model.addAttribute("issueId", common.getIssueId());
+            model.addAttribute("customerId", common.getCustomerId());
             ShoppingCartsModel shoppingCartsModel = new ShoppingCartsModel();
             shoppingCartsModel.setBuyNum(0L);
             shoppingCartsModel.setBuyMoney(0.0);
