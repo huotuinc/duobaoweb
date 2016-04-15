@@ -392,7 +392,7 @@ public class GoodsServiceImpl implements GoodsService {
     private String convertImageUrl(String imageUrl){
         if(imageUrl != null){
             imageUrl = imageUrl.replaceAll("\"", "'");
-            imageUrl = imageUrl.replaceAll("src='/", "src='" + commonConfigService.getHuoBanPlusNetWebUrl());
+            imageUrl = imageUrl.replaceAll("src='/", "src='" + commonConfigService.getHuoBanPlusNetWebUrl()+"/");
         }
         return imageUrl;
     }

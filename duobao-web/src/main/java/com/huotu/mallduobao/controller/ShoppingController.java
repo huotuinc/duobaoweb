@@ -201,6 +201,7 @@ public class ShoppingController {
             return "html/shopping/pay";
         } else {
             //返回购物车提示错误
+            model.addAttribute("payModel", new PayModel());
             model.addAttribute("overTime", "1");
             model.addAttribute("notShow", "1");
             model.addAttribute("issueId", common.getIssueId());

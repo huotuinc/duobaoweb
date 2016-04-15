@@ -1,5 +1,6 @@
 package com.huotu.mallduobao.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.huotu.mallduobao.model.PayResult;
 import com.huotu.mallduobao.model.PayResultModel;
 import com.huotu.mallduobao.repository.OrdersItemRepository;
@@ -10,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +43,8 @@ public class PayCallBackController {
      * 微信回调接口
      */
     @RequestMapping("/payCallbackWeixin")
-    public PayResult payCallbackWeixin(HttpServletRequest request) throws Exception {
+    @ResponseBody
+    public Object payCallbackWeixin(HttpServletRequest request) throws Exception {
         //网页授权后获取传递的参数
         String tradeno=request.getParameter("tradeno");
         String orderNo = request.getParameter("orderNo");
@@ -73,12 +76,13 @@ public class PayCallBackController {
 //            }
             payResultModel.setCode(1);
             payResultModel.setMsg("支付成功！");
-            return payResultModel;
+
+            return JSONArray.toJSON(payResultModel);
         } else {
             //支付失败
             payResultModel.setCode(0);
             payResultModel.setMsg("支付失败！");
-            return payResultModel;
+            return JSONArray.toJSON(payResultModel);
         }
 
 //        //以下为测试信息
