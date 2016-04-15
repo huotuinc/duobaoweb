@@ -80,7 +80,10 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
             List<BuyListModel> rows = new ArrayList<>();
             for(UserBuyFlow userBuyFlow : userBuyFlowPage){
                 BuyListModel buyListModel = new BuyListModel();
-                buyListModel.setUserHeadUrl(staticResourceService.getResource(userBuyFlow.getUser().getUserHead()).toString());
+                String head = userBuyFlow.getUser().getUserHead();
+                if(head != null){
+                    buyListModel.setUserHeadUrl(staticResourceService.getResource(userBuyFlow.getUser().getUserHead()).toString());
+                }
                 buyListModel.setCity(userBuyFlow.getUser().getCityName());
                 buyListModel.setIp(userBuyFlow.getUser().getIp());
                 buyListModel.setAttendAmount(userBuyFlow.getAmount());
