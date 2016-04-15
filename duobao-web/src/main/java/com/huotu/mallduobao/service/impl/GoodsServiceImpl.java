@@ -76,7 +76,7 @@ public class GoodsServiceImpl implements GoodsService {
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
             goodsIndexModel.setId(goods.getId());
-            goodsIndexModel.setDefaultPictureUrl(commonConfigService.getHuoBanPlusManagerWebUrl() + goods.getDefaultPictureUrl());
+            goodsIndexModel.setDefaultPictureUrl(commonConfigService.getHuoBanPlusManagerResourceUrl() + goods.getDefaultPictureUrl());
             goodsIndexModel.setStartTime(goods.getStartTime().getTime());
             goodsIndexModel.setEndTime(goods.getEndTime().getTime());
             issue = goods.getIssue();
@@ -151,7 +151,7 @@ public class GoodsServiceImpl implements GoodsService {
             if (pictures != null) {
                 String[] pics = pictures.split(",");
                 for (int i = 0; i < pics.length; ++i) {
-                    picList.add(commonConfigService.getHuoBanPlusManagerWebUrl()  + pics[i]);
+                    picList.add(commonConfigService.getHuoBanPlusManagerResourceUrl()  + pics[i]);
                 }
                 goodsDetailModel.setPictureUrls(picList);
             }
@@ -264,7 +264,7 @@ public class GoodsServiceImpl implements GoodsService {
                 if (pictures != null) {
                     String[] pics = pictures.split(",");
                     for (int i = 0; i < pics.length; ++i) {
-                        picList.add(commonConfigService.getHuoBanPlusManagerWebUrl()  + pics[i]);
+                        picList.add(commonConfigService.getHuoBanPlusManagerResourceUrl()  + pics[i]);
                     }
                     goodsDetailModel.setPictureUrls(picList);
                 }
@@ -392,7 +392,7 @@ public class GoodsServiceImpl implements GoodsService {
     private String convertImageUrl(String imageUrl){
         if(imageUrl != null){
             imageUrl = imageUrl.replaceAll("\"", "'");
-            imageUrl = imageUrl.replaceAll("src='/", "src='" + commonConfigService.getHuoBanPlusNetWebUrl()+"/");
+            imageUrl = imageUrl.replaceAll("src='/", "src='" + commonConfigService.getNetMallResourceUrl()+"/");
         }
         return imageUrl;
     }
@@ -442,7 +442,7 @@ public class GoodsServiceImpl implements GoodsService {
                 if(pictureUrls != null){
                     String[] pics = pictureUrls.split(",");
                     for(int i = 0; i < pics.length; ++i){
-                        pictureUrlList.add(commonConfigService.getHuoBanPlusManagerWebUrl() + pics[i]);
+                        pictureUrlList.add(commonConfigService.getHuoBanPlusManagerResourceUrl() + pics[i]);
                     }
                 }
                 selGoodsSpecModel.setPictureUrlList(pictureUrlList);

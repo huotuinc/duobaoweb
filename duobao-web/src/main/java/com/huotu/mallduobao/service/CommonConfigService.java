@@ -39,14 +39,14 @@ public interface CommonConfigService {
     String getDuobaoApiKey();
 
     /**
-     * 伙伴商城管理Web地址
+     * 伙伴商城管理Web资源地址
      */
-    String getHuoBanPlusManagerWebUrl();
+    String getHuoBanPlusManagerResourceUrl();
 
     /**
-     * 商城.Net地址
+     * 商城图片资源地址
      */
-    String getHuoBanPlusNetWebUrl();
+    String getNetMallResourceUrl();
 
 
 
