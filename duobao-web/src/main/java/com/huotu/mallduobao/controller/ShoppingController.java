@@ -198,6 +198,10 @@ public class ShoppingController {
             //返回购物车提示错误
             model.addAttribute("overTime", "1");
             model.addAttribute("notShow", "1");
+            ShoppingCartsModel shoppingCartsModel = new ShoppingCartsModel();
+            shoppingCartsModel.setBuyNum(0L);
+            shoppingCartsModel.setBuyMoney(0.0);
+            model.addAttribute("shoppingCarts", shoppingCartsModel);
             return "html/shopping/cartsList";
         }
     }

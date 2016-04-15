@@ -24,6 +24,7 @@ var payToService = function (payMoney, detail, cartsId, payType, type, issueId, 
             cartsId:cartsId,
             payType:payType,
             type:type,
+            issueId:issueId,
             customerId:customerId
         },
         type: "post",
