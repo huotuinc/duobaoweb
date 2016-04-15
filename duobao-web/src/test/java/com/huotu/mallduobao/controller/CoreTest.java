@@ -36,7 +36,7 @@ import java.util.UUID;
 @Transactional
 public class CoreTest extends BaseTest {
 
-    private Log log = LogFactory.getLog(PersonalControllerTest.class);
+    private Log log = LogFactory.getLog(CoreTest.class);
 
 
     @Autowired

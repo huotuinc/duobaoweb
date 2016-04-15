@@ -13,14 +13,9 @@ package com.huotu.mallduobao.controller;
 import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
-import com.huotu.mallduobao.entity.Goods;
-import com.huotu.mallduobao.entity.Issue;
-import com.huotu.mallduobao.entity.User;
-import com.huotu.mallduobao.entity.UserBuyFlow;
-import com.huotu.mallduobao.entity.UserNumber;
+import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.GoodsDetailModel;
 import com.huotu.mallduobao.repository.GoodsRepository;
-import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserBuyFlowRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.mallduobao.service.CommonConfigService;
@@ -41,9 +36,7 @@ import java.text.SimpleDateFormat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by daisy.zhang on 2016/4/12.
@@ -335,7 +328,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByIssueId extends BaseT
                 goodsDetailModel.getAwardUserJoinCount().toString());
         Assert.assertNotNull("开奖时间缺失", goodsDetailModel.getAwardTime());
         Assert.assertEquals("幸运号码错误", mockIssue.getLuckyNumber(), goodsDetailModel.getLuckNumber());
-        Assert.assertEquals("用户头像不对", commonConfigService.getHuoBanPlusManagerWebUrl() + mockUserB.getUserHead(),
+        Assert.assertEquals("用户头像不对", commonConfigService.getHuoBanPlusManagerResourceUrl() + mockUserB.getUserHead(),
                 goodsDetailModel.getAwardUserHead());
         Assert.assertNotNull("首次购买时间缺失", goodsDetailModel.getFirstBuyTime());
 

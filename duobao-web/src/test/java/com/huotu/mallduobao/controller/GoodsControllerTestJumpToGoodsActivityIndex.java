@@ -128,7 +128,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
                 .andReturn();
         GoodsIndexModel goodsIndexModel = (GoodsIndexModel) result.getModelAndView().getModel().get("goodsIndexModel");
         Assert.assertEquals("商品ID错误", mockGoods.getId(), goodsIndexModel.getId());
-        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerWebUrl() + mockGoods.getDefaultPictureUrl(), goodsIndexModel.getDefaultPictureUrl());
+        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerResourceUrl() + mockGoods.getDefaultPictureUrl(), goodsIndexModel.getDefaultPictureUrl());
         Assert.assertEquals("原价计算错误", costPrice, goodsIndexModel.getCostPrice());
         Assert.assertEquals("现价计算错误", currentPrice, goodsIndexModel.getCurrentPrice());
         Assert.assertNotNull("时间戳不存在", goodsIndexModel.getStartTime());
@@ -154,7 +154,7 @@ public class GoodsControllerTestJumpToGoodsActivityIndex extends BaseTest {
                 .andReturn();
         GoodsIndexModel goodsIndexModel = (GoodsIndexModel) result.getModelAndView().getModel().get("goodsIndexModel");
         Assert.assertEquals("商品ID错误", mockGoods.getId(), goodsIndexModel.getId());
-        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerWebUrl() + mockGoods.getDefaultPictureUrl(), goodsIndexModel.getDefaultPictureUrl());
+        Assert.assertEquals("图片获取错误", commonConfigService.getHuoBanPlusManagerResourceUrl() + mockGoods.getDefaultPictureUrl(), goodsIndexModel.getDefaultPictureUrl());
         Assert.assertEquals("原价计算错误", costPrice, goodsIndexModel.getCostPrice());
         Assert.assertEquals("现价计算错误", currentPrice, goodsIndexModel.getCurrentPrice());
         Assert.assertNotNull("时间戳不存在", goodsIndexModel.getStartTime());

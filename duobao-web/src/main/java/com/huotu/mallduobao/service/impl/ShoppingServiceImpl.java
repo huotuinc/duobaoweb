@@ -45,9 +45,6 @@ public class ShoppingServiceImpl implements ShoppingService {
     private SecurityService securityService;
 
     @Autowired
-    private StaticResourceService staticResourceService;
-
-    @Autowired
     private CommonConfigService commonConfigService;
 
     @Autowired
@@ -100,8 +97,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             shoppingCartsModel.setPerMoney(shoppingCart.getIssue().getPricePercentAmount().doubleValue());
             shoppingCartsModel.setLeftNumber(left);
             //得到图片绝对地址
-            String url = staticResourceService.getResource(shoppingCart.getIssue().getGoods().getDefaultPictureUrl()).toString();
-            shoppingCartsModel.setImgUrl(url);
+            shoppingCartsModel.setImgUrl(commonConfigService.getHuoBanPlusManagerResourceUrl() + shoppingCart.getIssue().getGoods().getDefaultPictureUrl());
             //如果购买量大于库存量，默认调整为库存量
             shoppingCartsModel.setBuyNum(shoppingCart.getBuyAmount() > left ? left : shoppingCart.getBuyAmount());
 
