@@ -248,13 +248,16 @@
   var status;
   var goodsId;
   var issueId;
+  var nextIssueId;
+  var andStr;
   var lastId = 0;
+  var customerId = /*[[${customerId}]]*/'';
 
   $(function(){
 
     //1.获取商品详情model
     var goodsDetailModel = /*[[${goodsDetailModel}]]*/'';
-    var customerId = /*[[${customerId}]]*/''
+
 
     //2.获取商品进度
     var progress = goodsDetailModel.progress;
@@ -264,6 +267,8 @@
 
     goodsId = goodsDetailModel.id;
     issueId = goodsDetailModel.issueId;
+    nextIssueId = goodsDetailModel.nextIssueId;
+    andStr = goodsDetailModel.andStr;
 
     //获取商品单次购买最低量
     var stepAmount = parseInt(goodsDetailModel.stepAmount);
@@ -373,7 +378,7 @@
       var curUrl = window.location.href;
       var index = curUrl.lastIndexOf("/");
       curUrl = curUrl.substring(0, index + 1);
-      curUrl = curUrl + "detailByGoodsId?id=" + goodsId;
+      curUrl = curUrl + "detailByGoodsId?goodsId=" + goodsId + andStr + "issueId=" + nextIssueId + andStr + "customerId=" + customerId;
       window.location.href = curUrl;
     }
   }

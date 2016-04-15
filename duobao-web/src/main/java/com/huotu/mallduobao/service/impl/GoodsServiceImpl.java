@@ -132,6 +132,7 @@ public class GoodsServiceImpl implements GoodsService {
         if (goodsId == null) return;
 
         GoodsDetailModel goodsDetailModel = new GoodsDetailModel();
+        goodsDetailModel.setAndStr("&");
 
         WebPublicModel webPublicModel = PublicParameterHolder.getParameters();
 
@@ -163,6 +164,7 @@ public class GoodsServiceImpl implements GoodsService {
                 int status = issue.getStatus().getValue();
                 goodsDetailModel.setStatus(status);
                 goodsDetailModel.setIssueId(issue.getId());
+                goodsDetailModel.setNextIssueId(issue.getId());
 
                 Long toAmount = issue.getToAmount() == null ? 0L : issue.getToAmount();
                 Long buyAmount = issue.getBuyAmount() == null ? 0L : issue.getBuyAmount();
@@ -239,6 +241,7 @@ public class GoodsServiceImpl implements GoodsService {
         if (issueId == null) return;
 
         GoodsDetailModel goodsDetailModel = new GoodsDetailModel();
+        goodsDetailModel.setAndStr("&");
         WebPublicModel webPublicModel = PublicParameterHolder.getParameters();
 
         //1.通过期号获取定义的期
@@ -308,6 +311,7 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsDetailModel.setAwardTime(issue.getAwardingDate());
                 goodsDetailModel.setLuckNumber(issue.getLuckyNumber());
             }
+            goodsDetailModel.setNextIssueId(goods.getIssue().getId());
 
             //3.获取用户当前参与次数
             //3.1获取当前用户
@@ -382,6 +386,19 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
+     * 工具方法
+     * @return
+     */
+    private String convertImageUrl(String imageUrl){
+        if(imageUrl != null){
+            imageUrl = imageUrl.replaceAll("\"", "'");
+            imageUrl = imageUrl.replaceAll("src='/", "src='" + commonConfigService.getHuoBanPlusNetWebUrl());
+        }
+        return imageUrl;
+    }
+
+
+    /**
      * 获取商品图文详情
      * @param goodsId
      * @param map
@@ -397,12 +414,8 @@ public class GoodsServiceImpl implements GoodsService {
         com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
 
         //3.获取商品简介
-        String introduce = mallGoods.getIntro();
+        String introduce = convertImageUrl(mallGoods.getIntro());
 
-        if(introduce != null){
-            introduce = introduce.replaceAll("\"", "'");
-            introduce = introduce.replaceAll("src='/", "src='" + commonConfigService.getHuoBanPlusNetWebUrl());
-        }
         map.put("introduce", introduce);
     }
 
@@ -435,11 +448,7 @@ public class GoodsServiceImpl implements GoodsService {
                 selGoodsSpecModel.setPictureUrlList(pictureUrlList);
                 //3.获取商城商品
                 com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
-                String introduce = mallGoods.getIntro();
-                if(introduce != null){
-                    introduce = introduce.replaceAll("\"", "'");
-                    introduce = introduce.replaceAll("src='/", "src='" + commonConfigService.getHuoBanPlusNetWebUrl());
-                }
+                String introduce = convertImageUrl(mallGoods.getIntro());
                 selGoodsSpecModel.setIntroduce(introduce);
             }
         }

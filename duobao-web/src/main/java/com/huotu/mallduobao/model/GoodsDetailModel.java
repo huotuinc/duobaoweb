@@ -25,6 +25,16 @@ public class GoodsDetailModel {
      */
     private Long issueId;
 
+    /**
+     * 下一期期号
+     */
+    private Long nextIssueId;
+
+    /**
+     * 特殊字符
+     */
+    private String andStr;
+
 
     /**
      * 商品图片列表
