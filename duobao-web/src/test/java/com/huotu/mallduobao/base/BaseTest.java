@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -390,7 +391,7 @@ public class BaseTest {
         userBuyFlow.setTime(new Date().getTime());
         userBuyFlow.setUser(user);
         userBuyFlow.setIssue(issue);
-        userBuyFlow.setAmount(10L);
+        userBuyFlow.setAmount(1460701803441L);
         return userBuyFlowRepository.saveAndFlush(userBuyFlow);
     }
 
@@ -412,7 +413,7 @@ public class BaseTest {
         mockGoods.setShareTitle("丹青测试商品的分享标题"); //分享标题
         mockGoods.setShareDescription("丹青测试商品的分享描述"); //分享描述
         mockGoods.setSharePictureUrl("http://XXXXX.jpg"); //分享图片地址
-        mockGoods.setToMallGoodsId(123456L);
+        mockGoods.setToMallGoodsId(17153L);
         mockGoods.setAttendAmount(10L); //购买次数
         mockGoods.setViewAmount(2L); //浏览量
         mockGoods.setMerchantId(3447L); //设置商城ID
@@ -434,6 +435,18 @@ public class BaseTest {
         mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-11 05:00:00"));//开奖日期
         mockIssue = issueRepository.saveAndFlush(mockIssue);
         return mockIssue;
+    }
+
+    //找出列表中最大的期号
+    public Long findMaxIssueId(List<Issue> issues) {
+        int j = issues.size();
+        Long issueId = issues.get(0).getId();
+        for (int i = 1; i < j; i++) {
+            Long nextID = issues.get(i).getId();
+            if (issueId < nextID)
+                issueId = nextID;
+        }
+        return issueId;
     }
 
 }
