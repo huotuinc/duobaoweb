@@ -62,7 +62,6 @@ public class PersonalController {
     public String getMyInvolvedRecord(Model model,Integer type) throws Exception{
         WebPublicModel common = PublicParameterHolder.getParameters();
         model.addAttribute("type",type);
-        model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId", common.getIssueId());
         return "/html/personal/raiderList";
@@ -198,7 +197,6 @@ public class PersonalController {
     @RequestMapping(value = "/toRecpeiptAddress" , method = RequestMethod.GET)
     public String toRecpeiptAddress(Model model, Long deliveryId) throws IOException {
         WebPublicModel common = PublicParameterHolder.getParameters();
-        model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         model.addAttribute("deliveryId",deliveryId);
@@ -215,7 +213,6 @@ public class PersonalController {
     @ResponseBody
     public String ajaxFindByParentId(Model model,Integer parentId){
         WebPublicModel common = PublicParameterHolder.getParameters();
-        model.addAttribute("userId",common.getCurrentUser().getId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         return JSONObject.toJSONString(cityRepository.findByParentId(parentId));
@@ -236,7 +233,6 @@ public class PersonalController {
     public String addRecpeiptAddress(Model model, Long deliveryId, String receiver, String mobile, String details,String remark) throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
         deliveryService.addRecpeiptAddress(common.getCustomerId(),deliveryId, receiver, mobile, details,remark);
-        model.addAttribute("userId", common.getCurrentUser().getId());
         model.addAttribute("customerId", common.getCustomerId());
         model.addAttribute("issueId", common.getIssueId());
         return "redirect:/personal/getOneLotteryInfo?issueId="+common.getIssueId()+"&customerId="+common.getCustomerId();

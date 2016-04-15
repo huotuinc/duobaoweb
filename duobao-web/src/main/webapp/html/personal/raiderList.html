@@ -149,10 +149,10 @@
 
                             <p class="qrqr">
                                 {{if 2>=row.deliveryStatus}}
-                                    <a  href="getOneLotteryInfo?{{PublicParament}}{{Hong}}issueId={{row.issueId}}{{Hong}}" class="zuijia" style="display: block">完善领奖信息</a>
+                                    <a  href="getOneLotteryInfo?{{PublicParament}}{{Hong}}issueId={{row.issueId}}{{Hong}}" onclick="loadingMsg()" class="zuijia" style="display: block">完善领奖信息</a>
                                 {{/if }}
                                 {{if row.deliveryStatus==3 }}
-                                    <a  href="getOneLotteryInfo?{{PublicParament}}{{Hong}}issueId={{row.issueId}}{{Hong}}" class="zuijia" style="display: block">查看派发信息</a>
+                                    <a  href="getOneLotteryInfo?{{PublicParament}}{{Hong}}issueId={{row.issueId}}{{Hong}}" onclick="loadingMsg()" class="zuijia" style="display: block">查看派发信息</a>
                                 {{/if}}
                             </p>
                         </div>
@@ -166,18 +166,13 @@
     </script>
 
     <script type="text/javascript">
-
         function buy(issueId){
             var customerId=$("#customerId").val();
             shoppingBuy('',issueId,customerId);
         }
-    </script>
-    <script>
-        $(function(){
-            $(".zuijia").click(function(){
-                $.jBox.tip("正在加载...", "loading");
-            });
-        });
+        function loadingMsg() {
+            $.jBox.tip("正在加载...", "loading");
+        }
     </script>
     <script type="text/javascript"   src="resources/js/raiderListAjaxModel.js" th:src="@{/resources/js/raiderListAjaxModel.js}"></script>
 </div>
