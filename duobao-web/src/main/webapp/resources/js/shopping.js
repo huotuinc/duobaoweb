@@ -15,7 +15,7 @@ var turnToBalance = function (cartId, buyNum, issueId, customerId) {
 //todo 加入必须的信息
 var payToService = function (payMoney, detail, cartsId, payType, type, issueId, customerId) {
 
-    $.jBox.tip("正在支付...", "loading");
+    $.jBox.tip("正在生成订单...", "loading");
     $.ajax({
         url: "../shopping/pay",
         data: {

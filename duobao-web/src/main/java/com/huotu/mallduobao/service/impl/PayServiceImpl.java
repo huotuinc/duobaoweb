@@ -1,7 +1,6 @@
 package com.huotu.mallduobao.service.impl;
 
-import com.huotu.huobanplus.common.entity.*;
-import com.huotu.mallduobao.utils.CommonEnum;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.PayResultModel;
 import com.huotu.mallduobao.repository.*;
@@ -9,12 +8,13 @@ import com.huotu.mallduobao.service.PayService;
 import com.huotu.mallduobao.service.RaidersCoreService;
 import com.huotu.mallduobao.service.UserBuyFailService;
 import com.huotu.mallduobao.service.UserNumberService;
-import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.mallduobao.utils.CommonEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -72,7 +72,7 @@ public class PayServiceImpl implements PayService {
         log.info("进入支付主流程，in doPay()!");
         Date date = new Date();
         PayResultModel resultModel = new PayResultModel();
-        if (orders == null){//如果订单不存在
+        if (orders == null) {//如果订单不存在
             log.info("订单不存在，支付失败!");
             resultModel.setSuccess(false);
             return resultModel;
@@ -103,12 +103,18 @@ public class PayServiceImpl implements PayService {
             //用户的支付失败，转到下一期，当没有下一期的时候，就直接是支付失败(这些都异步罗国华处理，这里只需要存到数据库即可)
             userBuyFailService.recordToBuyFail(orders, ordersItem);
             //返回用户成功，提示延期 todo
+
+            //订单标记为失败
+            ordersItem.setStatus(CommonEnum.OrderStatus.fail);
+            ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
+            orders.setStatus(CommonEnum.OrderStatus.fail);
+
             resultModel.setResultType(CommonEnum.PayResult.turnToBuyFail);
             resultModel.setSuccess(true);
             return resultModel;
-        }
-        log.info("开始正常的购买!");
-        //正常的购买
+        } else {
+            log.info("开始正常的购买!");
+            //正常的购买
 //        if (orders.getOrderType().equals(CommonEnum.OrderType.allpay)) {
 //            log.info("开始全额购买!");
 //            //如果是全额购买
@@ -118,30 +124,30 @@ public class PayServiceImpl implements PayService {
 //            resultModel.setSuccess(true);
 //            return resultModel;
 //        }
-        //如果不是全额购买
-        ordersItem.getIssue().setBuyAmount(ordersItem.getIssue().getBuyAmount() + ordersItem.getAmount());
-        //用户得到号码，罗国华接口 赋值到结果集
-        Boolean result = raidersCoreService.generateUserNumber(orders.getUser(), ordersItem.getIssue(), ordersItem.getAmount(), orders);
+            //如果不是全额购买
+            ordersItem.getIssue().setBuyAmount(ordersItem.getIssue().getBuyAmount() + ordersItem.getAmount());
+            //用户得到号码，罗国华接口 赋值到结果集
+            Boolean result = raidersCoreService.generateUserNumber(orders.getUser(), ordersItem.getIssue(), ordersItem.getAmount(), orders);
 
-        //List<Long> userNumbers=userNumberService.getUserNumbersByUserAndIssue(orders.getUser(), ordersItem.getIssue());
-        //得到所有的数字来传递给前端显示 暂时不需要了
-        //resultModel.setResultNumber(userNumbers);
+            //List<Long> userNumbers=userNumberService.getUserNumbersByUserAndIssue(orders.getUser(), ordersItem.getIssue());
+            //得到所有的数字来传递给前端显示 暂时不需要了
+            //resultModel.setResultNumber(userNumbers);
 
-        //如果用户购买的数量已经达到总需数，则进行新的一期生成
-        if (ordersItem.getIssue().getToAmount() <= ordersItem.getIssue().getBuyAmount()) {
-            log.info("开始生成新的期号!");
-            //更新期号 罗国华接口
-            Issue issue = raidersCoreService.generateIssue(ordersItem.getIssue().getGoods());
+            //如果用户购买的数量已经达到总需数，则进行新的一期生成
+            if (ordersItem.getIssue().getToAmount() <= ordersItem.getIssue().getBuyAmount()) {
+                log.info("开始生成新的期号!");
+                //更新期号 罗国华接口
+                Issue issue = raidersCoreService.generateIssue(ordersItem.getIssue().getGoods());
+            }
+
+
+            ordersItem.setStatus(CommonEnum.OrderStatus.payed);
+            ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
+            orders.setStatus(CommonEnum.OrderStatus.payed);
         }
-
-        ordersItem.setStatus(CommonEnum.OrderStatus.payed);
-        ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
         orders.setPayType(purchaseSource);
         orders.setOutOrderNo(outOrderNo);
-        orders.setStatus(CommonEnum.OrderStatus.payed);
         orders = ordersRepository.saveAndFlush(orders);
-
-
         //用户购买流水
         UserBuyFlow userBuyFlow = new UserBuyFlow();
         //如果用户流水中已经有了对应期号对应用户的流水，则更新
@@ -182,7 +188,7 @@ public class PayServiceImpl implements PayService {
      */
     private void allPay(Orders orders, OrdersItem ordersItem, String outOrderNo, CommonEnum.PayType purchaseSource) throws IOException {
         //如果是全额购买
-        Date date=new Date();
+        Date date = new Date();
         if (ordersItem.getIssue().getToAmount() <= ordersItem.getIssue().getBuyAmount()) {
             log.info("开始生成新的期号!");
             // 全额购买减库存

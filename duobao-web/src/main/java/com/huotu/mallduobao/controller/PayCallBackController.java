@@ -49,7 +49,7 @@ public class PayCallBackController {
         String outOrderNo = request.getParameter("outtradeno");
         log.info("进入支付提示接口orderNo："+orderNo+";totalfee:"+money+";outOrderNo"+outOrderNo+";tradeno:"+tradeno);
         PayResult payResultModel=new PayResult();
-        PayResultModel payResult = payService.solveWeixinPayResult(tradeno, money, outOrderNo);
+        PayResultModel payResult = payService.solveWeixinPayResult(orderNo, money, outOrderNo);
 
         //PaysResultShowModel paysResultShowModel = new PaysResultShowModel();
         if (payResult.isSuccess()) {
