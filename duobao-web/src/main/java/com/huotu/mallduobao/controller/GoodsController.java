@@ -133,5 +133,16 @@ public class GoodsController {
         return "/html/default";
     }
 
+    /**
+     * 显示开奖规则页面
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/lotteryRule")
+    public String lotteryRule() throws Exception{
+         return "/html/goods/lotteryRule";
+    }
+
+
 
 }

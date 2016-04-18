@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="description" content="" />
+    
+    <link rel="stylesheet" href="css/common.css" th:href="@{/resources/css/common.css}"/>
+
+<title></title>
+</head>
+<style>
+.gzsm{ font-size:14px;}
+.jh1{ background-color:#dddddd; color:#4D4D4D; padding:8px; border-radius:6px; margin:7px 0px}
+.jh2{ font-size:14px; line-height:22px;color:#666;}
+</style>  
+<body>
+  <div style="padding:10px 10px">
+ <div class="gzsm">
+ 
+  <p class="jh1">怎么计算幸运号码？</p>
+  <p class="jh2">
+  a、商品的最后一个号码分配完毕后，将公式该分配时间点前本站全部商品的最后50个参与时间；<br />
+  b、将这50个时间的数值进行求和（得出数值A）（每个时间按时、分、秒、毫秒的顺序组合，如20:15:25.362则为201525362）；<br />
+  c、为保证公平公开公正，系统还会等待一小段时间，取最近下一期中国福利彩票“老时时彩”的揭晓结果（一个五位数值B）；<br />
+  d、（数值A+数值B）除以该商品总需人次得到的余数+原始数10000001，得到最终幸运号，拥有该幸运号码者，直接获得该商品。<br />
+  注：最后一个号码认购时间距离“老时时彩”最近下一期揭晓大于24小时，默认“老时时彩”揭晓结果为00000。
+  </p>
+  
+     </div>
+   </div>
+</body>
+</html>
