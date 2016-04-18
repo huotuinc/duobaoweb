@@ -2,6 +2,7 @@ package com.huotu.mallduobao.service.impl;
 
 import com.huotu.common.base.DateHelper;
 import com.huotu.common.base.HttpHelper;
+import com.huotu.mallduobao.model.PayResultModel;
 import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.mallduobao.common.LotteryCode;
 import com.huotu.mallduobao.utils.SysRegex;
@@ -666,6 +667,8 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         Issue issue = userBuyFail.getGoods().getIssue();
         //在新的期号数量够的情况下进行购买
         if (issue.getToAmount() - issue.getBuyAmount() >= userBuyFail.getAmount()) {
+            log.info("issueId:" + issue.getId() + " toAmount:" + issue.getBuyAmount() + " buyAmount:" + issue.getBuyAmount() + " amount:" + userBuyFail.getAmount());
+
             Date date = new Date();
             String tradeNo = createOrderNo(date, userBuyFail.getUser().getId());
 
@@ -687,8 +690,13 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             ordersItem.setAmount(userBuyFail.getAmount());
             ordersItemRepository.saveAndFlush(ordersItem);
 
-            payService.doPay(userOrder, userBuyFail.getMoney().floatValue()
+            PayResultModel resultModel = payService.doPay(userOrder, userBuyFail.getMoney().floatValue()
                     , userBuyFail.getSourceOrders().getOutOrderNo(), userBuyFail.getSourceOrders().getPayType());
+            if (resultModel.isSuccess()) {
+                userBuyFail.setStatus(CommonEnum.UserBuyFailStatus.doed);
+                userBuyFailRepository.save(userBuyFail);
+            }
+
         }
     }
 }
