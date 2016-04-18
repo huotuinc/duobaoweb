@@ -103,7 +103,7 @@ public class PayServiceImpl implements PayService {
             log.info("期号已经被买满，进入下一期!");
             //用户的支付失败，转到下一期，当没有下一期的时候，就直接是支付失败(这些都异步罗国华处理，这里只需要存到数据库即可)
             userBuyFailService.recordToBuyFail(orders, ordersItem);
-            //返回用户成功，提示延期 todo
+            //返回用户成功，提示延期
 
             //订单标记为失败
             ordersItem.setStatus(CommonEnum.OrderStatus.fail);
@@ -127,6 +127,8 @@ public class PayServiceImpl implements PayService {
 //        }
             //如果不是全额购买
             ordersItem.getIssue().setBuyAmount(ordersItem.getIssue().getBuyAmount() + ordersItem.getAmount());
+            //跟新当前参与次数
+            ordersItem.getIssue().setAttendAmount(ordersItem.getIssue().getAttendAmount() + 1);
             //用户得到号码，罗国华接口 赋值到结果集
             Boolean result = raidersCoreService.generateUserNumber(orders.getUser(), ordersItem.getIssue(), ordersItem.getAmount(), orders);
 

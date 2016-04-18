@@ -53,7 +53,7 @@ function toPayModel(payMoney1, detail1, cartsId1, payType1, type1) {
 }
 
 var shoppingBuy = function (buyNum, issueId, customerId) {
-    $.jBox.tip("正在结算...", "loading");
+    $.jBox.tip("正在添加购物车...", "loading");
     $.ajax({
         url: "../shopping/joinToCarts",
         data: {
