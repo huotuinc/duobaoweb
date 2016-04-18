@@ -110,7 +110,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
 
 
-        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up) && (mallGoods.getStock() == -1 || mallGoods.getStock() > 1)) {
+        if (goods.getStatus().equals(CommonEnum.GoodsStatus.up) && (mallGoods.getStock() == -1 || mallGoods.getStock() > 0)) {
 
             //处理下期的情况
             Issue nextIssue = new Issue();
