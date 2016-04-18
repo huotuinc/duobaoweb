@@ -122,14 +122,28 @@ public class ShoppingServiceImpl implements ShoppingService {
         } else {
             payModel.setDetail(shoppingCart.getIssue().getGoods().getTitle());
             Long left = shoppingCart.getIssue().getToAmount() - shoppingCart.getIssue().getBuyAmount();
-            if (left < shoppingCart.getBuyAmount()) {
-                //如果剩余量不足，购买量超过了剩余量，则将购物车的数量更改为剩余量
-                shoppingCart.setBuyAmount(left);
-                shoppingCart = shoppingCartRepository.saveAndFlush(shoppingCart);
-                payModel.setPayMoney(left * shoppingCart.getIssue().getPricePercentAmount().doubleValue());
-            } else {
-                //正常的结算
-                payModel.setPayMoney(shoppingCart.getBuyAmount() * shoppingCart.getIssue().getPricePercentAmount().doubleValue());
+            if(buyNum!=null&&buyNum!=0) {
+                if (left <buyNum) {
+                    //如果剩余量不足，购买量超过了剩余量，则将购物车的数量更改为剩余量
+                    shoppingCart.setBuyAmount(left);
+                    shoppingCart = shoppingCartRepository.saveAndFlush(shoppingCart);
+                    payModel.setPayMoney(left * shoppingCart.getIssue().getPricePercentAmount().doubleValue());
+                } else {
+                    //正常的结算
+                    shoppingCart.setBuyAmount(Long.parseLong(String.valueOf(buyNum)));
+                    shoppingCart = shoppingCartRepository.saveAndFlush(shoppingCart);
+                    payModel.setPayMoney(buyNum* shoppingCart.getIssue().getPricePercentAmount().doubleValue());
+                }
+            }else{
+                if (left < shoppingCart.getBuyAmount()) {
+                    //如果剩余量不足，购买量超过了剩余量，则将购物车的数量更改为剩余量
+                    shoppingCart.setBuyAmount(left);
+                    shoppingCart = shoppingCartRepository.saveAndFlush(shoppingCart);
+                    payModel.setPayMoney(left * shoppingCart.getIssue().getPricePercentAmount().doubleValue());
+                } else {
+                    //正常的结算
+                    payModel.setPayMoney(shoppingCart.getBuyAmount() * shoppingCart.getIssue().getPricePercentAmount().doubleValue());
+                }
             }
             payModel.setCartsId(cartId);
             payModel.setType(1);
