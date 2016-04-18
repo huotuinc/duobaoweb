@@ -49,12 +49,20 @@ public class ApiController {
         if (toSign.equals(sign)) {
             Goods goods = goodsRepository.getOne(goodsId);
             Issue issue = raidersCoreService.generateIssue(goods);
-            apiResultModel.setCode("1");
-            apiResultModel.setMessage("成功");
-            apiResultModel.setData(issue.getId());
+            if (issue != null) {
+                apiResultModel.setCode("1");
+                apiResultModel.setMessage("成功");
+                apiResultModel.setData(issue.getId());
+            }
+            else
+            {
+                apiResultModel.setCode("1002");
+                apiResultModel.setMessage("生成期号失败");
+            }
+
         } else {
             apiResultModel.setCode("1001");
-            apiResultModel.setMessage("成功");
+            apiResultModel.setMessage("签名失败");
         }
         return apiResultModel;
     }
