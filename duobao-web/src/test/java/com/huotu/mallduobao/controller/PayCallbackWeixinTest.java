@@ -38,6 +38,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,12 +121,13 @@ public class PayCallbackWeixinTest extends BaseTest {
                 .param("orderNo", mockOrder.getId()).param("totalfee", mockOrder.getMoney().toString())
                 .param("outOrderNo", "7777777777"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("payResult"))
+                .andExpect((jsonPath("$.msg").value("支付成功！")))
+                .andExpect((jsonPath("$.code").value(1)))
                 .andDo(print())
                 .andReturn();
-        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
-        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
+//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
+//        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
+//        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
         Assert.assertEquals("订单状态没改变", CommonEnum.OrderStatus.payed,
                 ordersRepository.findOne(mockOrder.getId()).getStatus());
         Assert.assertEquals("订单详情状态没改变", CommonEnum.OrderStatus.payed,
@@ -158,11 +160,12 @@ public class PayCallbackWeixinTest extends BaseTest {
                 .param("orderNo", "999999").param("totalfee", mockOrder.getMoney().toString())
                 .param("outOrderNo", "7777777777"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("payResult"))
+                .andExpect((jsonPath("$.msg").value("支付失败！")))
+                .andExpect((jsonPath("$.code").value(0)))
                 .andReturn();
-        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-        Assert.assertEquals("code值错误", "0", payResult.getCode().toString());
-        Assert.assertEquals("提示信息错误", "支付失败！", payResult.getMsg());
+//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
+//        Assert.assertEquals("code值错误", "0", payResult.getCode().toString());
+//        Assert.assertEquals("提示信息错误", "支付失败！", payResult.getMsg());
 
     }
     //支付时，是最后一笔订单，则立即新建一期商品
@@ -181,11 +184,12 @@ public class PayCallbackWeixinTest extends BaseTest {
                 .param("outOrderNo", "7777777777"))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(model().attributeExists("payResult"))
+                .andExpect((jsonPath("$.msg").value("支付成功！")))
+                .andExpect((jsonPath("$.code").value(1)))
                 .andReturn();
-        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
-        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
+//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
+//        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
+//        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
 
     }
 
@@ -197,11 +201,12 @@ public class PayCallbackWeixinTest extends BaseTest {
                 .param("orderNo", mockOrder.getId().toString()).param("totalfee", "20")
                 .param("outOrderNo", "7777777777"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("payResult"))
+                .andExpect((jsonPath("$.msg").value("支付失败！")))
+                .andExpect((jsonPath("$.code").value(0)))
                 .andReturn();
-        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-        Assert.assertEquals("code值错误", "0", payResult.getCode().toString());
-        Assert.assertEquals("提示信息错误", "支付失败！", payResult.getMsg());
+//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
+//        Assert.assertEquals("code值错误", "0", payResult.getCode().toString());
+//        Assert.assertEquals("提示信息错误", "支付失败！", payResult.getMsg());
         Assert.assertEquals("订单状态改变", CommonEnum.OrderStatus.paying, ordersRepository.findOne(mockOrder.getId()).getStatus());
         Assert.assertEquals("订单详情状态改变", CommonEnum.OrderStatus.paying, ordersItemRepository.findOne(mockItem.getId()).getStatus());
         Assert.assertEquals("购买数量被增加", BuyAmount.toString(), issueRepository.findOne(mockIssue.getId()).getBuyAmount().toString());
