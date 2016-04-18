@@ -1,5 +1,6 @@
 package com.huotu.mallduobao.service;
 
+import com.huotu.mallduobao.entity.Goods;
 import com.huotu.mallduobao.model.BuyListModelAjax;
 import com.huotu.mallduobao.model.SelGoodsSpecModel;
 
@@ -67,4 +68,12 @@ public interface GoodsService {
      * @throws Exception
      */
     BuyListModelAjax getBuyListByIssueId(Long issueId, Long page, Long pageSize) throws Exception;
+
+    /**
+     * 更新商品的参与人数
+     * @param goods
+     * @return
+     */
+    Goods upateGoodsAttendAmount(Goods goods);
+
 }

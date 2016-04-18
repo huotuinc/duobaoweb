@@ -4,10 +4,7 @@ import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.PayResultModel;
 import com.huotu.mallduobao.repository.*;
-import com.huotu.mallduobao.service.PayService;
-import com.huotu.mallduobao.service.RaidersCoreService;
-import com.huotu.mallduobao.service.UserBuyFailService;
-import com.huotu.mallduobao.service.UserNumberService;
+import com.huotu.mallduobao.service.*;
 import com.huotu.mallduobao.utils.CommonEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,6 +51,10 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     private UserMoneyFlowRepository userMoneyFlowRepository;
+
+    @Autowired
+    private GoodsService goodsService;
+
 
     @Override
     public PayResultModel solveWeixinPayResult(String orderNo, float money, String outOrderNo) throws IOException {
@@ -136,8 +137,12 @@ public class PayServiceImpl implements PayService {
             //如果用户购买的数量已经达到总需数，则进行新的一期生成
             if (ordersItem.getIssue().getToAmount() <= ordersItem.getIssue().getBuyAmount()) {
                 log.info("开始生成新的期号!");
+                //更新商品的参与次数
+                Goods goods = goodsService.upateGoodsAttendAmount(ordersItem.getIssue().getGoods());
+
                 //更新期号 罗国华接口
-                Issue issue = raidersCoreService.generateIssue(ordersItem.getIssue().getGoods());
+                //Issue issue = raidersCoreService.generateIssue(ordersItem.getIssue().getGoods());
+                Issue issue = raidersCoreService.generateIssue(goods);
             }
 
 

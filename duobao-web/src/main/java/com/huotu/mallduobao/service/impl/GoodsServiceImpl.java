@@ -468,4 +468,23 @@ public class GoodsServiceImpl implements GoodsService {
         BuyListModelAjax buyListModelAjax = userBuyFlowService.ajaxFindBuyListByIssueId(issueId, page, pageSize);
         return buyListModelAjax;
     }
+
+    @Override
+    public Goods upateGoodsAttendAmount(Goods goods){
+        //1.获取期号
+        Issue issue = goods.getIssue();
+
+        //2.获取attentAmount
+        if(issue != null){
+            Long attendAmount = issue.getAttendAmount();
+            if(attendAmount != null){
+                Long goodsAttendAmount = goods.getAttendAmount();
+                if(goodsAttendAmount == null) goodsAttendAmount = 0L;
+                goodsAttendAmount = goodsAttendAmount + attendAmount;
+                goods.setAttendAmount(goodsAttendAmount);
+                goods = goodsRepository.save(goods);
+            }
+        }
+        return goods;
+    }
 }
