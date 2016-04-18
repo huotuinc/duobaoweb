@@ -112,4 +112,14 @@ public class CoreTest extends BaseTest {
         System.out.println(UUID.randomUUID().toString().replace("-",""));
         System.out.println(UUID.randomUUID().toString().replace("-",""));
     }
+
+//    /**
+//     * 测试spring jpa的getone与findone的区别
+//     */
+//    @Test
+//    public void testGetAndFind(){
+//        Goods goods=goodsRepository.getOne(50L);
+//        Goods goods1=goodsRepository.findOne(50L);
+//
+//    }
 }

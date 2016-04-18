@@ -50,6 +50,7 @@ public class UserBuyFail {
     /**
      * 金钱
      */
+    @Column(precision = 20, scale = 2)
     private BigDecimal money;
 
     /**

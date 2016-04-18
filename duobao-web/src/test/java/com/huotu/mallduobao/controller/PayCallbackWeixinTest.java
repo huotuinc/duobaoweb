@@ -14,7 +14,6 @@ import com.huotu.mallduobao.base.BaseTest;
 import com.huotu.mallduobao.boot.MVCConfig;
 import com.huotu.mallduobao.boot.RootConfig;
 import com.huotu.mallduobao.entity.*;
-import com.huotu.mallduobao.model.PayResult;
 import com.huotu.mallduobao.repository.*;
 import com.huotu.mallduobao.service.UserMoneyFlowService;
 import com.huotu.mallduobao.utils.CommonEnum;
@@ -34,12 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -119,7 +116,7 @@ public class PayCallbackWeixinTest extends BaseTest {
         Long BuyAmount = mockIssue.getBuyAmount();
         MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", mockOrder.getId()).param("totalfee", mockOrder.getMoney().toString())
-                .param("outOrderNo", "7777777777"))
+                .param("outtradeno", "7777777777"))
                 .andExpect(status().isOk())
                 .andExpect((jsonPath("$.msg").value("支付成功！")))
                 .andExpect((jsonPath("$.code").value(1)))
@@ -158,7 +155,7 @@ public class PayCallbackWeixinTest extends BaseTest {
     public void testOrderNotFind() throws Exception {
         MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", "999999").param("totalfee", mockOrder.getMoney().toString())
-                .param("outOrderNo", "7777777777"))
+                .param("outtradeno", "7777777777"))
                 .andExpect(status().isOk())
                 .andExpect((jsonPath("$.msg").value("支付失败！")))
                 .andExpect((jsonPath("$.code").value(0)))
@@ -181,7 +178,7 @@ public class PayCallbackWeixinTest extends BaseTest {
         ordersItemRepository.saveAndFlush(mockItem);
         MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
-                .param("outOrderNo", "7777777777"))
+                .param("outtradeno", "7777777777"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect((jsonPath("$.msg").value("支付成功！")))
@@ -199,7 +196,7 @@ public class PayCallbackWeixinTest extends BaseTest {
         Long BuyAmount = mockIssue.getBuyAmount();
         MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", mockOrder.getId().toString()).param("totalfee", "20")
-                .param("outOrderNo", "7777777777"))
+                .param("outtradeno", "7777777777"))
                 .andExpect(status().isOk())
                 .andExpect((jsonPath("$.msg").value("支付失败！")))
                 .andExpect((jsonPath("$.code").value(0)))
@@ -226,7 +223,7 @@ public class PayCallbackWeixinTest extends BaseTest {
 //        Long BuyAmount = mockIssue.getBuyAmount();
 //        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
 //                .param("orderNo", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
-//                .param("outOrderNo", "7777777777"))
+//                .param("outtradeno", "7777777777"))
 //                .andExpect(status().isOk())
 //                .andExpect(model().attributeExists("payResult"))
 //                .andReturn();
@@ -277,7 +274,7 @@ public class PayCallbackWeixinTest extends BaseTest {
 //        Long BuyAmount = mockIssue.getBuyAmount();
 //        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
 //                .param("orderNo", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
-//                .param("outOrderNo", "7777777777"))
+//                .param("outtradeno", "7777777777"))
 //                .andExpect(status().isOk())
 //                .andExpect(model().attributeExists("payResult"))
 //                .andReturn();
@@ -324,11 +321,31 @@ public class PayCallbackWeixinTest extends BaseTest {
 //        mockOrder.setOrderType(CommonEnum.OrderType.put);
 //        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
 //                .param("tradeno", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
-//                .param("outOrderNo", "7777777777"))
+//                .param("outtradeno", "7777777777"))
 //                .andExpect(status().isOk())
 //                .andExpect(model().attributeExists("payResult"))
 //                .andReturn();
 
+//    }
+
+//    /**
+//     * 测试两个订单支付成功，但是剩余人次不足，写入“订单失败”表 by xhk
+//     */
+//    @Test
+//    @Rollback(false)
+//    public void testOrderFail() throws Exception {
+//        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
+//                .param("orderNo", "201604181610345011")
+//                .param("totalfee", "0.01")
+//                .param("outtradeno", "123456"))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//        MvcResult result1 = mockMvcPay.perform(post("/pay/payCallbackWeixin")
+//                .param("orderNo", "2016041816111983120")
+//                .param("totalfee", "0.01")
+//                .param("outtradeno", "654321"))
+//                .andExpect(status().isOk())
+//                .andReturn();
 //    }
 
 }

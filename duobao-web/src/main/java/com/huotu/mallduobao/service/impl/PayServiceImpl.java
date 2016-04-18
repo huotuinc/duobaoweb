@@ -173,7 +173,7 @@ public class PayServiceImpl implements PayService {
 
         //金额购买流水
         UserMoneyFlow userMoneyFlowBuy = new UserMoneyFlow();
-        userMoneyFlowBuy.setMoney(ordersItem.getIssue().getPricePercentAmount().multiply(new BigDecimal(String.valueOf(ordersItem.getAmount())))); //购买的为一部分的钱
+        userMoneyFlowBuy.setMoney(orders.getMoney()); //购买的为一部分的钱
         userMoneyFlowBuy.setUser(orders.getUser());
         //userMoneyFlow.setCurrentMoney(userOrder.getMoney().add(userOrder.getUser().getMoney()));
         userMoneyFlowBuy.setTime(date);

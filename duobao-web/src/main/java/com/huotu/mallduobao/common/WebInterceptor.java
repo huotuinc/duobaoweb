@@ -43,7 +43,10 @@ public class WebInterceptor implements HandlerInterceptor {
             //在非测试环境下进行正常请求
             if (request.getParameter("customerId") == null || webPublicModel.getIssueId() == null) {
                 log.info("初始化认证失败啦！！！！！！");
-                //todo 跳转到错误页面
+                String errorUrl="/html/error.html";
+                //跳转到错误页面
+                response.sendRedirect(errorUrl);
+                return false;
             }
             if (webPublicModel.getOpenId() == null ||
                     webPublicModel.getSign() == null || !userService.checkOpenid(webPublicModel.getOpenId(), webPublicModel.getSign()) ||

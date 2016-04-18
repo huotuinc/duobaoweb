@@ -73,7 +73,7 @@ var shoppingBuy = function (buyNum, issueId, customerId) {
             }
         },
         error: function (data) {
-            $.jBox.tip("异常");
+            $.jBox.tip("异常,请关闭页面重试！");
         }
     })
 }
