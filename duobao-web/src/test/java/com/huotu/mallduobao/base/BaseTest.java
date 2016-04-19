@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -449,4 +450,129 @@ public class BaseTest {
         return issueId;
     }
 
+
+
+    /***************************COSY测试商品，不准你动*************************/
+
+
+    //创建商品
+    Goods goods;
+
+    public Goods createGoods()
+    {
+        //商品
+        goods = new Goods();
+        goods.setTitle("cosytest");
+        goods.setCharacters("这是测试商品");
+        goods.setDefaultPictureUrl("/resources/images/aa.jpg");
+        goods.setPictureUrls("/resources/images/bb.jpg,/resources/images/cc.jpg");
+        goods.setSharePictureUrl("/resources/images/dd.jpg");
+        goods.setDefaultAmount(10L);
+        goods.setToAmount(100L);
+        goods.setPricePercentAmount(new BigDecimal(1));
+        goods.setStatus(CommonEnum.GoodsStatus.up);
+        goods = goodsRepository.saveAndFlush(goods);
+        return goods;
+
+    }
+
+
+    //创建用户
+    User currentUser;
+    public  User createUser()
+    {
+        currentUser = new User();
+        currentUser.setUsername("cosylj");
+        currentUser.setPassword("123456");
+        currentUser.setMobile("13600541783");
+        currentUser.setMobileBinded(true);
+        currentUser.setWeixinOpenId("111");
+        currentUser.setMerchantId(3447L);
+        currentUser.setMoney(new BigDecimal(100));
+        currentUser.setRegTime(new Date());
+        currentUser=userRepository.saveAndFlush(currentUser);
+        return currentUser;
+    }
+
+    //期号
+    Issue currentIssue;
+
+    public Issue createIssue(Goods goods,User currentUser) throws Exception
+    {
+        currentIssue = new Issue();
+        currentIssue.setGoods(goods);
+        currentIssue.setDefaultAmount(10L);
+        currentIssue.setToAmount(100L);
+        currentIssue.setBuyAmount(10L);
+        currentIssue.setAwardingDate(new Date());
+        currentIssue.setPricePercentAmount(new BigDecimal(1));
+        currentIssue.setAttendAmount(10L);
+        currentIssue.setStatus(CommonEnum.IssueStatus.drawed);
+        currentIssue.setAwardingUser(currentUser);
+        currentIssue= issueRepository.saveAndFlush(currentIssue);
+        return currentIssue;
+    }
+
+    //收货地址
+    Delivery delivery;
+
+    public Delivery  createDelivery(Issue currentIssue,User currentUser) throws Exception
+    {
+
+
+        delivery = new Delivery();
+        delivery.setIssue(currentIssue);
+        delivery.setUser(currentUser);
+        delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.GetPrize);
+        delivery.setIsCommit(false);
+        delivery = deliveryRepository.saveAndFlush(delivery);
+        return delivery;
+    }
+
+    //用户购买商品的记录
+    UserBuyFlow userBuyFlow;
+
+    public UserBuyFlow createUserBuyFlow () throws Exception
+    {
+
+
+        userBuyFlow = new UserBuyFlow();
+        userBuyFlow.setUser(currentUser);
+        userBuyFlow.setIssue(currentIssue);
+        userBuyFlow.setAmount(10L);
+        userBuyFlow= userBuyFlowRepository.saveAndFlush(userBuyFlow);
+        for (int i=0 ; i<10; i++){
+            UserNumber userNumber = new UserNumber();
+            userNumber.setIssue(currentIssue);
+            userNumber.setUser(currentUser);
+            userNumber.setNumber(100000L+i);
+            userNumberRepository.save(userNumber);
+
+        }
+        return userBuyFlow;
+
+    }
+
+
+
+    //创建订单
+    Orders orders;
+
+    public Orders createOrders()
+    {
+        orders = new Orders();
+        orders.setId("2016011508080848599");
+        orders.setUser(currentUser);
+        orders.setReceiver("cosylj");
+        orders.setOrderType(CommonEnum.OrderType.raiders);
+        orders.setTotalMoney(new BigDecimal(10));
+        orders.setMoney(new BigDecimal(10));
+        orders.setPayType(CommonEnum.PayType.alipay);
+        orders.setStatus(CommonEnum.OrderStatus.payed);
+        orders.setDetails("aaaaa");
+        orders= ordersRepository.saveAndFlush(orders);
+        return orders;
+    }
+
 }
+
