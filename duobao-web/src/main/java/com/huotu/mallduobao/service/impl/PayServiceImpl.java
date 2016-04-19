@@ -136,6 +136,8 @@ public class PayServiceImpl implements PayService {
             //得到所有的数字来传递给前端显示 暂时不需要了
             //resultModel.setResultNumber(userNumbers);
 
+            ordersItem.setStatus(CommonEnum.OrderStatus.payed);
+            ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
             //如果用户购买的数量已经达到总需数，则进行新的一期生成
             if (ordersItem.getIssue().getToAmount() <= ordersItem.getIssue().getBuyAmount()) {
                 log.info("开始生成新的期号!");
@@ -148,8 +150,7 @@ public class PayServiceImpl implements PayService {
             }
 
 
-            ordersItem.setStatus(CommonEnum.OrderStatus.payed);
-            ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
+
             orders.setStatus(CommonEnum.OrderStatus.payed);
         }
         orders.setPayType(purchaseSource);
