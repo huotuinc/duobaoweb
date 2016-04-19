@@ -102,24 +102,77 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
     }
 
 
-    @Override
-    public UserBuyFlowModelAjax findByUserAjax(Long userId, Integer pageSize, Integer page) throws Exception {
-        Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = new Sort(direction, "time");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Page<UserBuyFlow> userBuyFlowPage = userBuyFlowRepository.findAll(new Specification<UserBuyFlow>() {
-            @Override
-            public Predicate toPredicate(Root<UserBuyFlow> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Predicate predicate = cb.and(cb.equal(root.get("user").get("id").as(Long.class), userId));
-                predicate = cb.and(predicate, cb.equal(root.get("issue").get("awardingUser").get("id").as(Long.class), userId));
-                return predicate;
-            }
-        }, new PageRequest(page-1, pageSize, sort));
+//    @Override
+//    public UserBuyFlowModelAjax findByUserAjax(Long userId, Integer pageSize, Integer page) throws Exception {
+//        Sort.Direction direction = Sort.Direction.DESC;
+//        Sort sort = new Sort(direction, "time");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//        Page<UserBuyFlow> userBuyFlowPage = userBuyFlowRepository.findAll(new Specification<UserBuyFlow>() {
+//            @Override
+//            public Predicate toPredicate(Root<UserBuyFlow> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+//                Predicate predicate = cb.and(cb.equal(root.get("user").get("id").as(Long.class), userId));
+//                predicate = cb.and(predicate, cb.equal(root.get("issue").get("awardingUser").get("id").as(Long.class), userId));
+//                return predicate;
+//            }
+//        }, new PageRequest(page-1, pageSize, sort));
+//
+//        UserBuyFlowModelAjax userBuyFlowModelAjax = new UserBuyFlowModelAjax();
+//        if (userBuyFlowPage != null ) {
+//            List<UserBuyFlowModel> rows = new ArrayList<>();
+//            for (UserBuyFlow userBuyFlow : userBuyFlowPage) {
+//                UserBuyFlowModel userBuyFlowModel = new UserBuyFlowModel();
+//                userBuyFlowModel.setDefaultPictureUrl(staticResourceService.getResource(userBuyFlow.getIssue().getGoods().getDefaultPictureUrl()).toString());
+//                Delivery delivery = deliveryRepository.findByIssueId(userBuyFlow.getIssue().getId());
+//                if (delivery==null)
+//                    continue;
+//                userBuyFlowModel.setPid(userBuyFlow.getId());
+//                userBuyFlowModel.setAmount(userBuyFlow.getAmount());
+//                userBuyFlowModel.setTitle(userBuyFlow.getIssue().getGoods().getTitle());
+//                userBuyFlowModel.setIssueId(userBuyFlow.getIssue().getId());
+//                userBuyFlowModel.setAwardingDate(userBuyFlow.getIssue().getAwardingDate());
+//                userBuyFlowModel.setToAmount(userBuyFlow.getIssue().getToAmount());
+//                userBuyFlowModel.setLuckyNumber(userBuyFlow.getIssue().getLuckyNumber());
+//                userBuyFlowModel.setDeliveryStatus(delivery.getDeliveryStatus().getValue());
+//                //todo 由于程序运行不起来。注释了下面语句 by xhk
+//                //userBuyFlowModel.setDeliveryId(delivery.getId());
+//                userBuyFlowModel.setTime(userBuyFlow.getTime());
+//                userBuyFlowModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
+//                rows.add(userBuyFlowModel);
+//            }
+//            userBuyFlowModelAjax.setPageCount(userBuyFlowPage.getTotalPages());
+//            userBuyFlowModelAjax.setPageIndex(page);
+//            userBuyFlowModelAjax.setTotal(Integer.parseInt(userBuyFlowPage.getTotalElements() + ""));
+//            userBuyFlowModelAjax.setPageSize(pageSize);
+//            userBuyFlowModelAjax.setRows(rows);
+//        }
+//        return userBuyFlowModelAjax;
+//    }
 
+    @Override
+    public UserBuyFlowModelAjax findByUserAjax(Long userId,Long lastFlag, Integer pageSize, Integer page) throws Exception {
+        StringBuilder hql = new StringBuilder();
+        List<UserBuyFlow> userBuyFlows = null;
+        Query query = null;
+        String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1 and ubf.issue.awardingUser.id=?2";
+        hql.append(hq);
+        if (lastFlag > 0) {
+            hql.append(" and ubf.time<?3 order by ubf.time desc");
+        } else {
+            hql.append(" order by ubf.time desc");
+        }
+        query = entityManager.createQuery(hql.toString());
+        query.setParameter(1, userId);
+        query.setParameter(2, userId);
+        if (lastFlag > 0) {
+            query.setParameter(3, lastFlag);
+        }
+        query.setMaxResults(pageSize);
+        userBuyFlows = query.getResultList();
         UserBuyFlowModelAjax userBuyFlowModelAjax = new UserBuyFlowModelAjax();
-        if (userBuyFlowPage != null ) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        if (userBuyFlows != null) {
             List<UserBuyFlowModel> rows = new ArrayList<>();
-            for (UserBuyFlow userBuyFlow : userBuyFlowPage) {
+            for (UserBuyFlow userBuyFlow : userBuyFlows) {
                 UserBuyFlowModel userBuyFlowModel = new UserBuyFlowModel();
                 userBuyFlowModel.setDefaultPictureUrl(staticResourceService.getResource(userBuyFlow.getIssue().getGoods().getDefaultPictureUrl()).toString());
                 Delivery delivery = deliveryRepository.findByIssueId(userBuyFlow.getIssue().getId());
@@ -133,17 +186,16 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 userBuyFlowModel.setToAmount(userBuyFlow.getIssue().getToAmount());
                 userBuyFlowModel.setLuckyNumber(userBuyFlow.getIssue().getLuckyNumber());
                 userBuyFlowModel.setDeliveryStatus(delivery.getDeliveryStatus().getValue());
-                //todo 由于程序运行不起来。注释了下面语句 by xhk
-                //userBuyFlowModel.setDeliveryId(delivery.getId());
                 userBuyFlowModel.setTime(userBuyFlow.getTime());
                 userBuyFlowModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
+                lastFlag = userBuyFlowModel.getTime();
                 rows.add(userBuyFlowModel);
             }
-            userBuyFlowModelAjax.setPageCount(userBuyFlowPage.getTotalPages());
-            userBuyFlowModelAjax.setPageIndex(page);
-            userBuyFlowModelAjax.setTotal(Integer.parseInt(userBuyFlowPage.getTotalElements() + ""));
-            userBuyFlowModelAjax.setPageSize(pageSize);
+            lastFlag = rows.get(rows.size()-1).getTime();
+            userBuyFlowModelAjax.setLastFlag(lastFlag);
             userBuyFlowModelAjax.setRows(rows);
+            userBuyFlowModelAjax.setPageIndex(page);
+            userBuyFlowModelAjax.setPageSize(pageSize);
         }
         return userBuyFlowModelAjax;
     }
@@ -179,75 +231,183 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
         }, new PageRequest(page-1, pageSize, sort));
     }
 
+//    @Override
+//    public RaiderListModelAjax toListRaiderListModel(Integer type, Long userId, Integer pageSize, Integer page) throws URISyntaxException {
+//        Page<UserBuyFlow> userBuyFlows = getMyInvolvedRecordAjax(userId,type,page,pageSize);
+//        if (userBuyFlows==null){
+//            return null;
+//        }
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//        List<RaiderListModel> listModels = new ArrayList<>();
+//        RaiderListModelAjax raiderListModelAjax = new RaiderListModelAjax();
+//        for (UserBuyFlow userBuyFlow : userBuyFlows){
+//            RaiderListModel appMyRaiderListModel = new RaiderListModel();
+//            appMyRaiderListModel.setPid(userBuyFlow.getId());
+//            appMyRaiderListModel.setIssueId(userBuyFlow.getIssue().getId());
+//            appMyRaiderListModel.setPictureUrl(userBuyFlow.getIssue().getGoods() != null ? staticResourceService.getResource(userBuyFlow.getIssue().getGoods().getDefaultPictureUrl()).toString() : "");
+//            appMyRaiderListModel.setTitle(userBuyFlow.getIssue().getGoods() != null ? userBuyFlow.getIssue().getGoods().getTitle() : "");
+//            appMyRaiderListModel.setToAmount(userBuyFlow.getIssue().getToAmount());
+//            appMyRaiderListModel.setAttendAmount(userBuyFlow.getAmount());
+//            appMyRaiderListModel.setStatus(userBuyFlow.getIssue().getStatus().getValue());
+//            appMyRaiderListModel.setTime(new Date(userBuyFlow.getTime()));
+//            if (type == 2) {
+//                //============封装以开奖记录的额外数据============
+//                appMyRaiderListModel.setWinner(userBuyFlow.getIssue().getAwardingUser() == null ? "" : userBuyFlow.getIssue().getAwardingUser().getRealName());
+//                appMyRaiderListModel.setLunkyNumber(userBuyFlow.getIssue().getLuckyNumber());
+//                appMyRaiderListModel.setAwardingDate(userBuyFlow.getIssue().getAwardingDate());
+//                appMyRaiderListModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
+//                List<UserBuyFlow> userBuyFlowList = findByUserIdAndIssuId(userBuyFlow.getUser().getId(), userBuyFlow.getIssue().getId());
+//                if (userBuyFlowList != null && userBuyFlowList.size() > 0) {
+//                    appMyRaiderListModel.setWinnerAttendAmount(userBuyFlowList.get(0).getAmount());
+//                }
+//            } else if (type == 1) {
+//                //============封装进行中记录的额外数据============
+//                if (userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount() > 0) {
+//                    appMyRaiderListModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
+//                } else {
+//                    appMyRaiderListModel.setRemainAmount(0l);
+//                }
+//            } else if (type == 0) {
+//                //============对全部数据进行查询并封装============
+//                if (userBuyFlow.getIssue().getStatus() == CommonEnum.IssueStatus.drawed) {
+//                    List<UserBuyFlow> userBuyFlowList = findByUserIdAndIssuId(userBuyFlow.getUser().getId(), userBuyFlow.getIssue().getId());
+//                    if (userBuyFlowList != null && userBuyFlowList.size() > 0) {
+//                        //============封装 进行中记录的额外数据============
+//                        if (userBuyFlowList.get(0).getIssue().getAwardingUser() == null) {
+//                            appMyRaiderListModel.setWinner("");
+//                        } else {
+//                            appMyRaiderListModel.setWinner(userBuyFlowList.get(0).getIssue().getAwardingUser().getRealName());
+//                        }
+//                        appMyRaiderListModel.setLunkyNumber(userBuyFlowList.get(0).getIssue().getLuckyNumber());
+//                        appMyRaiderListModel.setAwardingDate(userBuyFlowList.get(0).getIssue().getAwardingDate());
+//                        appMyRaiderListModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
+//                        appMyRaiderListModel.setWinnerAttendAmount(0L);
+//                        appMyRaiderListModel.setWinnerAttendAmount(userBuyFlowList.get(0).getAmount());
+//                    }
+//                }
+//                if (userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount() > 0) {
+//                    appMyRaiderListModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
+//                } else {
+//                    appMyRaiderListModel.setRemainAmount(0l);
+//                }
+//            }
+//            listModels.add(appMyRaiderListModel);
+//        }
+//        raiderListModelAjax.setRows(listModels);
+//        raiderListModelAjax.setPageCount(userBuyFlows.getTotalPages());
+//        raiderListModelAjax.setPageIndex(page);
+//        raiderListModelAjax.setTotal(Integer.parseInt(userBuyFlows.getTotalElements() + ""));
+//        raiderListModelAjax.setPageSize(pageSize);
+//        return raiderListModelAjax;
+//    }
+
     @Override
-    public RaiderListModelAjax toListRaiderListModel(Integer type, Long userId, Integer pageSize, Integer page) throws URISyntaxException {
-        Page<UserBuyFlow> userBuyFlows = getMyInvolvedRecordAjax(userId,type,page,pageSize);
-        if (userBuyFlows==null){
-            return null;
+    public RaiderListModelAjax toListRaiderListModel(Integer type, Long userId, Long lastFlag, Integer pageSize, Integer page) throws URISyntaxException {
+        StringBuilder hql = new StringBuilder();
+        List<UserBuyFlow> userBuyFlows = null;
+        Query query = null;
+
+        if (type == 0) {
+            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1";
+            hql.append(hq);
+            if (lastFlag > 0) {
+                hql.append(" and ubf.time<?2 order by ubf.time desc");
+            } else {
+                hql.append("  order by ubf.time desc");
+            }
+        } else if (type == 1) {
+            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1 and ubf.issue.status!=com.huotu.mallduobao.utils.CommonEnum.IssueStatus.drawed";
+            hql.append(hq);
+            if (lastFlag > 0) {
+                hql.append(" and ubf.time<?2 order by ubf.time desc");
+            } else {
+                hql.append(" order by ubf.time desc");
+            }
+        } else if (type == 2) {
+            String hq = "select ubf from UserBuyFlow as ubf where ubf.user.id =?1  and ubf.issue.status=com.huotu.mallduobao.utils.CommonEnum.IssueStatus.drawed";
+            hql.append(hq);
+            if (lastFlag > 0) {
+                hql.append(" and ubf.time<?2 order by ubf.time desc");
+            } else {
+                hql.append("  order by ubf.time desc");
+            }
         }
+        query = entityManager.createQuery(hql.toString());
+
+        query.setParameter(1, userId);
+        if (lastFlag > 0) {
+            query.setParameter(2, lastFlag);
+        }
+        query.setMaxResults(pageSize);
+        userBuyFlows = query.getResultList();
+        RaiderListModelAjax raiderListModelAjax = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         List<RaiderListModel> listModels = new ArrayList<>();
-        RaiderListModelAjax raiderListModelAjax = new RaiderListModelAjax();
-        for (UserBuyFlow userBuyFlow : userBuyFlows){
-            RaiderListModel appMyRaiderListModel = new RaiderListModel();
-            appMyRaiderListModel.setPid(userBuyFlow.getId());
-            appMyRaiderListModel.setIssueId(userBuyFlow.getIssue().getId());
-            appMyRaiderListModel.setPictureUrl(userBuyFlow.getIssue().getGoods() != null ? staticResourceService.getResource(userBuyFlow.getIssue().getGoods().getDefaultPictureUrl()).toString() : "");
-            appMyRaiderListModel.setTitle(userBuyFlow.getIssue().getGoods() != null ? userBuyFlow.getIssue().getGoods().getTitle() : "");
-            appMyRaiderListModel.setToAmount(userBuyFlow.getIssue().getToAmount());
-            appMyRaiderListModel.setAttendAmount(userBuyFlow.getAmount());
-            appMyRaiderListModel.setStatus(userBuyFlow.getIssue().getStatus().getValue());
-            appMyRaiderListModel.setTime(new Date(userBuyFlow.getTime()));
-            if (type == 2) {
-                //============封装以开奖记录的额外数据============
-                appMyRaiderListModel.setWinner(userBuyFlow.getIssue().getAwardingUser() == null ? "" : userBuyFlow.getIssue().getAwardingUser().getRealName());
-                appMyRaiderListModel.setLunkyNumber(userBuyFlow.getIssue().getLuckyNumber());
-                appMyRaiderListModel.setAwardingDate(userBuyFlow.getIssue().getAwardingDate());
-                appMyRaiderListModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
-                List<UserBuyFlow> userBuyFlowList = findByUserIdAndIssuId(userBuyFlow.getUser().getId(), userBuyFlow.getIssue().getId());
-                if (userBuyFlowList != null && userBuyFlowList.size() > 0) {
-                    appMyRaiderListModel.setWinnerAttendAmount(userBuyFlowList.get(0).getAmount());
-                }
-            } else if (type == 1) {
-                //============封装进行中记录的额外数据============
-                if (userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount() > 0) {
-                    appMyRaiderListModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
-                } else {
-                    appMyRaiderListModel.setRemainAmount(0l);
-                }
-            } else if (type == 0) {
-                //============对全部数据进行查询并封装============
-                if (userBuyFlow.getIssue().getStatus() == CommonEnum.IssueStatus.drawed) {
+        if (userBuyFlows != null) {
+            raiderListModelAjax = new RaiderListModelAjax();
+            for (UserBuyFlow userBuyFlow : userBuyFlows) {
+                RaiderListModel appMyRaiderListModel = new RaiderListModel();
+                appMyRaiderListModel.setPid(userBuyFlow.getId());
+                appMyRaiderListModel.setIssueId(userBuyFlow.getIssue().getId());
+                appMyRaiderListModel.setPictureUrl(userBuyFlow.getIssue().getGoods() != null ? staticResourceService.getResource(userBuyFlow.getIssue().getGoods().getDefaultPictureUrl()).toString() : "");
+                appMyRaiderListModel.setTitle(userBuyFlow.getIssue().getGoods() != null ? userBuyFlow.getIssue().getGoods().getTitle() : "");
+                appMyRaiderListModel.setToAmount(userBuyFlow.getIssue().getToAmount());
+                appMyRaiderListModel.setAttendAmount(userBuyFlow.getAmount());
+                appMyRaiderListModel.setStatus(userBuyFlow.getIssue().getStatus().getValue());
+                appMyRaiderListModel.setTime(new Date(userBuyFlow.getTime()));
+                if (type == 2) {
+                    //============封装以开奖记录的额外数据============
+                    appMyRaiderListModel.setWinner(userBuyFlow.getIssue().getAwardingUser() == null ? "" : userBuyFlow.getIssue().getAwardingUser().getRealName());
+                    appMyRaiderListModel.setLunkyNumber(userBuyFlow.getIssue().getLuckyNumber());
+                    appMyRaiderListModel.setAwardingDate(userBuyFlow.getIssue().getAwardingDate());
+                    appMyRaiderListModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
                     List<UserBuyFlow> userBuyFlowList = findByUserIdAndIssuId(userBuyFlow.getUser().getId(), userBuyFlow.getIssue().getId());
                     if (userBuyFlowList != null && userBuyFlowList.size() > 0) {
-                        //============封装 进行中记录的额外数据============
-                        if (userBuyFlowList.get(0).getIssue().getAwardingUser() == null) {
-                            appMyRaiderListModel.setWinner("");
-                        } else {
-                            appMyRaiderListModel.setWinner(userBuyFlowList.get(0).getIssue().getAwardingUser().getRealName());
-                        }
-                        appMyRaiderListModel.setLunkyNumber(userBuyFlowList.get(0).getIssue().getLuckyNumber());
-                        appMyRaiderListModel.setAwardingDate(userBuyFlowList.get(0).getIssue().getAwardingDate());
-                        appMyRaiderListModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
-                        appMyRaiderListModel.setWinnerAttendAmount(0L);
                         appMyRaiderListModel.setWinnerAttendAmount(userBuyFlowList.get(0).getAmount());
                     }
+                } else if (type == 1) {
+                    //============封装进行中记录的额外数据============
+                    if (userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount() > 0) {
+                        appMyRaiderListModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
+                    } else {
+                        appMyRaiderListModel.setRemainAmount(0l);
+                    }
+                } else if (type == 0) {
+                    //============对全部数据进行查询并封装============
+                    if (userBuyFlow.getIssue().getStatus() == CommonEnum.IssueStatus.drawed) {
+                        List<UserBuyFlow> userBuyFlowList = findByUserIdAndIssuId(userBuyFlow.getUser().getId(), userBuyFlow.getIssue().getId());
+                        if (userBuyFlowList != null && userBuyFlowList.size() > 0) {
+                            //============封装 进行中记录的额外数据============
+                            if (userBuyFlowList.get(0).getIssue().getAwardingUser() == null) {
+                                appMyRaiderListModel.setWinner("");
+                            } else {
+                                appMyRaiderListModel.setWinner(userBuyFlowList.get(0).getIssue().getAwardingUser().getRealName());
+                            }
+                            appMyRaiderListModel.setLunkyNumber(userBuyFlowList.get(0).getIssue().getLuckyNumber());
+                            appMyRaiderListModel.setAwardingDate(userBuyFlowList.get(0).getIssue().getAwardingDate());
+                            appMyRaiderListModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
+                            appMyRaiderListModel.setWinnerAttendAmount(0L);
+                            appMyRaiderListModel.setWinnerAttendAmount(userBuyFlowList.get(0).getAmount());
+                        }
+                    }
+                    if (userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount() > 0) {
+                        appMyRaiderListModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
+                    } else {
+                        appMyRaiderListModel.setRemainAmount(0l);
+                    }
                 }
-                if (userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount() > 0) {
-                    appMyRaiderListModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
-                } else {
-                    appMyRaiderListModel.setRemainAmount(0l);
-                }
+                listModels.add(appMyRaiderListModel);
+                lastFlag=appMyRaiderListModel.getTime().getTime();
+
             }
-            listModels.add(appMyRaiderListModel);
+            raiderListModelAjax.setLastFlag(lastFlag);
+            raiderListModelAjax.setRows(listModels);
+            raiderListModelAjax.setPageIndex(page);
+            raiderListModelAjax.setPageSize(pageSize);
         }
-        raiderListModelAjax.setRows(listModels);
-        raiderListModelAjax.setPageCount(userBuyFlows.getTotalPages());
-        raiderListModelAjax.setPageIndex(page);
-        raiderListModelAjax.setTotal(Integer.parseInt(userBuyFlows.getTotalElements() + ""));
-        raiderListModelAjax.setPageSize(pageSize);
         return raiderListModelAjax;
     }
+
 
     @Autowired
     ProductRestRepository productRestRepository;

@@ -34,6 +34,7 @@
         <input type="hidden"  th:value="*{type}" id="type"/>
         <input type="hidden"  th:value="*{issueId}" id="issueId"/>
         <input type="hidden"  th:value="*{customerId}"  id="customerId"/>
+        <input type="hidden"  th:value="0"  id="lastFlag"/>
         <ul class="float-ul flex-ul">
             <li>
                 <div  th:class="*{type eq 0?'con':''}" >
