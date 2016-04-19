@@ -47,7 +47,7 @@ public class ApiController {
         ApiResultModel apiResultModel = new ApiResultModel();
         String toSign = DigestUtils.md5DigestAsHex((goodsId.toString() + commonConfigService.getDuobaoApiKey()).getBytes());
         if (toSign.equals(sign)) {
-            Goods goods = goodsRepository.getOne(goodsId);
+            Goods goods = goodsRepository.findOne(goodsId);
             Issue issue = raidersCoreService.generateIssue(goods);
             if (issue != null) {
                 apiResultModel.setCode("1");

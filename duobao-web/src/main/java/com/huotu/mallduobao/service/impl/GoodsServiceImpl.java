@@ -70,7 +70,7 @@ public class GoodsServiceImpl implements GoodsService {
 
         GoodsIndexModel goodsIndexModel = new GoodsIndexModel();
         //1.通过商品Id获取对应的商品
-        Issue issue = issueRepository.getOne(issueId);
+        Issue issue = issueRepository.findOne(issueId);
         Goods goods = issue.getGoods();
 
         //2.获取商品中正在进行的期且封装数据
@@ -425,7 +425,7 @@ public class GoodsServiceImpl implements GoodsService {
         SelGoodsSpecModel selGoodsSpecModel = new SelGoodsSpecModel();
 
         //1.获取期号对用的期
-        Issue issue = issueRepository.getOne(issueId);
+        Issue issue = issueRepository.findOne(issueId);
 
         //2.获取期号对应的活动商品
         if(issue != null){

@@ -92,7 +92,7 @@ public class CoreTest extends BaseTest {
         Assert.assertEquals("缓存中的数量", 5, cachedIssueLeaveNumberRepository.findAllByIssueId(currentIssue.getId()).size());
         Assert.assertEquals("缓存中的数量", 5, cacheService.getLotteryNumber(currentIssue.getId()).size());
 
-        Issue issue = issueRepository.getOne(currentIssue.getId());
+        Issue issue = issueRepository.findOne(currentIssue.getId());
         Assert.assertEquals("期号还没有开奖", true, issue.getAwardingUser() == null);
 
         generateOrdersWithPayed(currentUser, goods.getIssue(), 5L, ordersRepository, ordersItemRepository, issueRepository);
@@ -101,7 +101,7 @@ public class CoreTest extends BaseTest {
 
         //进行抽奖
         raidersCoreService.drawLottery();
-        issue = issueRepository.getOne(currentIssue.getId());
+        issue = issueRepository.findOne(currentIssue.getId());
         log.info("中奖号码为" + issue.getLuckyNumber().toString());
         log.info("中奖用户为" + issue.getAwardingUser().getId());
     }

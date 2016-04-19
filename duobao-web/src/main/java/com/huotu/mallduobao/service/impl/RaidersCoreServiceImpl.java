@@ -667,7 +667,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         Issue issue = userBuyFail.getGoods().getIssue();
         //在新的期号数量够的情况下进行购买
         if (issue.getToAmount() - issue.getBuyAmount() >= userBuyFail.getAmount()) {
-            log.info("issueId:" + issue.getId() + " toAmount:" + issue.getBuyAmount() + " buyAmount:" + issue.getBuyAmount() + " amount:" + userBuyFail.getAmount());
+            log.info("issueId:" + issue.getId() + " toAmount:" + issue.getToAmount() + " buyAmount:" + issue.getBuyAmount() + " amount:" + userBuyFail.getAmount());
 
             Date date = new Date();
             String tradeNo = createOrderNo(date, userBuyFail.getUser().getId());
