@@ -166,7 +166,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
         if (lastFlag > 0) {
             query.setParameter(3, lastFlag);
         }
-        query.setMaxResults(pageSize);
+        query.setMaxResults(10);
         userBuyFlows = query.getResultList();
         UserBuyFlowModelAjax userBuyFlowModelAjax = new UserBuyFlowModelAjax();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -188,6 +188,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 userBuyFlowModel.setDeliveryStatus(delivery.getDeliveryStatus().getValue());
                 userBuyFlowModel.setTime(userBuyFlow.getTime());
                 userBuyFlowModel.setAwardingDateString(sdf.format(userBuyFlow.getIssue().getAwardingDate()));
+                userBuyFlowModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
                 lastFlag = userBuyFlowModel.getTime();
                 rows.add(userBuyFlowModel);
             }
@@ -338,7 +339,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
         if (lastFlag > 0) {
             query.setParameter(2, lastFlag);
         }
-        query.setMaxResults(pageSize);
+        query.setMaxResults(10);
         userBuyFlows = query.getResultList();
         RaiderListModelAjax raiderListModelAjax = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -355,6 +356,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 appMyRaiderListModel.setAttendAmount(userBuyFlow.getAmount());
                 appMyRaiderListModel.setStatus(userBuyFlow.getIssue().getStatus().getValue());
                 appMyRaiderListModel.setTime(new Date(userBuyFlow.getTime()));
+                appMyRaiderListModel.setRemainAmount(userBuyFlow.getIssue().getToAmount() - userBuyFlow.getIssue().getBuyAmount());
                 if (type == 2) {
                     //============封装以开奖记录的额外数据============
                     appMyRaiderListModel.setWinner(userBuyFlow.getIssue().getAwardingUser() == null ? "" : userBuyFlow.getIssue().getAwardingUser().getRealName());

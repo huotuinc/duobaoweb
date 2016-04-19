@@ -13,6 +13,8 @@ package com.huotu.mallduobao.service;
 import com.huotu.mallduobao.service.jdbc.ConnectionProvider;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -22,7 +24,7 @@ public interface JdbcService {
     @FunctionalInterface
     interface ConnectionConsumer {
 
-        void workWithConnection(ConnectionProvider connection) throws SQLException;
+        void workWithConnection(ConnectionProvider connection) throws SQLException, IOException;
     }
 
 
@@ -36,7 +38,7 @@ public interface JdbcService {
      * @throws SQLException
      */
     @Transactional
-    void runJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException;
+    void runJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException, IOException;
 
     /**
      * 执行一些jdbc操作.
@@ -48,6 +50,6 @@ public interface JdbcService {
      * @param connectionConsumer 操作者
      * @throws SQLException
      */
-    void runStandaloneJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException;
+    void runStandaloneJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException, IOException;
 
 }

@@ -79,8 +79,12 @@
             });
 
             $("#submitFrom").click(function () {
-                $.jBox.tip("正在提交...", "loading");
+
                 $("#details").val($("#province  option:selected").text()+','+$("#city  option:selected").text()+','+$("#county  option:selected").text()+','+$("#details").val());
+                if($("#receiver").val()=='' or $("#mobile").val()=='' or $("#province").val()=='' or  $("#city").val()=='' or $("#orcounty").val()=='' or $("#details").val()=='' ){
+                    return ;
+                }
+                $.jBox.tip("正在提交...", "loading");
                 $("#form1").submit();
             });
 
@@ -129,7 +133,7 @@
 
                         <span>
                         <select id="province" name="province" class="wx-province" data-next-type="城市" data-next="city">
-                            <option data-code="" value="省份">选择省份</option>
+                            <option data-code="" value="">选择省份</option>
                             <option th:each="ct:${citys}" th:text="${ct.cityName}" th:value="${ct.id}">
                                 北京市
                             </option>

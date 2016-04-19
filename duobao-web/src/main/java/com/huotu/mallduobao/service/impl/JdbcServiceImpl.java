@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -34,7 +35,7 @@ public class JdbcServiceImpl implements JdbcService {
     private EntityManager entityManager;
 
     @Override
-    public void runJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException {
+    public void runJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException, IOException {
         log.debug("Prepare to run jdbc");
         Connection connection = entityManager.unwrap(Connection.class);
         if (connection == null) {
@@ -45,7 +46,7 @@ public class JdbcServiceImpl implements JdbcService {
     }
 
     @Override
-    public void runStandaloneJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException {
+    public void runStandaloneJdbcWork(ConnectionConsumer connectionConsumer) throws SQLException, IOException {
         log.debug("Prepare to run jdbc");
         Connection connection = entityManager.unwrap(Connection.class);
         if (connection==null){

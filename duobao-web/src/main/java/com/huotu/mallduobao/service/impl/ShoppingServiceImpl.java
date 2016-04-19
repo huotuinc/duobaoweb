@@ -14,6 +14,7 @@ import com.huotu.mallduobao.service.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -55,6 +56,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     @Autowired
     private GoodsRestRepository goodsRestRepository;
+
+
 
     @Override
     public ShoppingCart joinToShoppingCarts(Issue issue, User user, Long buyNum) {

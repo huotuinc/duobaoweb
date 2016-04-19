@@ -1,8 +1,8 @@
 
 
 $(function () {
-    var data1 = { pageSize: 5 ,page: 1,lastFlag:$("#lastFlag").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
-    var data2 = { type: $("#type").val(),pageSize: 5 ,page: 1,lastFlag:$("#lastFlag").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
+    var data1 = { pageSize: 10 ,page: 1,lastFlag:$("#lastFlag").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
+    var data2 = { type: $("#type").val(),pageSize: 10 ,page: 1,lastFlag:$("#lastFlag").val(),issueId: $("#issueId").val(),customerId: $("#customerId").val()};
 
     var url = "getMyInvolvedRecordAjax";
     var stemplete = "#detailTemplate";

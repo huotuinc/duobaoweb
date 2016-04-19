@@ -43,6 +43,11 @@ public class UserBuyFlowModel {
     private Long amount;
 
     /**
+     * 剩余量
+     */
+    private Long remainAmount;
+
+    /**
      * 幸运号码  (8位数字)
      * 格式 10005888
      * 触发条件：抽奖后

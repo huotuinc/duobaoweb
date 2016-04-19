@@ -202,8 +202,7 @@ public class PersonalController {
     public String selGoodsSpec(Model model)  throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
         SelGoodsSpecModel selGoodsSpecModel = goodsService.getSelGoodsSpecModelByIssueId(common.getIssueId());
-        //todo lhx selGoodsSpecModel.getMallGoodsId()
-        Map<String,Object> map = userBuyFlowService.getGoodsSpec(1L);
+        Map<String,Object> map = userBuyFlowService.getGoodsSpec(selGoodsSpecModel.getMallGoodsId());
         model.addAttribute("goodsAndSpecModel", selGoodsSpecModel);
         model.addAttribute("list",map.get("mgsList"));
         model.addAttribute("productList",map.get("productList"));
