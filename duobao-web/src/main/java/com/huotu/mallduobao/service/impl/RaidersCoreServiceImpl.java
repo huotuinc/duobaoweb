@@ -693,8 +693,10 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             PayResultModel resultModel = payService.doPay(userOrder, userBuyFail.getMoney().floatValue()
                     , userBuyFail.getSourceOrders().getOutOrderNo(), userBuyFail.getSourceOrders().getPayType());
             if (resultModel.isSuccess()) {
-                userBuyFail.setStatus(CommonEnum.UserBuyFailStatus.doed);
-                userBuyFailRepository.save(userBuyFail);
+
+                UserBuyFail userBuyFail1 = userBuyFailRepository.findOne(userBuyFail.getId());
+                userBuyFail1.setStatus(CommonEnum.UserBuyFailStatus.doed);
+                userBuyFailRepository.save(userBuyFail1);
             }
 
         }
