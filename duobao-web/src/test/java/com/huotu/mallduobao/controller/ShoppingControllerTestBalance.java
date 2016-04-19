@@ -14,6 +14,8 @@ import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.ShoppingCartRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.mallduobao.utils.CommonEnum;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +47,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("development")
 @Transactional
 public class ShoppingControllerTestBalance extends BaseTest {
+    private Log log = LogFactory.getLog(ShoppingControllerTestBalance.class);
+
+
     @Autowired
     private GoodsRepository goodsRepository;
     @Autowired

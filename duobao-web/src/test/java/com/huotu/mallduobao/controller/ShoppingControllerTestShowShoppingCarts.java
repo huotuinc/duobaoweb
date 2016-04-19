@@ -14,6 +14,8 @@ import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.ShoppingCartRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.mallduobao.utils.CommonEnum;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +30,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -45,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("development")
 @Transactional
 public class ShoppingControllerTestShowShoppingCarts extends BaseTest {
-
+    private Log log = LogFactory.getLog(ShoppingControllerTestShowShoppingCarts.class);
     @Autowired
     private GoodsRepository goodsRepository;
     @Autowired
@@ -187,32 +191,43 @@ public class ShoppingControllerTestShowShoppingCarts extends BaseTest {
     @Test
     public void statusNotGoing() throws  Exception
     {
-        //创建Status为drawed的期号
-        currentIssue=new Issue();
-        currentIssue.setGoods(goods);
-        currentIssue.setDefaultAmount(10L);
-        currentIssue.setToAmount(100L);
-        currentIssue.setBuyAmount(10L);
-        currentIssue.setPricePercentAmount(new BigDecimal(1));
-        currentIssue.setAttendAmount(10L);
-        currentIssue.setStepAmount(10L);
-        currentIssue.setStatus(CommonEnum.IssueStatus.drawed);
-        currentIssue.setAwardingUser(currentUser);
-        currentIssue=issueRepository.saveAndFlush(currentIssue);
+        List<CommonEnum.IssueStatus> str=new ArrayList<>();
+        str.add(CommonEnum.IssueStatus.drawed);
+        str.add(CommonEnum.IssueStatus.drawing);
 
-        //将商品添加到购物车
-        shoppingCart=new ShoppingCart();
-        shoppingCart.setUser(currentUser);
-        shoppingCart.setIssue(currentIssue);
-        shoppingCart.setBuyAmount(10l);
-        shoppingCart=shoppingCartRepository.saveAndFlush(shoppingCart);
+        //创建Status为drawed,drawing的期号
 
-        MvcResult result=mockMvc.perform(get("/shopping/showShoppingCarts")
-                .param("customerId","3447")
-                .param("issueId",currentIssue.getId().toString()))
-                .andExpect(model().attribute("customerId",3447L))
-                .andReturn();
-        ShoppingCartsModel shoppingCartsModel=(ShoppingCartsModel)result.getModelAndView().getModel().get("shoppingCarts");
-        Assert.assertEquals(null,shoppingCartsModel.getCartId());
+        for(CommonEnum.IssueStatus str1:str)
+        {
+            currentIssue=new Issue();
+            currentIssue.setGoods(goods);
+            currentIssue.setDefaultAmount(10L);
+            currentIssue.setToAmount(100L);
+            currentIssue.setBuyAmount(10L);
+            currentIssue.setPricePercentAmount(new BigDecimal(1));
+            currentIssue.setAttendAmount(10L);
+            currentIssue.setStepAmount(10L);
+            currentIssue.setStatus(str1);
+            currentIssue.setAwardingUser(currentUser);
+            currentIssue=issueRepository.saveAndFlush(currentIssue);
+
+            //将商品添加到购物车
+            shoppingCart=new ShoppingCart();
+            shoppingCart.setUser(currentUser);
+            shoppingCart.setIssue(currentIssue);
+            shoppingCart.setBuyAmount(10l);
+            shoppingCart=shoppingCartRepository.saveAndFlush(shoppingCart);
+
+            MvcResult result=mockMvc.perform(get("/shopping/showShoppingCarts")
+                    .param("customerId","3447")
+                    .param("issueId",currentIssue.getId().toString()))
+                    .andExpect(model().attribute("customerId",3447L))
+                    .andReturn();
+            ShoppingCartsModel shoppingCartsModel=(ShoppingCartsModel)result.getModelAndView().getModel().get("shoppingCarts");
+            Assert.assertEquals(null,shoppingCartsModel.getCartId());
+
+        }
+
+
     }
 }

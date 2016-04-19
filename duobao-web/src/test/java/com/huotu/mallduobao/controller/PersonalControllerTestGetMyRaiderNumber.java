@@ -11,7 +11,6 @@ import com.huotu.mallduobao.entity.Orders;
 import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.entity.UserBuyFlow;
 import com.huotu.mallduobao.entity.UserNumber;
-import com.huotu.mallduobao.model.DeliveryModel;
 import com.huotu.mallduobao.model.RaiderNumbersModel;
 import com.huotu.mallduobao.repository.CachedIssueLeaveNumberRepository;
 import com.huotu.mallduobao.repository.DeliveryRepository;
@@ -32,27 +31,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
-
 import org.springframework.transaction.annotation.Transactional;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 /**
- * Created by cosy on 2016/4/12.
+ * Created by cosy on 2016/4/15.
  */
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -61,10 +58,8 @@ import java.util.List;
 @ContextConfiguration(classes = {RootConfig.class, MVCConfig.class, BaseClientSpringConfig.class})
 @ActiveProfiles("development")
 @Transactional
-public class PersonalControllerForMock extends BaseTest {
-
-    private Log log = LogFactory.getLog(PersonalControllerForMock.class);
-
+public class PersonalControllerTestGetMyRaiderNumber extends BaseTest {
+    private Log log = LogFactory.getLog(PersonalControllerTestGetMyRaiderNumber.class);
 
     @Autowired
     UserRepository userRepository;
@@ -121,26 +116,6 @@ public class PersonalControllerForMock extends BaseTest {
         goods = goodsRepository.saveAndFlush(goods);
 
 
-
-
-     /*   Goods goods = new Goods();
-        goods.setDefaultPictureUrl("/resources/images/dsds.jpg");
-        goods.setPictureUrls("/resources/images/dsds.jpg,/resources/images/dsds.jpg,/resources/images/dsds.jpg");
-        goods.setTitle("iphone6s");
-        goods.setCharacters("独一无二");
-        goods.setDefaultAmount(10L);
-        goods.setStepAmount(10L);
-        goods.setToAmount(5890L);
-        goods.setPricePercentAmount(new BigDecimal(1L));
-        goods.setStatus(CommonEnum.GoodsStatus.up);
-        Date curDate = new Date();
-        goods.setStartTime(curDate);
-        goods.setEndTime(new Date(curDate.getTime() + 3600 * 24 * 1000));
-        goods.setShareTitle("分享标题");
-        goods.setShareDescription("分享描述");
-        goods.setSharePictureUrl("/resources/images/dsds.jpg");
-        goods.setMerchantId(3447L);
-        goods.setToMallGoodsId(17066L);*/
 
         //用户
         currentUser = new User();
@@ -219,85 +194,26 @@ public class PersonalControllerForMock extends BaseTest {
 
 
 
-
-
-
-
-    //中奖信息确认
     @Rollback(true)
     @Test
-    public  void textGetOneLotteryInfo()throws Exception
+    public void  getMyRaiderNumbers()throws  Exception
     {
-        MvcResult result=mockMvc.perform(get("/personal/getOneLotteryInfo")
-                                .param("customerId","3447")
-                                .param("issueId",currentIssue.getId().toString()))
-                                .andExpect(model().attribute("customerId",3447L))
-                                .andExpect(model().attribute("issueId",currentIssue.getId()))
-                                .andExpect(model().attributeExists("deliveryModel"))
-                                .andReturn();
-        DeliveryModel deliveryModel=(DeliveryModel)result.getModelAndView().getModel().get("deliveryModel");
-        Assert.assertEquals(delivery.getIssue().getId(),deliveryModel.getIssueId());
-        Assert.assertEquals(delivery.getUser().getUsername(),deliveryModel.getUsername());
-        Assert.assertEquals(delivery.getReceiver(),deliveryModel.getReceiver());
-        Assert.assertEquals(delivery.getDetails(),deliveryModel.getDetails());
-    }
-
-/*
-    @Rollback(true)
-    @Test
-    public void textSelGoodsSpec() throws  Exception
-    {
-         mockMvc.perform(get("/personal/selGoodsSpec")
-                 .param("customerId","3447")
-                 .param("issueId",currentIssue.getId().toString()))
-                 .andExpect(model().attributeExists("goodsAndSpecModel"))
-                 .andExpect(model().attribute("list"),3)
-    }*/
-
-
-  /*  @Rollback(true)
-    @Test
-    public void textAddDeliveryProductInfo() throws Exception
-    {
-
-    }*/
-
-
-    //跳转到添加地址界面
-    @Rollback(true)
-    @Test
-    public void testToRecpeiptAddress() throws Exception
-    {
-        mockMvc.perform(get("/personal/toRecpeiptAddress")
+        MvcResult result=mockMvc.perform(get("/personal/getMyRaiderNumbers")
                 .param("customerId","3447")
                 .param("issueId",currentIssue.getId().toString()))
-                .andExpect(model().attribute("userId",currentIssue.getAwardingUser().getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/html/personal/duobaoNumber"))
+                .andExpect(model().attributeExists("raiderNumbersModel"))
                 .andExpect(model().attribute("customerId",3447L))
                 .andExpect(model().attribute("issueId",currentIssue.getId()))
                 .andReturn();
-    }
-
-    @Rollback(true)
-    @Test
-    public void testAddRecpeiptAddress() throws Exception
-    {
-        mockMvc.perform(get("/personal/addRecpeiptAddress")
-                .param("customerId","3447")
-                .param("issueId",currentIssue.getId().toString())
-                .param("deliveryId",currentIssue.getId().toString())
-                .param("receiver",currentUser.getUsername())
-                .param("mobile",currentUser.getMobile().toString())
-                .param("details","浙江省,杭州市,滨江区,江南大道")
-                .param("remark","bbbbb"))
-                .andExpect(model().attribute("userId",currentUser.getId()))
-                .andExpect(model().attribute("customerId",3447L))
-                .andExpect(model().attribute("issueId",currentIssue.getId()))
-                .andReturn();
-        Delivery delivery=deliveryRepository.findByIssueId(currentIssue.getId());
-        Assert.assertEquals(currentUser.getId(),delivery.getUser().getId());
-        Assert.assertEquals(currentUser.getUsername(),delivery.getReceiver());
-        Assert.assertEquals(currentUser.getMobile(),delivery.getMobile());
-        Assert.assertEquals("aaaaa",delivery.getDetails());
-        Assert.assertEquals("bbbbbb",delivery.getRemark());
+        RaiderNumbersModel raider=(RaiderNumbersModel)result.getModelAndView().getModel().get("raiderNumbersModel");
+        Assert.assertEquals(currentIssue.getGoods().getTitle(),raider.getGoodsTitle());
+        Assert.assertEquals(currentIssue.getId(),raider.getIssueId());
+        Assert.assertEquals(currentIssue.getAttendAmount(),raider.getAmount());
+        List<Long> number= raider.getNumbers();
+        Assert.assertEquals(10,number.size());
+        Assert.assertEquals("100000",number.get(0).toString());
+        Assert.assertEquals("100009",number.get(9).toString());
     }
 }
