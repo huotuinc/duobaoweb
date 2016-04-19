@@ -31,7 +31,7 @@ public class RaiderListModelAjax {
      */
     private int PageSize;
 
-    private Long LastTime;
+    private Long LastFlag;
 
     private String Hong="&";
 
@@ -91,12 +91,12 @@ public class RaiderListModelAjax {
         this.PageSize = PageSize;
     }
 
-    @JsonProperty(value = "LastTime")
-    public Long getLastTime() {
-        return LastTime;
+    @JsonProperty(value = "LastFlag")
+    public Long getLastFlag() {
+        return LastFlag;
     }
 
-    public void setLastTime(Long LastTime) {
-        this.LastTime = LastTime;
+    public void setLastFlag(Long LastFlag) {
+        this.LastFlag = LastFlag;
     }
 }

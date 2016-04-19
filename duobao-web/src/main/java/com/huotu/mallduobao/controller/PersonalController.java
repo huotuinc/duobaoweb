@@ -52,6 +52,7 @@ public class PersonalController {
 
     @Autowired
     MerchantRestRepository merchantRestRepository;
+
     /**
      * 跳转到我的参与记录页面
      * @param model
@@ -67,6 +68,23 @@ public class PersonalController {
         return "/html/personal/raiderList";
     }
 
+//    /**
+//     * 查看我的参与记录列表
+//     * @param type       层级
+//     * @param pageSize   每页条数
+//     * @param page       页数
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = "/getMyInvolvedRecordAjax", method = {RequestMethod.POST})
+//    @ResponseBody
+//    public RaiderListModelAjax getMyInvolvedRecordAjax(Model model,Integer type, Integer pageSize, Integer page) throws IOException, URISyntaxException {
+//        WebPublicModel common = PublicParameterHolder.getParameters();
+//        model.addAttribute("customerId",common.getCustomerId());
+//        model.addAttribute("issueId",common.getIssueId());
+//        RaiderListModelAjax raiderListAjaxModel= userBuyFlowService.toListRaiderListModel(type,common.getCurrentUser().getId(),pageSize,page);
+//        raiderListAjaxModel.setPublicParament("customerId=" + common.getCustomerId());
+//        return raiderListAjaxModel;
+//    }
     /**
      * 查看我的参与记录列表
      * @param type       层级
@@ -76,11 +94,11 @@ public class PersonalController {
      */
     @RequestMapping(value = "/getMyInvolvedRecordAjax", method = {RequestMethod.POST})
     @ResponseBody
-    public RaiderListModelAjax getMyInvolvedRecordAjax(Model model,Integer type, Integer pageSize, Integer page) throws IOException, URISyntaxException {
+    public RaiderListModelAjax getMyInvolvedRecordAjax(Model model,Integer type,Long lastFlag,Integer pageSize, Integer page) throws IOException, URISyntaxException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
-        RaiderListModelAjax raiderListAjaxModel= userBuyFlowService.toListRaiderListModel(type,common.getCurrentUser().getId(),pageSize,page);
+        RaiderListModelAjax raiderListAjaxModel= userBuyFlowService.toListRaiderListModel(type, common.getCurrentUser().getId(), lastFlag, pageSize, page);
         raiderListAjaxModel.setPublicParament("customerId=" + common.getCustomerId());
         return raiderListAjaxModel;
     }
@@ -118,6 +136,24 @@ public class PersonalController {
         return "/html/personal/raiderList";
     }
 
+//    /**
+//     * 获取中奖列表
+//     * @param pageSize
+//     * @param page
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(value = "/getMyLotteryListAjax" , method = RequestMethod.POST)
+//    @ResponseBody
+//    public UserBuyFlowModelAjax getMyLotteryListAjax(Model model,Integer pageSize, Integer page) throws Exception {
+//        WebPublicModel common = PublicParameterHolder.getParameters();
+//        UserBuyFlowModelAjax userBuyFlowModelAjax = userBuyFlowService.findByUserAjax(common.getCurrentUser().getId(), pageSize, page);
+//        userBuyFlowModelAjax.setPublicParament("customerId=" + common.getCustomerId());
+//        model.addAttribute("customerId",common.getCustomerId());
+//        model.addAttribute("issueId",common.getIssueId());
+//        return userBuyFlowModelAjax;
+//    }
+
     /**
      * 获取中奖列表
      * @param pageSize
@@ -127,9 +163,9 @@ public class PersonalController {
      */
     @RequestMapping(value = "/getMyLotteryListAjax" , method = RequestMethod.POST)
     @ResponseBody
-    public UserBuyFlowModelAjax getMyLotteryListAjax(Model model,Integer pageSize, Integer page) throws Exception {
+    public UserBuyFlowModelAjax getMyLotteryListAjax(Model model,Long lastFlag,Integer pageSize, Integer page) throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
-        UserBuyFlowModelAjax userBuyFlowModelAjax = userBuyFlowService.findByUserAjax(common.getCurrentUser().getId(), pageSize, page);
+        UserBuyFlowModelAjax userBuyFlowModelAjax = userBuyFlowService.findByUserAjax(common.getCurrentUser().getId(),lastFlag, pageSize, page);
         userBuyFlowModelAjax.setPublicParament("customerId=" + common.getCustomerId());
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
@@ -146,10 +182,10 @@ public class PersonalController {
     public String getOneLotteryInfo(Model model)  throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
         DeliveryModel deliveryModel = deliveryService.findByIssueId(common.getIssueId());
-        model.addAttribute("customerId",common.getCustomerId());
         //todo lhx
         String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMaindomain().trim();
         model.addAttribute("mallOrderUrl",url);
+        model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
         model.addAttribute("deliveryModel",deliveryModel);
         return "/html/personal/lotteryInfo";

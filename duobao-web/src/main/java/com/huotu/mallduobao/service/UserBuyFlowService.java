@@ -35,13 +35,14 @@ public interface UserBuyFlowService {
      */
     BuyListModelAjax ajaxFindBuyListByIssueId(Long issueId, Long page, Long pageSize) throws  Exception;
 
-
     /**
      * 中奖列表
      * @param userId
      * @return UserBuyFlowModelAjax[]
      */
-    UserBuyFlowModelAjax findByUserAjax(Long userId,Integer pageSize, Integer page) throws  Exception;
+//    UserBuyFlowModelAjax findByUserAjax(Long userId,Integer pageSize, Integer page) throws  Exception;
+    UserBuyFlowModelAjax findByUserAjax(Long userId, Long lastFlag, Integer pageSize, Integer page) throws Exception ;
+
 
     /**
      * 获取 某期夺宝中奖详细信息
@@ -61,7 +62,9 @@ public interface UserBuyFlowService {
     Page<UserBuyFlow> getMyInvolvedRecordAjax(Long userId, Integer type, Integer page, Integer pageSize);
 
 
-    RaiderListModelAjax toListRaiderListModel(Integer type,Long userId, Integer pageSize, Integer page) throws URISyntaxException;
+//    RaiderListModelAjax toListRaiderListModel(Integer type,Long userId, Integer pageSize, Integer page) throws URISyntaxException;
+
+    RaiderListModelAjax toListRaiderListModel(Integer type,Long userId,Long lastId, Integer pageSize, Integer page) throws URISyntaxException;
 
     /**
      * 商城商品id
@@ -69,4 +72,6 @@ public interface UserBuyFlowService {
      * @return
      */
     Map<String,Object> getGoodsSpec(Long goodsId) throws IOException;
+
+
 }

@@ -2,6 +2,7 @@ package com.huotu.mallduobao.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 

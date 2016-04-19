@@ -46,6 +46,7 @@ var Jload = {};
                 data: options.data,
                 async: true,
                 success: function (data) {
+
                     if (typeof(data.resultCode) != "undefined" && data.resultCode == 0) {
                         jBox.tip(data.resultMsg);
 
@@ -55,7 +56,9 @@ var Jload = {};
                         }
                         return;
                     }
+                    $("#lastFlag").val(data.LastFlag);
                     options.data.page++;
+                    options.data.lastFlag=data.LastFlag;
                     if (data.PageIndex == 1) {//初次加载
                         options.pageIndex++;
                         if (typeof options.callback === 'function')
@@ -117,16 +120,19 @@ var Jload = {};
                                 scorllDom = $("#" + options.scorllBox);
 
                             $(window).unbind("scroll");
-                            if (data.PageIndex < data.PageCount) {
-                                scorllDom.bind("scroll", function () {
-                                    Jload.nextPage(options,callback);
-                                })
-                            }
-                            else {
-                                _htmlLoad = Jload.resolveTemplete({ images: options.msgImg, msg: "已加载全部" }, _htmlLoad);
-                                Jload.createLoad(options, _htmlLoad);
-                                //scorllDom.unbind("scroll");
-                            }
+                            //if (data.PageIndex < data.PageCount) {
+                            //    scorllDom.bind("scroll", function () {
+                            //        Jload.nextPage(options,callback);
+                            //    })
+                            //}
+                            //else {
+                            //    _htmlLoad = Jload.resolveTemplete({ images: options.msgImg, msg: "已加载全部" }, _htmlLoad);
+                            //    Jload.createLoad(options, _htmlLoad);
+                            //    //scorllDom.unbind("scroll");
+                            //}
+                            scorllDom.bind("scroll", function () {
+                                Jload.nextPage(options,callback);
+                            })
                         }
                         else {
                             _htmlLoad = Jload.resolveTemplete({ images: options.msgImg, msg: "已加载全部" }, _htmlLoad);
@@ -173,7 +179,7 @@ var Jload = {};
             pageIndex: 1,
             url: "",//接口数据URL
             method: "POST",//请求方式POST|GET
-            data: { page:1, pagesize:20 },//请求参数,
+            data: { page:1, pagesize:2 },//请求参数,
             label: $element,//绑定数据标签
             Templete: "",//绑定数据模版
             dataType: "json",
