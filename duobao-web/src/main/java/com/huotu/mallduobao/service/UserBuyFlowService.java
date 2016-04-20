@@ -33,7 +33,7 @@ public interface UserBuyFlowService {
      * @return
      * @throws Exception
      */
-    BuyListModelAjax ajaxFindBuyListByIssueId(Long issueId, Long page, Long pageSize) throws  Exception;
+    BuyListModelAjax ajaxFindBuyListByIssueId(Long issueId, Long lastFlag, Long page, Long pageSize) throws  Exception;
 
     /**
      * 中奖列表

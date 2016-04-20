@@ -57,21 +57,26 @@ public class GoodsServiceImpl implements GoodsService {
     /**
      * 跳转到商品活动首页
      *
-     * @param issueId 期号Id
+     * @param goodsId 期号Id
      * @param map
      * @throws Exception
      */
     @Override
-    public void jumpToGoodsActivityIndex(Long issueId, Map<String, Object> map) throws Exception {
-        if (issueId == null) return;
+    public void jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception {
+        if (goodsId == null) return;
 
 
         WebPublicModel webPublicModel = PublicParameterHolder.getParameters();
 
         GoodsIndexModel goodsIndexModel = new GoodsIndexModel();
+
+
         //1.通过商品Id获取对应的商品
-        Issue issue = issueRepository.findOne(issueId);
-        Goods goods = issue.getGoods();
+        Goods goods = goodsRepository.findOne(goodsId);
+        Issue issue = goods.getIssue();
+        if(issue == null || goods == null || goods.getStatus().getValue() == 2){
+            throw new Exception("商品不存在或期号不存在或商品已下架");
+        }
 
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
@@ -119,6 +124,14 @@ public class GoodsServiceImpl implements GoodsService {
         map.put("issueId",goods.getIssue().getId());
         map.put("customerId",goods.getMerchantId());
         map.put("goodsIndexModel", goodsIndexModel);
+
+        //添加分享信息
+        String shareTitle = goods.getShareTitle();
+        String shareDesc = goods.getShareDescription();
+        String sharePic = commonConfigService.getResourceUri() + goods.getSharePictureUrl();
+        map.put("shareTitle", shareTitle);
+        map.put("shareDesc", shareDesc);
+        map.put("sharePic", sharePic);
     }
 
     /**
@@ -464,8 +477,8 @@ public class GoodsServiceImpl implements GoodsService {
      * @throws Exception
      */
     @Override
-    public BuyListModelAjax getBuyListByIssueId(Long issueId, Long page, Long pageSize) throws Exception{
-        BuyListModelAjax buyListModelAjax = userBuyFlowService.ajaxFindBuyListByIssueId(issueId, page, pageSize);
+    public BuyListModelAjax getBuyListByIssueId(Long issueId, Long lastFlag, Long page, Long pageSize) throws Exception{
+        BuyListModelAjax buyListModelAjax = userBuyFlowService.ajaxFindBuyListByIssueId(issueId, lastFlag, page, pageSize);
         return buyListModelAjax;
     }
 

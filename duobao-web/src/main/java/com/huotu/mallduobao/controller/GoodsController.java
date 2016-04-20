@@ -44,8 +44,8 @@ public class GoodsController {
      * @throws Exception
      */
     @RequestMapping("/index")
-    public String jumpToGoodsActivityIndex(Long issueId, Map<String, Object> map) throws Exception {
-        goodsService.jumpToGoodsActivityIndex(issueId, map);
+    public String jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception {
+        goodsService.jumpToGoodsActivityIndex(goodsId, map);
         return "/html/goods/index";
     }
 
@@ -101,8 +101,8 @@ public class GoodsController {
      */
     @RequestMapping("/getBuyListByIssueId")
     @ResponseBody
-    public BuyListModelAjax getBuyListByIssueId(Long issueId, Long pageSize, Long page) throws Exception {
-        BuyListModelAjax buyListModelAjax = goodsService.getBuyListByIssueId(issueId, page, pageSize);
+    public BuyListModelAjax getBuyListByIssueId(Long issueId, Long lastFlag, Long pageSize, Long page) throws Exception {
+        BuyListModelAjax buyListModelAjax = goodsService.getBuyListByIssueId(issueId, lastFlag, page, pageSize);
         return buyListModelAjax;
     }
 

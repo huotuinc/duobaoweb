@@ -13,11 +13,11 @@ public interface GoodsService {
 
     /**
      * 跳转到商品活动首页
-     * @param issueId  商品Id
+     * @param goodsId  商品Id
      * @param map
      * @throws Exception
      */
-    void jumpToGoodsActivityIndex(Long issueId, Map<String, Object> map) throws Exception;
+    void jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception;
 
     /**
      * 通过商品Id跳转到商品详情
@@ -67,7 +67,7 @@ public interface GoodsService {
      * @return
      * @throws Exception
      */
-    BuyListModelAjax getBuyListByIssueId(Long issueId, Long page, Long pageSize) throws Exception;
+    BuyListModelAjax getBuyListByIssueId(Long issueId, Long lastFlag, Long page, Long pageSize) throws Exception;
 
     /**
      * 更新商品的参与人数

@@ -63,22 +63,29 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
     }
 
     @Override
-    public BuyListModelAjax ajaxFindBuyListByIssueId(Long issueId, Long page, Long pageSize) throws Exception {
+    public BuyListModelAjax ajaxFindBuyListByIssueId(Long issueId, Long lastFlag, Long page, Long pageSize) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = new Sort(direction, "time");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Page<UserBuyFlow> userBuyFlowPage = userBuyFlowRepository.findAll(new Specification<UserBuyFlow>() {
-            @Override
-            public Predicate toPredicate(Root<UserBuyFlow> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Predicate predicate =  cb.equal(root.get("issue").get("id").as(Long.class), issueId);
-                return predicate;
-            }
-        }, new PageRequest(page.intValue() -1, pageSize.intValue(), sort));
+
+        StringBuilder sb = new StringBuilder("SELECT ubf FROM UserBuyFlow ubf WHERE ubf.issue.id = ?1 ");
+        if(lastFlag != null && lastFlag.intValue() > 0){
+            sb.append(" and ubf.time < ?2 ");
+        }
+        sb.append(" order by ubf.time desc");
+
+        Query query = entityManager.createQuery(sb.toString());
+        query.setParameter(1, issueId);
+        if(lastFlag != null && lastFlag.intValue() > 0){
+            query.setParameter(2, lastFlag);
+        }
+
+        query.setMaxResults(pageSize.intValue());
+        List<UserBuyFlow> userBuyFlows = query.getResultList();
+
         BuyListModelAjax buyListModelAjax = new BuyListModelAjax();
-        if(userBuyFlowPage != null){
+        if(userBuyFlows != null && userBuyFlows.size() > 0){
             List<BuyListModel> rows = new ArrayList<>();
-            for(UserBuyFlow userBuyFlow : userBuyFlowPage){
+            for(UserBuyFlow userBuyFlow : userBuyFlows){
                 BuyListModel buyListModel = new BuyListModel();
                 String head = userBuyFlow.getUser().getUserHead();
                 if(head != null){
@@ -92,11 +99,11 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 buyListModel.setPid(userBuyFlow.getId());
                 rows.add(buyListModel);
             }
+            lastFlag = userBuyFlows.get(userBuyFlows.size() - 1).getTime();
             buyListModelAjax.setRows(rows);
-            buyListModelAjax.setPageCount(userBuyFlowPage.getTotalPages());
             buyListModelAjax.setPageIndex(page.intValue());
-            buyListModelAjax.setTotal(Integer.parseInt(userBuyFlowPage.getTotalElements() + ""));
             buyListModelAjax.setPageSize(pageSize.intValue());
+            buyListModelAjax.setLastFlag(lastFlag);
         }
         return buyListModelAjax;
     }
