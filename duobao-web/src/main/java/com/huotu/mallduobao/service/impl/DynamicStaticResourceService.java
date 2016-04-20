@@ -43,7 +43,7 @@ public class DynamicStaticResourceService extends AbstractStaticResourceService 
 
     @Autowired
     private void setEnv(Environment env) {
-        String uri =  commonConfigService.getHuoBanPlusManagerResourceUrl();
+        String uri =  commonConfigService.getResourceUri();
         if (uri == null) {
             throw new IllegalStateException("请设置huotu.resourcesUri和huotu.resourcesHome属性");
         }

@@ -47,7 +47,7 @@ public interface CommonConfigService {
     /**
      * 伙伴商城管理Web资源地址
      */
-    String getHuoBanPlusManagerResourceUrl();
+    String getResourceUri();
 
     /**
      * 商城图片资源地址

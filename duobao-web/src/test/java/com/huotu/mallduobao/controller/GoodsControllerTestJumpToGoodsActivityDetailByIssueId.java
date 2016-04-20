@@ -328,7 +328,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByIssueId extends BaseT
                 goodsDetailModel.getAwardUserJoinCount().toString());
         Assert.assertNotNull("开奖时间缺失", goodsDetailModel.getAwardTime());
         Assert.assertEquals("幸运号码错误", mockIssue.getLuckyNumber(), goodsDetailModel.getLuckNumber());
-        Assert.assertEquals("用户头像不对", commonConfigService.getHuoBanPlusManagerResourceUrl() + mockUserB.getUserHead(),
+        Assert.assertEquals("用户头像不对", commonConfigService.getResourceUri() + mockUserB.getUserHead(),
                 goodsDetailModel.getAwardUserHead());
         Assert.assertNotNull("首次购买时间缺失", goodsDetailModel.getFirstBuyTime());
 

@@ -48,8 +48,8 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getHuoBanPlusManagerResourceUrl() {
-        return env.getProperty("huobanplusmanager.resource.url", "http://120.24.243.104/resources/lgh/mallduobao");
+    public String getResourceUri() {
+        return env.getProperty("huotu.resourcesUri", "http://120.24.243.104/resources/lgh/mallduobao");
     }
 
     @Override
