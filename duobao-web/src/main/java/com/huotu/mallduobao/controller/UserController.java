@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -60,7 +61,7 @@ public class UserController {
         log.info("issueId:"+issueId+";retuinfo:"+info);
         AuthEntity retuinfo=JSON.parseObject(info, AuthEntity.class);
         //进行用户注册(如果用户存在则不注册，不存在才注册)
-        User user = userService.registerUser(retuinfo, customerId);
+        User user = userService.registerUser(retuinfo, customerId,getIp(request));
 
         Issue issue=new Issue();
         if(issueId!=null&&!issueId.equals("")) {
@@ -103,6 +104,28 @@ public class UserController {
         PaysResultShowModel paysResultShowModel=shoppingService.getPayResultShowModel(orderNo);
         model.addAttribute("paysResultShowModel", paysResultShowModel);
         return "/html/shopping/payResult";
+    }
+
+    /**
+     * 获取ip地址
+     * @param request
+     * @return
+     */
+    private String getIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+            int index = ip.indexOf(",");
+            if (index != -1) {
+                return ip.substring(0, index);
+            } else {
+                return ip;
+            }
+        }
+        ip = request.getHeader("X-Real-IP");
+        if (!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+            return ip;
+        }
+        return request.getRemoteAddr();
     }
 
 }

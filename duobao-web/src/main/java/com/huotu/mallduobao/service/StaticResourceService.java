@@ -34,7 +34,7 @@ public interface StaticResourceService {
     /**
      * 用户头像文件夹
      */
-    String USER_HEAD_PATH="userhead/";
+    String USER_HEAD_PATH="/_resource/userhead/";
 
     /**
      * 红包分享图片路径

@@ -4,7 +4,6 @@ import com.huotu.mallduobao.entity.SystemConfig;
 import com.huotu.mallduobao.model.CommonVersion;
 import com.huotu.mallduobao.repository.SystemConfigRepository;
 import com.huotu.mallduobao.service.JdbcService;
-import com.thoughtworks.selenium.webdriven.commands.RunScript;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.sql.SQLException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Statement;
 
 
@@ -36,24 +36,7 @@ public class AppService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        try {
-            jdbcService.runJdbcWork(connection -> {
-                Statement statement = connection.getConnection().createStatement();
-                InputStream is = getClass().getClassLoader().getResourceAsStream("data/city.sql");
-                InputStreamReader isr = new InputStreamReader(is,"utf-8");
-                BufferedReader bis = new BufferedReader(isr);
-                String valueString = null;
-                while ((valueString=bis.readLine())!=null){
-                    statement.addBatch(valueString);
-                    statement.executeBatch();
-                    statement.clearBatch();
-                }
-            });
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         if (event.getApplicationContext().getParent() == null) {
             SystemConfig systemConfig = systemConfigRepository.findOne("DatabaseVersion");
             if (systemConfig == null) {
@@ -72,23 +55,19 @@ public class AppService implements ApplicationListener<ContextRefreshedEvent> {
                             jdbcService.runJdbcWork(connection -> {
                                 Statement statement = connection.getConnection().createStatement();
                                 String hql = "alter table ISSUE AUTO_INCREMENT=100000001";
-
                                 statement.execute(hql);
+
+                                InputStream is = getClass().getClassLoader().getResourceAsStream("data/city.sql");
+                                InputStreamReader isr = new InputStreamReader(is, "utf-8");
+                                BufferedReader bis = new BufferedReader(isr);
+                                String valueString = null;
+                                while ((valueString = bis.readLine()) != null) {
+                                    statement.execute(valueString);
+                                }
+                                isr.close();
+                                is.close();
                             });
-                            //初始化city.sql数据
-//                            jdbcService.runJdbcWork(connection -> {
-//                                Statement statement = connection.getConnection().createStatement();
-//                                InputStream is = getClass().getClassLoader().getResourceAsStream("data/city.sql");
-//                                InputStreamReader isr = new InputStreamReader(is,"utf-8");
-//                                BufferedReader bis = new BufferedReader(isr);
-//                                StringBuilder sb = new StringBuilder();
-//                                String valueString = null;
-//                                while ((valueString=bis.readLine())!=null){
-//                                    sb.append(valueString);
-//                                }
-//                                statement.addBatch(sb.toString());
-//                                statement.executeBatch();
-//                            });
+
                         } catch (Exception e) {
                             log.info("upgrade to " + CommonVersion.Version101.ordinal() + " error", e);
                         }

@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(AuthEntity authEntity,String customerId) throws IOException, URISyntaxException {
+    public User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException {
         User user=userRepository.findByWeixinOpenId(authEntity.getOpenid());
         //如果在数据库中没有这个微信信息则注册一个新的用户
         if(user==null){
@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
             user.setUsername(UUID.randomUUID().toString().replace("-",""));
             user.setWeixinOpenId(authEntity.getOpenid());
             user.setRealName(authEntity.getNickname());
+            user.setIp(ip);
 
             //设置用户头像
             String head=authEntity.getHeadimgurl();
@@ -82,10 +83,11 @@ public class UserServiceImpl implements UserService {
                 //如果商家id不为空并且不是null字符串在进行一下操作
                 user.setMerchantId(Long.parseLong(customerId));
             }
-            user=userRepository.saveAndFlush(user);
+        }else{
+            user.setIp(ip);
         }
 
-        return user;
+        return userRepository.saveAndFlush(user);
     }
 
     @Override

@@ -28,7 +28,7 @@ public interface UserService {
      * @param authEntity
      * @return
      */
-    User registerUser(AuthEntity authEntity,String customerId) throws IOException, URISyntaxException;
+    User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException;
 
     /**
      * 获取公用model

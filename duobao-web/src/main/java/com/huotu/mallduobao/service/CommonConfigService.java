@@ -39,6 +39,12 @@ public interface CommonConfigService {
     String getDuobaoApiKey();
 
     /**
+     * 上传资源的服务地址
+     * @return
+     */
+    String getResourcesHome();
+
+    /**
      * 伙伴商城管理Web资源地址
      */
     String getHuoBanPlusManagerResourceUrl();
