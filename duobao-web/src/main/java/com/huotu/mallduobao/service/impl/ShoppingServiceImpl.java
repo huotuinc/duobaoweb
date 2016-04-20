@@ -314,6 +314,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         paysResultShowModel.setIssueId(ordersItem.getIssue().getId());
         paysResultShowModel.setDetail(ordersItem.getIssue().getGoods().getTitle());
         paysResultShowModel.setNeedNumber(ordersItem.getIssue().getToAmount());
+        paysResultShowModel.setCustomerId(ordersItem.getIssue().getGoods().getMerchantId());
         paysResultShowModel.setTitle("您成功参与了1件商品的夺宝，信息如下：");
         return paysResultShowModel;
     }

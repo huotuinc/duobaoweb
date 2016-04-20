@@ -1,17 +1,20 @@
 package com.huotu.mallduobao.controller;
 
-import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.common.WeixinPayUrl;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.Orders;
 import com.huotu.mallduobao.entity.ShoppingCart;
 import com.huotu.mallduobao.entity.User;
-import com.huotu.mallduobao.model.*;
+import com.huotu.mallduobao.model.PayModel;
+import com.huotu.mallduobao.model.ResultModel;
+import com.huotu.mallduobao.model.ShoppingCartsModel;
+import com.huotu.mallduobao.model.WebPublicModel;
 import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.mallduobao.service.ShoppingService;
 import com.huotu.mallduobao.service.UserService;
+import com.huotu.mallduobao.utils.CommonEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 /**
  * Created by xhk on 2016/3/25.
@@ -53,6 +57,7 @@ public class ShoppingController {
     @ResponseBody
     public ResultModel joinToCarts(Long buyNum) { //String issueId,Long userId,
         WebPublicModel common = PublicParameterHolder.getParameters();
+        Date date=new Date();
         ResultModel resultModel = new ResultModel();
         if (common.getIssueId() == null) {
             resultModel.setMessage("添加到购物车失败！");
@@ -64,7 +69,15 @@ public class ShoppingController {
             resultModel.setMessage("商品不存在，请重新购买！");
             resultModel.setCode(404);
             return resultModel;
-        } else if (issue.getStatus() != CommonEnum.IssueStatus.going) {
+        } else if(date.before(issue.getGoods().getStartTime())){
+            resultModel.setMessage("活动还未开始，无法购买！");
+            resultModel.setCode(404);
+            return resultModel;
+        }else if(date.after(issue.getGoods().getEndTime())&&issue.getStatus()!= CommonEnum.IssueStatus.going){
+            resultModel.setMessage("活动已结束，无法购买！");
+            resultModel.setCode(404);
+            return resultModel;
+        }else if (issue.getStatus() != CommonEnum.IssueStatus.going) {
             resultModel.setMessage("商品已过期，请重新购买！");
             resultModel.setCode(404);
             return resultModel;

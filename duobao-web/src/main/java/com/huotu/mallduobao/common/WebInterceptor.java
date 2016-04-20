@@ -95,7 +95,6 @@ public class WebInterceptor implements HandlerInterceptor {
         if(request.getParameter("issueId")!=null&&request.getParameter("issueId")!="") {
             webPublicModel.setIssueId(Long.parseLong(request.getParameter("issueId")));
         }else {
-            log.info("issueId为空异常！issueId is null!");
             webPublicModel.setIssueId(null);
         }
         //获取cookies

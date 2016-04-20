@@ -23,6 +23,11 @@ public class PaysResultShowModel {
     private String detail;
 
     /**
+     * 商家id
+     */
+    private Long customerId;
+
+    /**
      * 商品总需人次
      */
     private Long needNumber;
