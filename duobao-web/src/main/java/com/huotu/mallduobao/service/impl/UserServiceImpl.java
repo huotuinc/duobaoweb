@@ -14,12 +14,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.UUID;
 
@@ -42,11 +45,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String getIndexUrl(Long issueId,Long customerId) {
-        String url = commonConfigService.getWebUrl()+ "/user/getOpid?issueId=";
-        if(issueId!=null) {
-            url =url + issueId;
-        }
+    public String getIndexUrl(HttpServletRequest request,Long customerId) throws UnsupportedEncodingException {
+        String url = commonConfigService.getWebUrl() + "/user/getOpid?redirectUrl=" + URLEncoder.encode(request.getRequestURL()
+                + (StringUtils.isEmpty(request.getQueryString()) ? "" : "?" + request.getQueryString()), "utf-8");
         return url+"&customerId="+customerId;
     }
 
@@ -121,10 +122,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getWeixinAuthUrl(WebPublicModel common) throws UnsupportedEncodingException {
+    public String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws UnsupportedEncodingException {
+
 
         //微信授权回调url，跳转到index
-        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(common.getIssueId(),common.getCustomerId()), "utf-8");
+        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(request,common.getCustomerId()), "utf-8");
         WeixinAuthUrl.customerid=common.getCustomerId();
         String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
         return apiUrl;

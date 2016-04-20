@@ -2,11 +2,8 @@ package com.huotu.mallduobao.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.huotu.mallduobao.common.AuthEntity;
-import com.huotu.mallduobao.common.PublicParameterHolder;
-import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.model.PaysResultShowModel;
-import com.huotu.mallduobao.model.WebPublicModel;
 import com.huotu.mallduobao.service.GoodsService;
 import com.huotu.mallduobao.service.IssueService;
 import com.huotu.mallduobao.service.ShoppingService;
@@ -51,37 +48,34 @@ public class UserController {
     private IssueService issueService;
     /**
      * 获取微信的Auth2认证之后的用户openid
-     * @param issueId 期号id
+     * @param customerId 商户id
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/getOpid", method = RequestMethod.GET)
-    public String getOpid(HttpServletRequest request,String customerId,String issueId,Map<String, Object> map) throws Exception {
+    public String getOpid(HttpServletRequest request,String customerId,String redirectUrl,Map<String, Object> map) throws Exception {
+        log.info("redirectUrl:"+redirectUrl);
         String info=request.getParameter("retuinfo");
-        log.info("issueId:"+issueId+";retuinfo:"+info);
         AuthEntity retuinfo=JSON.parseObject(info, AuthEntity.class);
         //进行用户注册(如果用户存在则不注册，不存在才注册)
         User user = userService.registerUser(retuinfo, customerId,getIp(request));
 
-        Issue issue=new Issue();
-        if(issueId!=null&&!issueId.equals("")) {
-            issue= issueService.getIssueById(issueId);
-        }
+
         //将当前用户写入ThreadLocal
-        WebPublicModel webPublicModel=userService.getWebPublicModel(user,issue);
-        PublicParameterHolder.putParameters(webPublicModel);
+        //WebPublicModel webPublicModel=userService.getWebPublicModel(user,issue);
+        //PublicParameterHolder.putParameters(webPublicModel);
 
 
         Cookie custId=new Cookie("customerId",customerId);
         custId.setMaxAge(60*10); //单位是秒 todo 正式上线的时候时间设置长一点
         custId.setPath("/");
-        Cookie userId=new Cookie("userId",String.valueOf(webPublicModel.getCurrentUser().getId()));
+        Cookie userId=new Cookie("userId",String.valueOf(user.getId()));
         userId.setMaxAge(60*10);
         userId.setPath("/");
         Cookie openId=new Cookie("openId",retuinfo.getOpenid());
         openId.setMaxAge(60*10);
         openId.setPath("/");
-        Cookie sign=new Cookie("sign",webPublicModel.getSign());
+        Cookie sign=new Cookie("sign",userService.getSign(user));
         sign.setMaxAge(60*10);
         sign.setPath("/");
         response.addCookie(custId);
@@ -89,9 +83,9 @@ public class UserController {
         response.addCookie(openId);
         response.addCookie(sign);
 
-        goodsService.jumpToGoodsActivityIndex(Long.parseLong(issueId), map);
+        //goodsService.jumpToGoodsActivityIndex(Long.parseLong(issueId), map);
 
-        return "/html/goods/index";
+        return "redirect:" + redirectUrl;
     }
 
     /**

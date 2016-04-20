@@ -121,7 +121,7 @@ public class ShoppingController {
 
         ShoppingCart shoppingCart = shoppingService.allToShoppingCarts(issue, user);
 
-        String openidUrl = userService.getWeixinAuthUrl(common);
+        //String openidUrl = userService.getWeixinAuthUrl(common);
 
         resultModel.setUrl("../shopping/toAllPay?shoppingCartId=" + shoppingCart.getId() +
                 "&issueId=" + common.getIssueId() +

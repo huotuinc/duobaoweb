@@ -6,6 +6,7 @@ import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.model.WebPublicModel;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -18,10 +19,10 @@ public interface UserService {
 
     /**
      * 由于未登陆直接返回首页
-     * @param issueId
+     * @param customerId
      * @return
      */
-    String getIndexUrl(Long issueId,Long customerId);
+    String getIndexUrl(HttpServletRequest request,Long customerId) throws UnsupportedEncodingException;
 
     /**
      * 通过openid注册一个用户
@@ -58,5 +59,5 @@ public interface UserService {
      * @param common
      * @return
      */
-    String getWeixinAuthUrl(WebPublicModel common) throws UnsupportedEncodingException;
+    String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws UnsupportedEncodingException;
 }

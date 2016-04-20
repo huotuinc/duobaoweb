@@ -41,7 +41,7 @@ public class WebInterceptor implements HandlerInterceptor {
 
         if(!environment.acceptsProfiles("development")) {
             //在非测试环境下进行正常请求
-            if (request.getParameter("customerId") == null || webPublicModel.getIssueId() == null) {
+            if (request.getParameter("customerId") == null) {
                 log.info("初始化认证失败啦！！！！！！");
                 String errorUrl="/html/error.html";
                 //跳转到错误页面
@@ -59,7 +59,7 @@ public class WebInterceptor implements HandlerInterceptor {
                 webPublicModel.setCustomerId(Long.parseLong(request.getParameter("customerId")));
             }
             PublicParameterHolder.putParameters(webPublicModel);
-            String openidUrl=userService.getWeixinAuthUrl(webPublicModel);
+            String openidUrl=userService.getWeixinAuthUrl(request,webPublicModel);
             response.sendRedirect(openidUrl);
             return false;
                 //进行微信认证

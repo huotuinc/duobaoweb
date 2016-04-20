@@ -110,9 +110,13 @@ public class PayServiceImpl implements PayService {
             ordersItem = ordersItemRepository.saveAndFlush(ordersItem);
             orders.setStatus(CommonEnum.OrderStatus.fail);
 
-//            resultModel.setResultType(CommonEnum.PayResult.turnToBuyFail);
-//            resultModel.setSuccess(true);
-//            return resultModel;
+            orders.setPayType(purchaseSource);
+            orders.setOutOrderNo(outOrderNo);
+            orders = ordersRepository.saveAndFlush(orders);
+
+            resultModel.setResultType(CommonEnum.PayResult.turnToBuyFail);
+            resultModel.setSuccess(true);
+            return resultModel;
         } else {
             log.info("开始正常的购买!");
             //正常的购买
