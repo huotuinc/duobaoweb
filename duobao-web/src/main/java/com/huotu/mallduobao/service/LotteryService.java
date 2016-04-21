@@ -1,13 +1,9 @@
 package com.huotu.mallduobao.service;
 
-import com.huotu.mallduobao.entity.Goods;
 import com.huotu.mallduobao.model.admin.WebIssueSearchModel;
 import com.huotu.mallduobao.model.admin.WebLotteryInfoModel;
 import com.huotu.mallduobao.model.admin.WebPersonnalIssueListModel;
 import com.huotu.mallduobao.model.admin.WebUserNumberModel;
-import com.huotu.mallduobao.utils.CommonEnum;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,12 +36,4 @@ public interface LotteryService {
      */
     List<WebUserNumberModel> getMyRaiderNumbers(Long userId, Long issueId) throws Exception;
 
-    /**
-     * 更新商品状态
-     * @param goodsId
-     * @param status
-     * @return
-     */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    Goods updateGoodsStatus(Long goodsId, CommonEnum.GoodsStatus status);
 }

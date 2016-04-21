@@ -67,7 +67,6 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private GoodsRestRepository goodsRestRepository;
 
-
     @Autowired
     private CommonConfigService commonConfigService;
 
@@ -102,7 +101,7 @@ public class GoodsServiceImpl implements GoodsService {
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
             goodsIndexModel.setId(goods.getId());
-            goodsIndexModel.setDefaultPictureUrl(commonConfigService.getResourceUri() + goods.getDefaultPictureUrl());
+            goodsIndexModel.setDefaultPictureUrl(staticResourceService.getResource(goods.getDefaultPictureUrl()).toString());
             goodsIndexModel.setStartTime(goods.getStartTime().getTime());
             goodsIndexModel.setEndTime(goods.getEndTime().getTime());
             issue = goods.getIssue();
@@ -145,7 +144,7 @@ public class GoodsServiceImpl implements GoodsService {
         //添加分享信息
         String shareTitle = goods.getShareTitle();
         String shareDesc = goods.getShareDescription();
-        String sharePic = commonConfigService.getResourceUri() + goods.getSharePictureUrl();
+        String sharePic =  staticResourceService.getResource(goods.getSharePictureUrl()).toString();
         map.put("shareTitle", shareTitle);
         map.put("shareDesc", shareDesc);
         map.put("sharePic", sharePic);
@@ -182,7 +181,7 @@ public class GoodsServiceImpl implements GoodsService {
             if (pictures != null) {
                 String[] pics = pictures.split(",");
                 for (int i = 0; i < pics.length; ++i) {
-                    picList.add(commonConfigService.getResourceUri()  + pics[i]);
+                    picList.add(staticResourceService.getResource(pics[i]).toString());
                 }
                 goodsDetailModel.setPictureUrls(picList);
             }
@@ -295,7 +294,7 @@ public class GoodsServiceImpl implements GoodsService {
                 if (pictures != null) {
                     String[] pics = pictures.split(",");
                     for (int i = 0; i < pics.length; ++i) {
-                        picList.add(commonConfigService.getResourceUri()  + pics[i]);
+                        picList.add(staticResourceService.getResource(pics[i]).toString());
                     }
                     goodsDetailModel.setPictureUrls(picList);
                 }
@@ -430,7 +429,7 @@ public class GoodsServiceImpl implements GoodsService {
             String sign = "appid=" + apiid + "&timestamp=" + curTime + appsecrect;
             sign = DigestUtils.md5DigestAsHex(sign.toString().getBytes("UTF-8")).toLowerCase();
             res = HttpHelper.getRequest(mallApi + "/system?appid=" + apiid + "&timestamp=" + curTime + "&sign=" + sign);
-            res = JsonPath.read(res, "$.mallResourceUriRoot");
+            res = JsonPath.read(res, "$.resourceUriRoot");
         }catch (Exception e){
             e.printStackTrace();
             res= "";
@@ -488,7 +487,7 @@ public class GoodsServiceImpl implements GoodsService {
                 if(pictureUrls != null){
                     String[] pics = pictureUrls.split(",");
                     for(int i = 0; i < pics.length; ++i){
-                        pictureUrlList.add(commonConfigService.getResourceUri() + pics[i]);
+                        pictureUrlList.add(staticResourceService.getResource(pics[i]).toString());
                     }
                 }
                 selGoodsSpecModel.setPictureUrlList(pictureUrlList);
@@ -849,7 +848,8 @@ public class GoodsServiceImpl implements GoodsService {
                     }else{
                         if(status == CommonEnum.GoodsStatus.uncheck) {
                             map.put("msg", "审核成功但商品无库存,不能上架");
-                            lotteryService.updateGoodsStatus(goodsId, CommonEnum.GoodsStatus.down);
+                            duobaoGoods.setStatus(CommonEnum.GoodsStatus.down);
+                            goodsRepository.save(duobaoGoods);
                             map.put("msgCode", 1);
                         }else{
                             map.put("msg", "商品无库存,不能上架");
@@ -866,7 +866,6 @@ public class GoodsServiceImpl implements GoodsService {
                 }else{
                     map.put("msg", "商品上架失败");
                 }
-                lotteryService.updateGoodsStatus(goodsId, CommonEnum.GoodsStatus.down);
                 map.put("code", 0);
                 throw  new Exception(e);
             }

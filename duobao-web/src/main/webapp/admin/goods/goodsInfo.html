@@ -135,9 +135,8 @@
                                         </tr>
                                         <tr>
                                             <th>分享描述:</th>
-                                            <td>
-                                                <textarea id="content" name="introduction" class="input-normal" th:text="*{shareDescription}">
-                                                </textarea>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <textarea id="content" name="shareDescription" cols="80" rows="4" th:text="*{shareDescription}"></textarea>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -161,14 +160,5 @@
 
 
 <div class="blank10"></div>
-<script>
-    //初始化进页面
-    function firstLoad() {
-        window.editor.readonly(true);
-    }
-</script>
-    <script charset="utf-8" src="richText/kindeditor-min.js" th:src="@{/resource/3rdParty/kindeditor/kindeditor-min.js}"></script>
-    <script charset="utf-8" src="richText/lang/zh_CN.js" th:src="@{/resource/3rdParty/kindeditor/lang/zh_CN.js}"></script>
-    <script charset="utf-8" src="richText/init.js" th:src="@{/resource/3rdParty/kindeditor/init.js}"></script>
 </body>
 </html>

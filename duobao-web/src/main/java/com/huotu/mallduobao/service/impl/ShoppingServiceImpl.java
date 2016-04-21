@@ -11,10 +11,7 @@ import com.huotu.mallduobao.repository.OrdersItemRepository;
 import com.huotu.mallduobao.repository.OrdersRepository;
 import com.huotu.mallduobao.repository.ShoppingCartRepository;
 import com.huotu.mallduobao.repository.UserRepository;
-import com.huotu.mallduobao.service.CommonConfigService;
-import com.huotu.mallduobao.service.RaidersCoreService;
-import com.huotu.mallduobao.service.SecurityService;
-import com.huotu.mallduobao.service.ShoppingService;
+import com.huotu.mallduobao.service.*;
 import com.huotu.mallduobao.utils.CommonEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +58,8 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Autowired
     private GoodsRestRepository goodsRestRepository;
 
+    @Autowired
+    private StaticResourceService staticResourceService;
 
 
     @Override
@@ -104,7 +103,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             shoppingCartsModel.setPerMoney(shoppingCarts.get(0).getIssue().getPricePercentAmount().doubleValue());
             shoppingCartsModel.setLeftNumber(left);
             //得到图片绝对地址
-            shoppingCartsModel.setImgUrl(commonConfigService.getResourceUri() + shoppingCarts.get(0).getIssue().getGoods().getDefaultPictureUrl());
+            shoppingCartsModel.setImgUrl(staticResourceService.getResource(shoppingCarts.get(0).getIssue().getGoods().getDefaultPictureUrl()).toString());
             //如果购买量大于库存量，默认调整为库存量
             shoppingCartsModel.setBuyNum(shoppingCarts.get(0).getBuyAmount() > left ? left : shoppingCarts.get(0).getBuyAmount());
 

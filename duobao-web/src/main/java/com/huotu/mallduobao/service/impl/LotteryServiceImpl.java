@@ -16,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -160,14 +158,5 @@ public class LotteryServiceImpl implements LotteryService {
             list.add(webUserNumberModel);
         }
         return list;
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Override
-    public com.huotu.mallduobao.entity.Goods updateGoodsStatus(Long goodsId,  CommonEnum.GoodsStatus status) {
-        com.huotu.mallduobao.entity.Goods duobaoGoods =  duoBaoGoodsRepository.getOne(goodsId);
-        duobaoGoods.setStatus(status);
-        duoBaoGoodsRepository.saveAndFlush(duobaoGoods);
-        return duobaoGoods;
     }
 }

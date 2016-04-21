@@ -9,6 +9,7 @@ import com.huotu.mallduobao.service.CommonConfigService;
 import com.huotu.mallduobao.service.GoodsService;
 import com.huotu.mallduobao.service.StaticResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,10 @@ public class DuoBaoGoodsController {
     @Autowired
     private CommonConfigService commonConfigService;
 
+    @Autowired
+    private Environment env;
+
+
 
     /**
      * 获取夺宝活动商品列表
@@ -53,7 +58,12 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
     @RequestMapping(value = "/getDuoBaoGoodsList", method = RequestMethod.GET)
-    public String getDuoBaoGoodsList(Long customerId, DuoBaoGoodsSearchModel duoBaoGoodsSearchModel, Map<String, Object> map) throws  Exception{
+    public String getDuoBaoGoodsList(@CustomerId Long customerId, DuoBaoGoodsSearchModel duoBaoGoodsSearchModel, Map<String, Object> map) throws  Exception{
+
+        if(env.acceptsProfiles("development")){
+            customerId = 3447L;
+        }
+
 
         if(customerId == null){
            map.put("message", "customerId不存在");
@@ -80,7 +90,13 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
     @RequestMapping(value = "/getMallGoodsList", method = RequestMethod.GET)
-    public String getMallGoodsList(Long customerId, MallGoodsSearchModel mallGoodsSearchModel, Map<String, Object> map) throws  Exception{
+    public String getMallGoodsList(@CustomerId Long customerId, MallGoodsSearchModel mallGoodsSearchModel, Map<String, Object> map) throws  Exception{
+
+        if(env.acceptsProfiles("development")){
+            customerId = 3447L;
+        }
+
+
         if(customerId == null){
             map.put("message", "customerId不存在");
             return "/admin/error";
@@ -103,7 +119,13 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
     @RequestMapping(value = "/jumpToAddDuoBaoGoods", method = RequestMethod.GET)
-    public String jumpToAddDuoBaoGoods(Long customerId, Map<String, Object> map) throws Exception{
+    public String jumpToAddDuoBaoGoods(@CustomerId Long customerId, Map<String, Object> map) throws Exception{
+
+        if(env.acceptsProfiles("development")){
+            customerId = 3447L;
+        }
+
+
         if(customerId == null){
             map.put("message", "customerId不存在");
             return "/admin/error";
@@ -121,14 +143,21 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
     @RequestMapping(value = "/saveDuoBaoGoods")
-    public String saveDuoBaoGoods(Long customerId,DuoBaoGoodsInputModel duoBaoGoodsInputModel, Map<String, Object> map) throws Exception {
+    public String saveDuoBaoGoods(@CustomerId Long customerId,DuoBaoGoodsInputModel duoBaoGoodsInputModel, Map<String, Object> map) throws Exception {
+
+
+        if(env.acceptsProfiles("development")){
+            customerId = 3447L;
+        }
+
+
         if(customerId == null){
             map.put("message", "customerId不存在");
             return "/admin/error";
         }
 
         duoBaoGoodsService.saveDuoBaoGoods(duoBaoGoodsInputModel);
-        return "redirect:/duobao/getDuoBaoGoodsList?customerId="+customerId;
+        return "redirect:/admin/getDuoBaoGoodsList?customerId="+customerId;
     }
 
     /**
@@ -139,7 +168,14 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
    @RequestMapping(value = "/jumpToUpdateBaoGoods", method = RequestMethod.GET)
-   public String jumpToUpdateBaoGoods(Long customerId,Long goodsId, Map<String, Object> map) throws Exception{
+   public String jumpToUpdateBaoGoods(@CustomerId Long customerId,Long goodsId, Map<String, Object> map) throws Exception{
+
+
+       if(env.acceptsProfiles("development")){
+           customerId = 3447L;
+       }
+
+
        if(customerId == null){
            map.put("message", "customerId不存在");
            return "/admin/error";
@@ -159,7 +195,7 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
    @RequestMapping(value = "/getDuoBaoGoodsDatailInfo")
-   public String getDuoBaoGoodsDatailInfo(Long goodsId, Map<String, Object> map) throws Exception{
+   public String getDuoBaoGoodsDatailInfo(@CustomerId Long goodsId, Map<String, Object> map) throws Exception{
        duoBaoGoodsService.getDuoBaoGoodsDatailInfo(goodsId, map);
       return "/admin/goods/goodsInfo";
    }
@@ -242,7 +278,14 @@ public class DuoBaoGoodsController {
      * @return
      */
     @RequestMapping("/getDuoBaoGoodsShareAddress")
-    public String getDuoBaoGoodsShareAddress(Long customerId, Long goodsId, Model model){
+    public String getDuoBaoGoodsShareAddress(@CustomerId Long customerId, Long goodsId, Model model){
+
+
+        if(env.acceptsProfiles("development")){
+            customerId = 3447L;
+        }
+
+
         if(customerId == null){
             model.addAttribute("message", "customerId不存在");
             return "/admin/error";

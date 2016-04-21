@@ -205,7 +205,7 @@
         <dependency>
             <groupId>com.huotu.huobanplus</groupId>
             <artifactId>common-client</artifactId>
-            <version>1.4.1-SNAPSHOT</version>
+            <version>1.4.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>

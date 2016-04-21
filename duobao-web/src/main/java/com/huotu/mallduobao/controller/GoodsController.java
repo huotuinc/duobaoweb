@@ -8,7 +8,6 @@ import com.huotu.mallduobao.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,13 +26,8 @@ public class GoodsController {
     private static Log log = LogFactory.getLog(GoodsController.class);
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private GoodsService goodsService;
 
-    @Autowired
-    private GoodsRepository goodsRepository;
 
     /**
      * 跳转到商品活动的首页
@@ -45,6 +39,11 @@ public class GoodsController {
      */
     @RequestMapping("/index")
     public String jumpToGoodsActivityIndex(Long goodsId, Map<String, Object> map) throws Exception {
+        if(goodsId == null){
+            map.put("message", "商品ID不能为空");
+            return "/html/error";
+        }
+
         goodsService.jumpToGoodsActivityIndex(goodsId, map);
         return "/html/goods/index";
     }
@@ -60,6 +59,11 @@ public class GoodsController {
      */
     @RequestMapping("/detailByGoodsId")
     public String jumpToGoodsActivityDetailByGoodsId(Long goodsId, Map<String, Object> map) throws Exception {
+        if(goodsId == null){
+            map.put("message", "商品ID不能为空");
+            return "/html/error";
+        }
+
         goodsService.jumpToGoodsActivityDetailByGoodsId(goodsId, map);
         return "/html/goods/detail";
     }
@@ -74,6 +78,13 @@ public class GoodsController {
      */
     @RequestMapping("/detailByIssueId")
     public String jumpToGoodsActivityDetailByIssueId(Long issueId, Map<String, Object> map) throws Exception {
+        if(issueId == null){
+            map.put("message", "期号ID不能为空");
+            return "/html/error";
+        }
+
+
+
         goodsService.jumpToGoodsActivityDetailByIssueId(issueId, map);
         return "/html/goods/detail";
     }
@@ -88,6 +99,12 @@ public class GoodsController {
      */
     @RequestMapping("/imageTextDetail")
     public String jumpToImageTextDetail(Long goodsId, Map<String, Object> map) throws Exception {
+        if(goodsId == null){
+            map.put("message", "商品ID不能为空");
+            return "/html/error";
+        }
+
+
         goodsService.jumpToImageTextDetail(goodsId, map);
         return "/html/goods/imageTextDetail";
     }
@@ -117,6 +134,11 @@ public class GoodsController {
      */
     @RequestMapping("/getCountResultByIssueId")
     public String getCountResultByIssueId(Long issueId, Map<String, Object> map) throws Exception {
+        if(issueId == null){
+            map.put("message", "期号ID不能为空");
+            return "/html/error";
+        }
+
         goodsService.getCountResultByIssueId(issueId, map);
         return "/html/goods/countResult";
     }
