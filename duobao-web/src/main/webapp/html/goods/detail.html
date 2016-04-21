@@ -255,6 +255,7 @@
   var andStr;
   var lastId = 0;
   var customerId = /*[[${customerId}]]*/'';
+  var onclickpay=0;
 
   $(function(){
 
@@ -439,10 +440,14 @@
   }
 
   var buy=function(){
+    if(onclickpay==1){
+      return false;
+    }
+    onclickpay=1;
     var buyNum=Number($("#buyNum").val());
     var issueId=/*[[${issueId}]]*/'';
     var customerId=/*[[${customerId}]]*/'';
-    shoppingBuy(buyNum,issueId,customerId);
+    shoppingBuy(buyNum,issueId,customerId,onclickpay);
   }
 
   var allBuy=function(){
