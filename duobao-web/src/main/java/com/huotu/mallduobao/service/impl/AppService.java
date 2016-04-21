@@ -4,6 +4,7 @@ import com.huotu.mallduobao.entity.SystemConfig;
 import com.huotu.mallduobao.model.CommonVersion;
 import com.huotu.mallduobao.repository.SystemConfigRepository;
 import com.huotu.mallduobao.service.JdbcService;
+import com.thoughtworks.selenium.webdriven.commands.RunScript;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 

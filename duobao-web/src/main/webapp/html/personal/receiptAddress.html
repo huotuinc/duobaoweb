@@ -79,11 +79,11 @@
             });
 
             $("#submitFrom").click(function () {
-
-                $("#details").val($("#province  option:selected").text()+','+$("#city  option:selected").text()+','+$("#county  option:selected").text()+','+$("#details").val());
-                if($("#receiver").val()=='' or $("#mobile").val()=='' or $("#province").val()=='' or  $("#city").val()=='' or $("#orcounty").val()=='' or $("#details").val()=='' ){
+                if($("#receiver").val()=='' || $("#mobile").val()=='' || $("#province").val()=='' ||  $("#city").val()=='' || $("#orcounty").val()=='' || $("#details").val()=='' ){
+                    $.jBox.tip("请填写完整收货信息在提交...");
                     return ;
                 }
+                $("#details").val($("#province  option:selected").text()+','+$("#city  option:selected").text()+','+$("#county  option:selected").text()+','+$("#details").val());
                 $.jBox.tip("正在提交...", "loading");
                 $("#form1").submit();
             });

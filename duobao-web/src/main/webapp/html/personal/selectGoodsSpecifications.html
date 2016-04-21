@@ -131,13 +131,27 @@
                 });
                 //提交
                 $("#submit").click(function(){
-                    if(flag){
-                        if(productId!=0){
-                            $.jBox.tip("正在提交...", "loading");
-                            $("#form1").submit();
+                    if(productList.length>1){
+                        if(flag){
+                            if(productId!=0){
+                                $.jBox.tip("正在提交...", "loading");
+                                $("#form1").submit();
+                            }
+                        }else{
+                            $.jBox.tip("请选择规格，如库存不足请联系客服。")
                         }
                     }else{
-                        $.jBox.tip("请选择规格，如库存不足请联系客服。")
+                        if(productList[0].stock-productList[0].freeze>0){
+                            productId = productList[0].id;
+                            $("#productId").val(productId);
+                            $("#productName").val(productList[0].spec);
+                            $("#skuStock").show();
+                            $("#quehuo").hide();
+                            $.jBox.tip("正在提交...", "loading");
+                            $("#form1").submit();
+                        }else{
+                            $.jBox.tip("请选择规格，如库存不足请联系客服。")
+                        }
                     }
                 });
             });

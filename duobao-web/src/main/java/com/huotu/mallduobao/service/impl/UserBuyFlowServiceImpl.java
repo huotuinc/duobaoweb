@@ -2,6 +2,8 @@ package com.huotu.mallduobao.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.huotu.huobanplus.common.entity.support.ProductSpecification;
+import com.huotu.huobanplus.common.entity.support.ProductSpecifications;
 import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.mallduobao.entity.Delivery;
 import com.huotu.mallduobao.entity.UserBuyFlow;
@@ -199,7 +201,9 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 lastFlag = userBuyFlowModel.getTime();
                 rows.add(userBuyFlowModel);
             }
-            lastFlag = rows.get(rows.size()-1).getTime();
+            if(rows.size()>0){
+                lastFlag = rows.get(rows.size()-1).getTime();
+            }
             userBuyFlowModelAjax.setLastFlag(lastFlag);
             userBuyFlowModelAjax.setRows(rows);
             userBuyFlowModelAjax.setPageIndex(page);
@@ -430,7 +434,6 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
         if(map!=null) {
             returnMap = new HashMap<>();
             mgsList = new ArrayList<>();
-            List<Product> productList = productRestRepository.findByGoods(goods);
 
             for (Map.Entry<Long,String> entry: map.entrySet()){
                 MallGoodsSpecificationsModel mgs = new MallGoodsSpecificationsModel();
@@ -438,6 +441,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 mgs.setName(entry.getValue());
                 mgsList.add(mgs);
             }
+
             SpecDescriptions specDescriptions = goods.getSpecDescriptions();
             for(Map.Entry<Long,List<SpecDescription>> entry:specDescriptions.entrySet()){
                 for (int i=0; i< mgsList.size(); i++){
@@ -448,6 +452,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 }
             }
             returnMap.put("mgsList",mgsList);
+            List<Product> productList = productRestRepository.findByGoods(goods);
             List<MallProductSpecModel> list = new ArrayList<>();
             for(Product product :productList){
                 MallProductSpecModel mallSpecModel = new MallProductSpecModel();
@@ -458,6 +463,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
                 list.add(mallSpecModel);
             }
             returnMap.put("productList",list);
+
         }
         return returnMap;
     }

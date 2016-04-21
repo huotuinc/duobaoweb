@@ -128,7 +128,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         map.put("timestamp", date.getTime()+ "");
         String sign = getSign(map);
         map.put("sign", sign);
-        //todo lhx
         String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMaindomain().trim()+"/api/order.aspx";
 //        url = "http://192.168.1.16:8899/api/order.aspx";
         String json = HttpHelper.postRequest(url, map);

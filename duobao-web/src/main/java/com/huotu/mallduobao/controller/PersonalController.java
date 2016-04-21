@@ -68,23 +68,6 @@ public class PersonalController {
         return "/html/personal/raiderList";
     }
 
-//    /**
-//     * 查看我的参与记录列表
-//     * @param type       层级
-//     * @param pageSize   每页条数
-//     * @param page       页数
-//     * @throws IOException
-//     */
-//    @RequestMapping(value = "/getMyInvolvedRecordAjax", method = {RequestMethod.POST})
-//    @ResponseBody
-//    public RaiderListModelAjax getMyInvolvedRecordAjax(Model model,Integer type, Integer pageSize, Integer page) throws IOException, URISyntaxException {
-//        WebPublicModel common = PublicParameterHolder.getParameters();
-//        model.addAttribute("customerId",common.getCustomerId());
-//        model.addAttribute("issueId",common.getIssueId());
-//        RaiderListModelAjax raiderListAjaxModel= userBuyFlowService.toListRaiderListModel(type,common.getCurrentUser().getId(),pageSize,page);
-//        raiderListAjaxModel.setPublicParament("customerId=" + common.getCustomerId());
-//        return raiderListAjaxModel;
-//    }
     /**
      * 查看我的参与记录列表
      * @param type       层级
@@ -136,23 +119,6 @@ public class PersonalController {
         return "/html/personal/raiderList";
     }
 
-//    /**
-//     * 获取中奖列表
-//     * @param pageSize
-//     * @param page
-//     * @return
-//     * @throws Exception
-//     */
-//    @RequestMapping(value = "/getMyLotteryListAjax" , method = RequestMethod.POST)
-//    @ResponseBody
-//    public UserBuyFlowModelAjax getMyLotteryListAjax(Model model,Integer pageSize, Integer page) throws Exception {
-//        WebPublicModel common = PublicParameterHolder.getParameters();
-//        UserBuyFlowModelAjax userBuyFlowModelAjax = userBuyFlowService.findByUserAjax(common.getCurrentUser().getId(), pageSize, page);
-//        userBuyFlowModelAjax.setPublicParament("customerId=" + common.getCustomerId());
-//        model.addAttribute("customerId",common.getCustomerId());
-//        model.addAttribute("issueId",common.getIssueId());
-//        return userBuyFlowModelAjax;
-//    }
 
     /**
      * 获取中奖列表
@@ -252,7 +218,6 @@ public class PersonalController {
         model.addAttribute("issueId",common.getIssueId());
         return JSONObject.toJSONString(cityRepository.findByParentId(parentId));
     }
-
 
     /**
      * 添加收货地址
