@@ -1,4 +1,4 @@
-var data = {pageSize: 2 ,page: 1, lastFlag:0,  issueId: $("#issueId").val(),customerId: $("#customerId").val()};
+var data = {pageSize: 10 ,page: 1, lastFlag:0,  issueId: $("#issueId").val(),customerId: $("#customerId").val()};
 $(function () {
     var url = "getBuyListByIssueId";
     var stemplete = "#detailTemplate";

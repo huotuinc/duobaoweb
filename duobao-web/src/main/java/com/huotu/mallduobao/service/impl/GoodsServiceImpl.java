@@ -115,14 +115,10 @@ public class GoodsServiceImpl implements GoodsService {
         }
 
         //6.获取该商品所有的参与次数 todo
-        List<Issue> issues = issueRepository.findAllIssueByGoodsId(goods.getId());
         Long attentAmount = 0L;
-        for(Issue i : issues){
-            if(i.getAttendAmount() != null){
-                attentAmount += i.getAttendAmount();
-            }
-        }
-         goodsIndexModel.setJoinCount(attentAmount);
+        attentAmount = attentAmount + (issue.getAttendAmount() == null ? 0L : issue.getAttendAmount());
+        attentAmount = attentAmount + (goods.getAttendAmount() == null ? 0L : goods.getAttendAmount());
+        goodsIndexModel.setJoinCount(attentAmount);
 
         map.put("issueId",goods.getIssue().getId());
         map.put("customerId",goods.getMerchantId());
@@ -135,6 +131,7 @@ public class GoodsServiceImpl implements GoodsService {
         map.put("shareTitle", shareTitle);
         map.put("shareDesc", shareDesc);
         map.put("sharePic", sharePic);
+        map.put("andStr", "&");
     }
 
     /**
@@ -214,7 +211,7 @@ public class GoodsServiceImpl implements GoodsService {
                             goodsDetailModel.setAwardUserHead(staticResourceService.getResource(head).toString());
                         }
 
-                        goodsDetailModel.setAwardUserJoinCount(userBuyFlowService.findByUserIdAndIssuId(awardUser.getId(), issue.getId()).size() + 0L);
+                        goodsDetailModel.setAwardUserJoinCount(userNumberService.getMyRaiderNumbers(awardUser.getId(), issue.getId()).getAmount() + 0L);
                     }
 
                     goodsDetailModel.setAwardTime(issue.getAwardingDate());
@@ -321,7 +318,7 @@ public class GoodsServiceImpl implements GoodsService {
                     if (head != null) {
                         goodsDetailModel.setAwardUserHead(staticResourceService.getResource(head).toString());
                     }
-                    goodsDetailModel.setAwardUserJoinCount(userBuyFlowService.findByUserIdAndIssuId(awardUser.getId(), issue.getId()).size() + 0L);
+                    goodsDetailModel.setAwardUserJoinCount(userNumberService.getMyRaiderNumbers(awardUser.getId(), issue.getId()).getAmount() + 0L);
                 }
 
                 goodsDetailModel.setAwardTime(issue.getAwardingDate());

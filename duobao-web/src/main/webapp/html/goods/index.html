@@ -50,15 +50,13 @@
     <p class="sycy">已有<span class="red tit_rem_big_big"><span th:text="*{joinCount}"></span></span>人正在参与</p>
 
     <div th:if="*{joined}" class="syabk" style="display:block">
-        <button class="buttonan tit_rem_big_s" type="button">
-            <a href="goods/detail.html"
-               th:href="@{/goods/detailByIssueId(issueId=*{issueId}, customerId=${customerId})}">继续购买</a>
+        <button class="buttonan tit_rem_big_s" type="button" onclick="javascript:jumpToDetail()">
+            继续购买
         </button>
     </div>
     <div th:if="*{!joined}" class="syabk" style="display:block">
-        <button class="buttonan tit_rem_big_s" type="button">
-            <a href="goods/detail.html"
-               th:href="@{/goods/detailByGoodsId(goodsId=*{id}, issueId=*{issueId}, customerId=${customerId})}">参与1元夺宝</a>
+        <button class="buttonan tit_rem_big_s" type="button" onclick="javascript:jumpToDetail()">
+            参与1元夺宝
         </button>
     </div>
 
@@ -72,9 +70,8 @@
         </button>
     </div>
     <div th:if="*{logined}" class="syabk" style="display:block">
-        <button class="buttonan huang tit_rem_big_s" type="button" onclick="">
-            <a href="personal/list.html"
-               th:href="@{/personal/getMyInvolvedRecord(issueId=*{issueId},customerId=${customerId},type=0)}">查看我的参与</a>
+        <button class="buttonan huang tit_rem_big_s" type="button" onclick="javascript:getMyInvolvedRecord()">
+             查看我的参与
         </button>
     </div>
 <!--我删了一个userId by Xhk-->
@@ -98,6 +95,8 @@
 
     //1.获取商品首页model
     var goodsIndexModel = /*[[${goodsIndexModel}]]*/'';
+    var andStr = /*[[${andStr}]]*/'';
+    var customerId = /*[[${customerId}]]*/'';
 
     //2.获取商品活动结束时间
     var endTime = goodsIndexModel.endTime;
@@ -132,6 +131,26 @@
             $("#second").text("00");
         }
     }
+
+    function jumpToDetail(){
+        var curUrl = window.location.href;
+        var index = curUrl.lastIndexOf("/");
+        curUrl = curUrl.substring(0, index + 1);
+        curUrl = curUrl + "detailByGoodsId?goodsId=" + goodsIndexModel.id + andStr + "customerId=" + customerId;
+        window.location.href = curUrl;
+    }
+
+
+    function getMyInvolvedRecord(){
+        var curUrl = window.location.href;
+        var index = curUrl.lastIndexOf("/");
+        curUrl = curUrl.substring(0, index);
+        index = curUrl.lastIndexOf("/");
+        curUrl = curUrl.substring(0, index + 1);
+        curUrl = curUrl + "personal/getMyInvolvedRecord?customerId=" + customerId + andStr + "type=0";
+        window.location.href = curUrl;
+    }
+
 
 </script>
 </body>

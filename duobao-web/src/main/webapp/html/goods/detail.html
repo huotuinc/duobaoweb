@@ -168,19 +168,14 @@
     <div class="jpxq">
       <p class="hhhh"></p>
       <ul>
-        <li >
-          <a href="#" th:href="@{/goods/imageTextDetail(goodsId=*{id},issueId=*{issueId},customerId=${customerId})}">
+        <li onclick="javascript:imageTextDetail()">
             <span class="fl">图文详情</span>
             <span class="fr"><img src="images/db003.png" th:src="@{/resources/images/db003.png}"/></span>
-          </a>
-          <span style="color:#ACACAC;" class="tit_rem fr">建议在wifi下查看</span>
+            <span style="color:#ACACAC;" class="tit_rem fr">建议在wifi下查看</span>
         </li>
-        <li >
-          <a href="../personal/list.html"
-             th:href="@{/personal/getMyInvolvedRecord(issueId=*{issueId},customerId=${customerId},type=0)}">
+        <li onclick="javascript:getMyInvolvedRecord()">
             <span class="fl">参与记录</span>
             <span class="fr"><img src="images/db003.png" th:src="@{/resources/images/db003.png}" /></span>
-          </a>
         </li>
       </ul>
       <p class="hhhh"></p>
@@ -254,12 +249,13 @@
   var nextIssueId;
   var andStr;
   var lastId = 0;
+
+  //1.获取商品详情model
+  var goodsDetailModel = /*[[${goodsDetailModel}]]*/'';
+
   var customerId = /*[[${customerId}]]*/'';
 
   $(function(){
-
-    //1.获取商品详情model
-    var goodsDetailModel = /*[[${goodsDetailModel}]]*/'';
 
 
     //2.获取商品进度
@@ -319,6 +315,26 @@
     }
 
   })
+
+
+  function imageTextDetail(){
+    var curUrl = window.location.href;
+    var index = curUrl.lastIndexOf("/");
+    curUrl = curUrl.substring(0, index + 1);
+    curUrl = curUrl + "imageTextDetail?goodsId=" + goodsDetailModel.id + andStr + "customerId=" + customerId;
+    window.location.href = curUrl;
+  }
+
+  function getMyInvolvedRecord(){
+    var curUrl = window.location.href;
+    var index = curUrl.lastIndexOf("/");
+    curUrl = curUrl.substring(0, index);
+    index = curUrl.lastIndexOf("/");
+    curUrl = curUrl.substring(0, index + 1);
+    curUrl = curUrl + "personal/getMyInvolvedRecord?customerId=" + customerId + andStr + "type=0";
+    window.location.href = curUrl;
+  }
+
 
   //倒计时
   function show_time() {

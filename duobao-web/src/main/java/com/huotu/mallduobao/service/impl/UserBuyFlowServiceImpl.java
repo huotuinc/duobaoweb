@@ -81,7 +81,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
             query.setParameter(2, lastFlag);
         }
 
-        query.setMaxResults(pageSize.intValue());
+        query.setMaxResults(10);
         List<UserBuyFlow> userBuyFlows = query.getResultList();
 
         BuyListModelAjax buyListModelAjax = new BuyListModelAjax();
@@ -104,7 +104,7 @@ public class UserBuyFlowServiceImpl implements UserBuyFlowService {
             lastFlag = userBuyFlows.get(userBuyFlows.size() - 1).getTime();
             buyListModelAjax.setRows(rows);
             buyListModelAjax.setPageIndex(page.intValue());
-            buyListModelAjax.setPageSize(pageSize.intValue());
+            buyListModelAjax.setPageSize(10);
             buyListModelAjax.setLastFlag(lastFlag);
         }
         return buyListModelAjax;
