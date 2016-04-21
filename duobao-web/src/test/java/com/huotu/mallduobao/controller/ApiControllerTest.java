@@ -1,3 +1,11 @@
+/*
+ * 版权所有:杭州火图科技有限公司
+ * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼在地图中查看
+ *
+ * (c) Copyright Hangzhou Hot Technology Co., Ltd.
+ * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+ * 2013-2015. All rights reserved.
+ */
 package com.huotu.mallduobao;
 
 import com.alibaba.fastjson.JSONObject;
@@ -49,16 +57,18 @@ public class ApiControllerTest extends BaseTest {
     private GoodsRepository goodsRepository;
     @Autowired
     private IssueRepository issueRepository;
+    @Autowired
+    private GoodsRestRepository goodsRestRepository;
 
 
     private Goods mockGoods;
     private Issue mockIssue;
+    private com.huotu.huobanplus.common.entity.Goods mallGoods;
 
     @Before
     public void setUp() throws Exception {
         //模拟一个商品
         mockGoods = daisyMockGoods();
-        //模拟一期
 
     }
 
@@ -92,9 +102,10 @@ public class ApiControllerTest extends BaseTest {
         mockGoods.setToMallGoodsId(17288L);
         //模拟一期商品
         mockIssue = daisyMockIssue(mockGoods);
+        mockGoods.setIssue(mockIssue);
         goodsRepository.saveAndFlush(mockGoods);
-
         //当前库中最新的期号
+        Long issueId = mockIssue.getId();
         String sign = DigestUtils.md5DigestAsHex((mockGoods.getId().toString() +
                 commonConfigService.getDuobaoApiKey()).getBytes());
         MvcResult result = mockMvc.perform(get("/api/generateIssue")
@@ -107,18 +118,23 @@ public class ApiControllerTest extends BaseTest {
         Assert.assertEquals("1", obj.get("code"));
         //获取数据库中最新期号
         Long newIssueID = findMaxIssueId(issueRepository.findAllIssueByGoodsId(mockGoods.getId()));
-        Assert.assertNotEquals("并没有创建新的期号", mockIssue.getId(), newIssueID);
-        Assert.assertEquals("之前期的状态变没有为待开奖", CommonEnum.IssueStatus.drawing, issueRepository.findOne(mockIssue.getId()).getStatus());
+        System.out.println("test---->" + issueId + "    " + newIssueID);
+        Assert.assertNotEquals("并没有创建新的期号", issueId, newIssueID);
+        Assert.assertEquals("之前期的状态变没有为待开奖", CommonEnum.IssueStatus.drawing, issueRepository.findOne(issueId).getStatus());
         Assert.assertEquals("没有更新商品的最新期号", newIssueID, mockGoods.getIssue().getId());
-        Assert.assertEquals("当前期状态不为进行中", CommonEnum.IssueStatus.drawing, issueRepository.findOne(newIssueID).getStatus());
+        Assert.assertEquals("当前期状态不为进行中", CommonEnum.IssueStatus.going, issueRepository.findOne(newIssueID).getStatus());
+
 
     }
 
-    //商城商品库存为1，测试临界值的情况
+    //    商城商品库存为1，测试临界值的情况
     @Test
     public void testCreateOne() throws Exception {
+        //获取商城商品，并修改库存为1
+        mallGoods = goodsRestRepository.getOneByPK(17275L);
+        mallGoods.setStock(1);
         //设置模拟商品与商城商品绑定
-        mockGoods.setToMallGoodsId(17275L);
+        mockGoods.setToMallGoodsId(mallGoods.getId());
         goodsRepository.saveAndFlush(mockGoods);
 
         //当前库中最新的期号
@@ -140,7 +156,10 @@ public class ApiControllerTest extends BaseTest {
     //商城商品库存为0，商品期号创建失败
     @Test
     public void testCreateFail() throws Exception {
-        mockGoods.setToMallGoodsId(17250L);
+        //获取商城商品，并修改库存为1
+        mallGoods = goodsRestRepository.getOneByPK(17250L);
+        mallGoods.setStock(0);
+        mockGoods.setToMallGoodsId(mallGoods.getId());
         goodsRepository.saveAndFlush(mockGoods);
         String sign = DigestUtils.md5DigestAsHex((mockGoods.getId().toString() +
                 commonConfigService.getDuobaoApiKey()).getBytes());
