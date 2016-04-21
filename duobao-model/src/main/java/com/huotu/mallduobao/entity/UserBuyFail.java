@@ -17,7 +17,6 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Cacheable(value = false)
 public class UserBuyFail {
 
     @Id

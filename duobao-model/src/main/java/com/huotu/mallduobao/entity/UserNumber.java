@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Cacheable(value = false)
 @IdClass(value = UserNumberPK.class)
 public class UserNumber {
     /**

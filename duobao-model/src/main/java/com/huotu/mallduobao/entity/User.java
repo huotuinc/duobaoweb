@@ -16,9 +16,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Cacheable(value = false)
-@Table(name = "users",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})},
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})},
         indexes = {@Index(columnList = "token")
         }
 )
