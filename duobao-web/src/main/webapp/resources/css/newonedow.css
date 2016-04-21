@@ -1,0 +1,72 @@
+.commfont {
+	font-size: 1.4rem;
+}
+.commfont .tit_rem {
+	font-size: 1.2rem
+}
+.commfont .tit_rem_big {
+	font-size: 1.5rem
+}
+.commfont .tit_rem_small {
+	font-size: 0.8rem
+}
+#container {
+	padding: 15px;
+}
+.article-content {
+	font-size: 16px;
+	color: #3e3e3e;
+	line-height: 1.5;
+	width: 100%;
+	margin: 4px 0 0;
+}
+.article-content p, .article-content font {
+	min-height: 1.5em;
+	word-wrap: normal;
+	word-break: normal;
+	white-space: pre-wrap;
+}
+.article-time {
+	padding-bottom: 10px;
+	border-bottom: 1px dotted #ccc;
+}
+.article-content .title-img {
+	margin: 18px 0;
+}
+.article-content img {
+	width: 100%;
+	margin: 18px 0;
+}
+#container h1 {
+	color: #000;
+	font-size: 20px;
+	font-weight: bold;
+	white-space: pre-wrap;
+	word-wrap: normal;
+	word-break: normal;
+}
+.footerbgimg {
+	border-top: solid #eee 1px;
+}
+.ysysright {
+	color: #fe645a;
+	float: right;
+	padding-top: 5px;
+	padding-bottom: 3px;
+}
+.ysysleft {
+	padding-top: 5px;
+	color: #8a8a8a;
+	float: left;
+	padding-bottom: 3px;
+}
+.ysysmoney {
+	margin-right: 10px;
+	color: #8a8a8a;
+}
+.ysysmoney i{
+	color:#000;
+}
+.boxhhh {
+	padding: 10px;
+}

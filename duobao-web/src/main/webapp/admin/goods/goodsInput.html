@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>商品后台</title>
+    <link href="../../resource/3rdParty/css/admin.global.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/css/admin.global.css}"/>
+    <link href="../../resource/3rdParty/css/admin.content.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/css/admin.content.css}"/>
+    <link href="../../resource/css/settlements.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/css/settlements.css}"/>
+    <script type="text/javascript" src="../../resource/3rdParty/js/jquery-1.4.2.min.js"
+            th:src="@{/resource/3rdParty/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" src="../../resource/3rdParty/js/jquery.utils.js"
+            th:src="@{/resource/3rdParty/js/jquery.utils.js}"></script>
+    <link href="../../resource/3rdParty/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resource/3rdParty/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resource/3rdParty/jBox/jquery.jBox-2.3.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/css/settlements.css"
+          th:href="@{/resource/css/settlements.css}"/>
+    <script type="text/javascript" src="../../resource/3rdParty/js/admin.js"
+            th:src="@{/resource/3rdParty/js/admin.js}"></script>
+    <script type="text/javascript" src="../../resource/3rdParty/My97DatePicker/WdatePicker.js"
+            th:src="@{/resource/3rdParty/My97DatePicker/WdatePicker.js}"></script>
+    <script type="text/javascript" src="../../resource/js/ajaxfileupload.js"
+            th:src="@{/resource/js/ajaxfileupload.js}"></script>
+    <script type="text/javascript" src="../resource/layer/layer.js"
+            th:src="@{/resource/layer/layer.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../resource/layer/skin/layer.css"
+          th:src="@{/resource/layer/skin/layer.css}"/>
+    <link rel="stylesheet" type="text/css" href="../resource/layer/skin/layer.ext.css"
+          th:src="@{/resource/layer/skin/layer.ext.css}"/>
+
+</head>
+
+<body>
+<form method="post" action="saveDuoBaoGoods" id="form1" th:object="${duoBaoGoodsInputModel}">
+    <input type="hidden" id="id" name="id" th:value="*{id}"/>
+    <input type="hidden" id="mallGoodsId" name="mallGoodsId" th:value="*{mallGoodsId}"/>
+    <input type="hidden" id="merchantId" name="merchantId" th:value="*{merchantId}"/>
+    <input type="hidden" name="customerId" th:value="${customerId}"/>
+
+    <div class="container">
+        <div class="blank10">
+        </div>
+        <div class="search block" style="display: block;">
+            <div class="h">
+      <span class="icon-sprite icon-magnifier">
+      </span>
+
+                <h3>活动商品新增后台</h3>
+            </div>
+            <div class="cnt-wp" style="padding: 35px 10px 10px;">
+                <div id="makeTab" class="cnt om-tabs om-widget om-widget-content om-corner-all"
+                     style="width: auto; height: auto;">
+
+                    <!-- 以下设置表单-->
+                    <div class="om-tabs-panels om-widget-content om-corner-bottom">
+                        <div class="om-widget om-panel">
+                            <div id="tab0001" class="om-panel-body om-widget-content om-panel-noheader om-state-nobd">
+                                <div class="division">
+                                    <div></div>
+                                    <div></div>
+                                    <table id="submitTable" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                        <tr>
+                                            <th>活动商品:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="24" style="width:300px" name="mallGoodsTitle"
+                                                       type="text" th:value="*{mallGoodsTitle}"
+                                                       id="mallGoodsTitle" class="input-normal" placeholder="请选择活动商品"
+                                                       readonly="readonly"/>
+                                                <span>(双击编辑框)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>商品标题:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="24" style="width:300px" name="title" type="text"
+                                                       id="title" class="input-normal" placeholder="请输入标题" th:value="*{title}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th>商品特性:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="24" style="width:300px" name="characters" type="text"
+                                                       id="characters" class="input-normal" placeholder="请输入商品特性" th:value="*{characters}" />
+                                                <span>(对商品的一些描述)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>购买时缺省量:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="13" style="width:170px" name="defaultAmount"
+                                                       type="text" id="defaultAmount"
+                                                       class="input-normal" placeholder="请输入购买时缺省量" value="1" th:value="*{defaultAmount}"/>
+                                                <span>(商品被加入购物车时默认购买的次数)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>单次最少购买量:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="13" style="width:170px" name="stepAmount"
+                                                       type="text" id="stepAmount"
+                                                       class="input-normal" placeholder="请输入单次最少购买量" value="1" th:value="*{stepAmount}"/>
+                                                <span>(商品被加入购物车时每次购买的最少数量)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>总需人次:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="13" style="width:170px" name="toAmount" type="text"
+                                                       id="toAmount"
+                                                       class="input-normal" placeholder="请输入总需人次" value="1" th:value="*{toAmount}"/>
+                                                <span>(商品总共需要被购买的次数)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>每人次单价:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="13" style="width:170px" name="pricePercentAmount"
+                                                       type="text"
+                                                       id="pricePercentAmount"
+                                                       class="input-normal" placeholder="每人次单价" value="1" th:value="*{pricePercentAmount}"/>
+                                                <span>(商品被购买一次需要的金额)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>图片(建议上传300*300的图片):</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <table id="picture">
+                                                    <tr>
+                                                        <td>
+                                                            <div id="uploadpicCover1"
+                                                                 style="width: 150px; height: 150px; border: 1px solid #ccc; float: left; background: #efefef; line-height: 150px; text-align: center; color: #ccc;">
+                                                                <span th:if="*{defaultPictureUrl eq null}" style="display: block; width: 150px; height: 150px; line-height: 150px">未上传</span>
+                                                                <img th:if="*{defaultPictureUrl eq null}" style="display:none" id="img1" width="150px" height="150px"/>
+                                                                <img th:if="*{defaultPictureUrl ne null}"  id="img1" width="150px" height="150px" th:src="*{defaultPictureUrl}"/>
+                                                                <input type="hidden" name="pictureUrls"
+                                                                       id="pictureUrls1" th:value="*{defaultPictureRelativelyUrl}"/>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div style="margin-left: 10px; float: left; line-height: 150px;">
+                                                                <a id="uploadpic1" class="btn-lit jUploader-button"
+                                                                   href="#"
+                                                                   style="cursor: pointer; position: relative; overflow: hidden; direction: ltr;">
+                                                        <span style="color: #c1b3a9">
+                                                                上传
+                                                        </span>
+                                                                    <input type="file" onchange="uploadImage(1)"
+                                                                           name="shareImage" id="shareImage1"
+                                                                           style="position: absolute; right: 0px; top: 0px; margin: 0px; opacity: 0; padding: 0px; font-family: Arial; font-size: 118px; vertical-align: baseline; cursor: pointer;"/>
+                                                                </a>
+                                                                &nbsp;&nbsp;
+                                                                <a id="addBtn" class="btn-lit jUploader-button"
+                                                                   href="javascript:addPic()"
+                                                                   style="cursor: pointer; position: relative; overflow: hidden; direction: ltr;">
+                                                        <span style="color: #c1b3a9">
+                                                                新增
+                                                        </span>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>活动开始时间:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input th:if="*{startTime ne null}" name="startTime" type="text"
+                                                       id="startTime" placeholder=" [开始日期]"
+                                                       class="input-normal Wdate"
+                                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false})" th:value="*{#dates.format(startTime, 'yyyy-MM-dd HH:mm')}"/>
+                                                <input th:if="*{startTime eq null}" name="startTime" type="text"
+                                                       id="startTime" placeholder=" [开始日期]"
+                                                       class="input-normal Wdate"
+                                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false})" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>活动结束时间:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input th:if="*{endTime ne null}" name="endTime" type="text"
+                                                       id="endTime" placeholder=" [结束日期]"
+                                                       class="input-normal Wdate"
+                                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false})" th:value="*{#dates.format(endTime, 'yyyy-MM-dd HH:mm')}"/>
+                                                <input th:if="*{endTime eq null}" name="endTime" type="text"
+                                                       id="endTime" placeholder=" [结束日期]"
+                                                       class="input-normal Wdate"
+                                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false})"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>分享标题:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="24" style="width:300px" name="shareTitle" type="text"
+                                                       id="shareTitle"
+                                                       class="input-normal" placeholder="分享标题" th:value="*{shareTitle}"/>
+                                                <span>(活动被分享出去时的标题)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>分享图片(建议上传300*300的图片):</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <div id="uploadpicCover0" style="width: 150px; height: 150px; border: 1px solid #ccc; float: left; background: #efefef; line-height: 150px; text-align: center; color: #ccc;">
+                                                    <span th:if="*{sharePictureUrl eq null}" style="display: block; width: 150px; height: 150px; line-height: 150">未上传</span>
+                                                    <img th:if="*{sharePictureUrl eq null}" style="display:none" id="img0" width="150px" height="150px"/>
+                                                    <img th:if="*{sharePictureUrl ne null}" id="img0" width="150px" height="150px" th:src="*{sharePictureUrl}"/>
+                                                    <input type="hidden" name="sharePictureUrl" id="sharePictureUrl" th:value="*{sharePictureRelativelyUrl}"/>
+                                                </div>
+                                                <div style="margin-left: 10px; float: left; line-height: 150px;">
+                                                    <a id="uploadpic" class="btn-lit jUploader-button" href="#"
+                                                       style="cursor: pointer; position: relative; overflow: hidden; direction: ltr;">
+                                                        <span style="color: #c1b3a9">
+                                                                上传
+                                                        </span>
+                                                        <input type="file" onchange="uploadImage(0)"
+                                                               name="shareImage" id="shareImage0"
+                                                               style="position: absolute; right: 0px; top: 0px; margin: 0px; opacity: 0; padding: 0px; font-family: Arial; font-size: 118px; vertical-align: baseline; cursor: pointer;"/>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>分享描述:</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <textarea id="content" name="shareDescription" cols="80" rows="4" th:text="*{shareDescription}"></textarea>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--是否在资讯栏目发一篇介绍范围结束-->
+
+                <!--以下是按钮-->
+                <div style="text-align: center; margin-top:12px">
+                    <a class="btn-lit" href="javascript:submitForm1();">
+        <span>
+          保存
+        </span>
+                    </a>
+                </div>
+                <!--按钮结束-->
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="blank10"></div>
+<script type="text/javascript" th:inline="javascript">
+
+    var customerId = /*[[${customerId}]]*/'';
+
+    $(function () {
+        $("#mallGoodsTitle").dblclick(function () {
+            var url = "getMallGoodsList?customerId=" + customerId;
+            window.open (url,'商城商品','height=768,width=1280,top=312,left=320,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+        })
+
+        var goods=/*[[${duoBaoGoodsInputModel}]]*/'';
+
+        //初始化商品图片
+        if(goods.pictureUrlList != null){
+            var len =goods.pictureUrlList.length;
+            for(var i = 0; len > i; i++){
+                addExistPic(goods.pictureUrlList[i], goods.pictureRelativelyUrlList[i]);
+            }
+        }
+    })
+
+    function setValue(title, id, merchantId){
+        $("#mallGoodsTitle").val(title);
+        $("#mallGoodsId").val(id);
+        $("#merchantId").val(merchantId);
+    }
+
+
+
+    //商品图片上传
+    function uploadImage(id) {
+        $.ajaxFileUpload({
+            url: 'UploadGoodsImg',
+            secureuri: false,
+            fileElementId: 'shareImage' + id,
+            dataType: 'json',
+            data: null,
+            success: function (resultModel) {
+                if (resultModel.code == 1) {
+                    $.jBox("上传成功");
+                    $("#img" + id).attr("src", resultModel.url);
+                    $("#img" + id).show();
+                    $("#uploadpicCover" + id).children("span").hide();
+                    if (id == 0) {
+                        $("input[id='sharePictureUrl']").val(resultModel.message);
+                    } else {
+                        $("input[id='pictureUrls" + id + "']").val(resultModel.message);
+                    }
+                }
+            },
+            error: function (data, status, e) {
+                $.jBox("上传失败，请检查网络后重试" + e);
+            }
+        });
+    }
+
+    function checkNumIsInt(input) {
+        var re = /^[1-9]+[0-9]*]*$/;
+        return re.test(input);
+    }
+
+
+    function checkDataValid() {
+        var mallGoodsId = $("#mallGoodsId").val().trim();
+        if(mallGoodsId.length == 0){
+            layer.msg("请选择活动商品");
+            return;
+        }
+
+        var title = $("#title").val().trim();
+        if (title.length == 0) {
+            $("#title").focus();
+            layer.msg("商品标题不能为空");
+            return false;
+        }
+
+        var character = $("#characters").val().trim();
+        if (character.length == 0) {
+            $("#characters").focus();
+            layer.msg("商品特性不能为空");
+            return false;
+        }
+
+        var defaultAmount = $("#defaultAmount").val().trim();
+        if (!checkNumIsInt(defaultAmount) || defaultAmount.length == 0) {
+            $("#defaultAmount").focus();
+            layer.msg("购买缺省量不是一个有效的数字");
+            return false;
+        }
+
+        var stepAmount = $("#stepAmount").val().trim();
+        if(!checkNumIsInt(stepAmount) || defaultAmount.length == 0){
+           $("#stepAmount").focus();
+            layer.msg("单次最少购买量不是一个有效的数字");
+            return false;
+        }
+
+        var toAmount = $("#toAmount").val().trim();
+        if (!checkNumIsInt(toAmount) || toAmount.length == 0) {
+            $("#toAmount").focus();
+            layer.msg("总需人次不是一个有效的数字");
+            return false;
+        }
+
+        var toAmountNum = parseInt($("#toAmount").val());
+        var stepAmountNum = parseInt($("#stepAmount").val());
+        var defaultAmountNum = parseInt($("#defaultAmount").val());
+        if(toAmountNum % stepAmountNum != 0){
+            $("#stepAmount").focus();
+            layer.msg("总需人次必须是单次最少购买量的倍数");
+            return false;
+        }
+
+        if(defaultAmountNum % stepAmountNum != 0){
+            $("#stepAmount").focus();
+            layer.msg("默认缺省量必须是单次最少购买量的倍数");
+            return false;
+        }
+
+        if(stepAmountNum > defaultAmountNum){
+            $("#stepAmount").focus();
+            layer.msg("默认缺省量必须大于单次最少购买量的倍数");
+            return false;
+        }
+
+
+        var pricePercentAmount = $("#pricePercentAmount").val().trim();
+        if (isNaN(pricePercentAmount) || pricePercentAmount.length == 0) {
+            $("#pricePercentAmount").focus();
+            layer.msg("每人次单价不是一个有效的数字");
+            return false;
+        }
+
+        var defaultPictureUrl = $("#pictureUrls1").val().trim();
+        if (defaultPictureUrl.length == 0) {
+            $("#uploadpic1").focus();
+            layer.msg("请上传商品图片");
+            return false;
+        }
+
+        var startTime = $("#startTime").val().trim();
+        if(startTime.length == 0){
+            $("#startTime").focus();
+            layer.msg("开始时间不能为空");
+            return false;
+        }
+
+        var endTime = $("#endTime").val().trim();
+        if(endTime.length == 0){
+            $("#endTime").focus();
+            layer.msg("结束时间不能为空");
+            return false;
+        }
+
+        if(startTime > endTime){
+            $("#endTime").focus();
+            layer.msg("活动开始时间不能大于活动结束时间");
+            return false;
+        }
+
+        var shareTitle = $("#shareTitle").val().trim();
+        if(shareTitle.length == 0){
+            $("#shareTitle").focus();
+            layer.msg("分享标题不能为空");
+            return false;
+        }
+
+        var sharePictureUrl = $("#sharePictureUrl").val().trim();
+        if(sharePictureUrl.length == 0){
+            $("#uploadpic").focus();
+            layer.msg("分享图片不能为空");
+            return false;
+        }
+
+        var shareDescription = $("#content").val();
+        if(shareDescription.length == 0){
+            $("#shareDescription").focus();
+            layer.msg("分享描述不能为空");
+            return false;
+        }
+
+        var defaultAmountNum = parseInt(defaultAmount);
+        if (0 >= defaultAmountNum) {
+            $("#defaultAmount").focus();
+            layer.msg("购买缺省量必须大于0");
+            return false;
+        }
+
+        var toAmountNum = parseInt(toAmount);
+        if (0 >= toAmountNum) {
+            $("#toAmount").focus();
+            layer.msg("总需必须大于0");
+            return false;
+        }
+
+        var pricePercentAmountNum = parseFloat(pricePercentAmount);
+        if (0 >= pricePercentAmountNum) {
+            $("#toAmount").focus();
+            layer.msg("每人次单价必须大于0");
+            return false;
+        }
+
+        return true;
+    }
+
+    function submitForm1() {
+        if(checkDataValid()){
+            $("#form1").submit();
+        }
+    }
+
+    var picCount = 1;
+    function addPic() {
+        picCount++;
+
+        html = '<tr id="pic' + picCount + '"><td><div id="uploadpicCover' + picCount + '"  style="width: 150px; height: 150px; border: 1px solid #ccc; float: left; background: #efefef; ' +
+                'line-height: 180px; text-align: center; color: #ccc;">';
+        html += '<span style="display: block; width: 150px; height: 150px; line-height: 150px">未上传</span>';
+        html += '<img style="display:none" id="img' + picCount + '" width="150px" height="150px"/>';
+        html += '<input type="hidden" name="pictureUrls" id="pictureUrls' + picCount + '"/>';
+        html += '</div></td><td><div style="margin-left: 10px; float: left; line-height: 150px;">';
+        html += '<a id="uploadpic' + picCount + '" class="btn-lit jUploader-button" href="#" style="cursor: pointer; position: relative; overflow: hidden; direction: ltr;">';
+        html += '<span style="color: #c1b3a9">上传 </span>';
+        html += '<input type="file"  name="shareImage" onchange="uploadImage(' + picCount + ')" id="shareImage' + picCount + '" style="position: absolute; right: 0px; top: 0px; margin: 0px; opacity: 0; ' +
+                'padding: 0px; font-family: Arial; font-size: 118px; vertical-align: baseline; cursor: pointer;"/>';
+        html += '</a>';
+        html += '&nbsp;&nbsp;';
+        html += ' <a id="addBtn" class="btn-lit jUploader-button" href="javascript:delPic(\'pic' + picCount + '\')" style="cursor: pointer; position: relative; overflow: hidden; direction: ltr;">';
+        html += '<span style="color: #c1b3a9">删除</span></a></div></td></tr>';
+
+        $("#picture").append(html);
+    }
+
+    function addExistPic(url, relativeUrl){
+        picCount++;
+        html = '<tr id="pic'+picCount+'"><td><div id="uploadpicCover'+picCount+'"  style="width: 150px; height: 150px; border: 1px solid #ccc; float: left; background: #efefef; ' +
+                'line-height: 150px; text-align: center; color: #ccc;">';
+        html += '<img id="img'+picCount+'" width="150px" height="150px" src="'+url+'" />';
+        html += '<input type="hidden" name="pictureUrls" id="pictureUrls'+picCount+'" value="'+relativeUrl+'" />';
+        html += '</div></td><td><div style="margin-left: 10px; float: left; line-height: 150px;">';
+        html += '<a id="uploadpic'+picCount+'" class="btn-lit jUploader-button" href="#" style="cursor: pointer; position: relative; overflow: hidden; direction: ltr;">';
+        html += '<span style="color: #c1b3a9">上传 </span>';
+        html += '<input type="file"  name="shareImage" onchange="uploadImage('+picCount+')" id="shareImage'+picCount+'" style="position: absolute; right: 0px; top: 0px; margin: 0px; opacity: 0; ' +
+                'padding: 0px; font-family: Arial; font-size: 118px; vertical-align: baseline; cursor: pointer;"/>';
+        html += '</a>';
+        html += '&nbsp;&nbsp;';
+        html += ' <a id="addBtn" class="btn-lit jUploader-button" href="javascript:delPic(\'pic'+picCount+'\')" style="cursor: pointer; position: relative; overflow: hidden; direction: ltr;">';
+        html += '<span style="color: #c1b3a9">删除</span></a></div></td></tr>';
+
+        $("#picture").append(html);
+    }
+
+
+
+    function delPic(pic) {
+        $.jBox.confirm("友情提示", "即将删除，确定继续吗？", function (v, h, f) {
+            if (v == 'ok')
+                $("#" + pic).remove();
+            else if (v == 'cancel')
+                return;
+
+        });
+    }
+
+</script>
+</body>
+</html>

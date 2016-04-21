@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>商品详情</title>
+    <link rel="stylesheet" href="../../resource/css/fmwebbb.css"
+          th:href="@{/resource/css/fmwebbb.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resource/css/search.css"
+          th:href="@{/resource/css/search.css}" />
+    <link rel="stylesheet" type="text/css" href="../../resource/css/newonedow.css"
+          th:href="@{/resource/css/newonedow.css}" />
+    <link href="../../resource/3rdParty/css/admin.content.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/css/admin.content.css}"/>
+    <link href="../../resource/css/settlements.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/css/settlements.css}"/>
+    <script type="text/javascript" src="../../resource/3rdParty/js/jquery-1.4.2.min.js"
+            th:src="@{/resource/3rdParty/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" src="../../resource/3rdParty/js/jquery.utils.js"
+            th:src="@{/resource/3rdParty/js/jquery.utils.js}"></script>
+    <link href="../../resource/3rdParty/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resource/3rdParty/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resource/3rdParty/jBox/jquery.jBox-2.3.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/css/settlements.css"
+          th:href="@{/resource/css/settlements.css}"/>
+    <script type="text/javascript" src="../../resource/3rdParty/js/admin.js"
+            th:src="@{/resource/3rdParty/js/admin.js}"></script>
+    <script type="text/javascript" src="../../resource/3rdParty/My97DatePicker/WdatePicker.js"
+            th:src="@{/resource/3rdParty/My97DatePicker/WdatePicker.js}"></script>
+    <script type="text/javascript" src="../../resource/js/ajaxfileupload.js"
+            th:src="@{/resource/js/ajaxfileupload.js}"></script>
+    <link href="../../resource/3rdParty/css/admin.global.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/css/admin.global.css}"/>
+</head>
+
+<body onload="firstLoad()">
+    <div class="container" style="width: auto" th:object="${duoBaoGoodsDetailModel}">
+        <div class="blank10">
+        </div>
+        <div class="search block" style="display: block;">
+            <div class="h">
+                  <span class="icon-sprite icon-magnifier">
+                  </span>
+                <h3>商品详情</h3>
+            </div>
+            <div class="cnt-wp" style="padding: 35px 10px 10px;">
+                <div id="makeTab" class="cnt om-tabs om-widget om-widget-content om-corner-all" style="width: 1260px; height: auto;">
+
+                    <!-- 以下设置表单-->
+                    <div class="om-tabs-panels om-widget-content om-corner-bottom">
+                        <div class="om-widget om-panel">
+                            <div id="tab0001" class="om-panel-body om-widget-content om-panel-noheader om-state-nobd">
+                                <div class="division">
+                                    <div></div>
+                                    <div></div>
+                                    <table id="submitTable" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                        <tr>
+                                            <th>商品名称:</th>
+                                            <td>
+                                                <label th:text="*{title}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>商城商品名称:</th>
+                                            <td>
+                                                <label th:text="*{mallGoodsTitle}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>商品特性:</th>
+                                            <td>
+                                                <label th:text="*{characters}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>购买缺省量:</th>
+                                            <td>
+                                                <label th:text="*{defaultAmount}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>单次购买最少量:</th>
+                                            <td>
+                                                <label th:text="*{stepAmount}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>总需人次:</th>
+                                            <td>
+                                                <label th:text="*{toAmount}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>每人次单价:</th>
+                                            <td>
+                                                <label th:text="*{pricePercentAmount}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>商品状态:</th>
+                                            <td>
+                                                <label th:text="*{statusName}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>商品购买人次:</th>
+                                            <td>
+                                                <label th:text="*{attendAmount}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>商品浏览数:</th>
+                                            <td>
+                                                <label th:text="*{viewAmount}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>商品图片:</th>
+                                            <td>
+                                              <img th:each="url:*{pictureUrls}" width="150px" height="150px" th:src="${url}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>分享标题:</th>
+                                            <td>
+                                                <label th:text="*{shareTitle}"></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>分享图片:</th>
+                                            <td>
+                                                <img width="150px" height="150px" th:src="*{sharePictureUrl}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>分享描述:</th>
+                                            <td>
+                                                <textarea id="content" name="introduction" class="input-normal" th:text="*{shareDescription}">
+                                                </textarea>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--是否在资讯栏目发一篇介绍范围结束-->
+
+                <!--以下是按钮-->
+
+                <!--按钮结束-->
+
+            </div>
+        </div>
+    </div>
+
+
+<div class="blank10"></div>
+<script>
+    //初始化进页面
+    function firstLoad() {
+        window.editor.readonly(true);
+    }
+</script>
+    <script charset="utf-8" src="richText/kindeditor-min.js" th:src="@{/resource/3rdParty/kindeditor/kindeditor-min.js}"></script>
+    <script charset="utf-8" src="richText/lang/zh_CN.js" th:src="@{/resource/3rdParty/kindeditor/lang/zh_CN.js}"></script>
+    <script charset="utf-8" src="richText/init.js" th:src="@{/resource/3rdParty/kindeditor/init.js}"></script>
+</body>
+</html>

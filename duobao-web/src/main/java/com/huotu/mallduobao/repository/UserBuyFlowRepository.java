@@ -21,4 +21,8 @@ public interface UserBuyFlowRepository extends JpaRepository<UserBuyFlow,Long>, 
     @Query("SELECT min(f.time) FROM UserBuyFlow f where f.issue.id = ?1")
     Long getFirstBuyTimeByIssueId(Long issueId);
 
+
+    @Query("select uby from UserBuyFlow as uby where uby.issue.id=?1 and uby.user.id =uby.issue.awardingUser.id")
+    UserBuyFlow findOneLotteryInfo(Long issueId);
+
 }

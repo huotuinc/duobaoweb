@@ -6,6 +6,7 @@ import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.entity.UserNumber;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,5 +24,8 @@ public interface UserNumberRepository extends JpaRepository<UserNumber, Long>, J
     List<UserNumber> findByIssue(Issue issue);
 
     List<UserNumber> findByIssueAndUser(Issue issue, User user);
+
+    @Query("select n from UserNumber as n where n.user.id =?1 and n.issue.id=?2 order by n.time desc")
+    List<UserNumber> findByUserAndIssueNumbers(Long userId,Long issueId);
 
 }

@@ -19,4 +19,8 @@ public interface IssueRepository extends JpaRepository<Issue, Long>, JpaSpecific
 
     @Query("FROM Issue i WHERE i.goods.id = ?1")
     List<Issue> findAllIssueByGoodsId(Long goodsId);
+
+
+    @Query("SELECT i FROM Issue i WhERE i.goods.id = ?1 and i.status = ?2")
+    Issue findIssueByGoodsIdAndStautsIsGoing(Long goodsId, CommonEnum.IssueStatus issueStatus);
 }

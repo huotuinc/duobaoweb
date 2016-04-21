@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+    <title>
+        中奖列表
+    </title>
+    <link href="../../resource/3rdParty/css/admin.global.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/css/admin.global.css}"/>
+    <link href="../../resource/3rdParty/css/admin.content.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/css/admin.content.css}" />
+    <script type="text/javascript" src="../../resource/3rdParty/js/jquery-1.8.3.min.js"
+            th:src="@{/resource/3rdParty/js/jquery-1.8.3.min.js}"></script>
+    <script type="text/javascript" src="../../resource/3rdParty/js/jquery.utils.js"
+            th:src="@{/resource/3rdParty/js/jquery.utils.js}"></script>
+    <link href="../../resource/3rdParty/jBox/Skins/Green/jbox.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/jBox/Skins/Green/jbox.css}"/>
+    <script type="text/javascript" src="../../resource/3rdParty/jBox/jquery.jBox-2.3.min.js"
+            th:src="@{/resource/3rdParty/jBox/jquery.jBox-2.3.min.js}"></script>
+    <script type="text/javascript" src="../../resource/3rdParty/js/admin.js"
+            th:src="@{/resource/3rdParty/js/admin.js}"></script>
+    <link href="../../resource/3rdParty/omTabs/themes/default/operamasks-ui.min.css" rel="stylesheet" type="text/css"
+          th:href="@{/resource/3rdParty/omTabs/themes/default/operamasks-ui.min.css}"/>
+    <script src="../../resource/3rdParty/jqueryui/jquery-ui-1.8.20.min.js"
+            th:src="@{/resource/3rdParty/jqueryui/jquery-ui-1.8.20.min.js}"></script>
+    <link href="../../resource/3rdParty/jqueryui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"
+          th:href="@{/resource/3rdParty/jqueryui/jquery-ui-1.10.3.custom.min.css}"/>
+    <script src="../../resource/3rdParty/Knockout/knockout-2.3.0.js"
+            th:src="@{/resource/3rdParty/Knockout/knockout-2.3.0.js}"></script>
+    <script type="text/javascript" src="../../resource/3rdParty/My97DatePicker/WdatePicker.js"
+            th:src="@{/resource/3rdParty/My97DatePicker/WdatePicker.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var _oldCass = ''
+        $(function () {
+            var authority = "";
+            if (authority != "") {
+                $(".aucontrol").hide();
+            }
+            $('tr').mouseover(function () {
+                _oldCass = this.className;
+                this.className = 'over';
+            }).mouseout(function () {
+                this.className = _oldCass;
+            });
+
+        });
+
+        function showList(statu) {
+            if (statu == 0) {
+                $("#shareType").attr("value", -1);
+                $('#form1').submit();
+            } else if (statu == 1) {
+                $("#shareType").attr("value", 0);
+                $('#form1').submit();
+                //$('.aparent3').parent().toggleClass('om-state-default om-corner-top  om-tabs-activated om-state-active');
+            } else if (statu == 2) {
+                $("#shareType").attr("value", 1);
+                $('#form1').submit();
+            } else if (statu == 3) {
+                $("#shareType").attr("value", 2);
+                $('#form1').submit();
+            }
+        }
+        function searchShares() {
+            $('#btnSearch').click();
+        }
+
+        function searchShareAll() {
+            $('#btnSearchAll').click();
+        }
+        /*]]>*/
+    </script>
+    <style type="text/css">
+        .over {
+            background-color: #00ff21;
+        }
+
+        .p_prt, .p_prted {
+            cursor: pointer;
+            width: 17px;
+            height: 18px;
+            display: inline-block;
+            display: -moz-inline-stack;
+            line-height: 18px;
+            vertical-align: top;
+            text-align: left;
+            margin: 2px 0 0 0;
+            color: #000;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body marginwidth="0" marginheight="0">
+<form method="get" action="getLotteryList" id="form1" th:object="${webIssueSearchModel}">
+    <input hidden="hidden" id="pageNoStr" name="pageNoStr" th:value="*{pageNoStr}"/>
+    <input hidden="hidden" id="ownerType" name="ownerType" value="1"/>
+    <input hidden="hidden" id="userId" name="userId" th:value="*{userId}"/>
+    <input hidden="hidden" id="customerId" name="customerId" th:value="*{customerId}"/>
+    <input hidden="hidden" id="goodsId" name="goodsId" th:value="*{goodsId}"/>
+
+    <div class="container">
+        <div class="blank10">
+        </div>
+        <div class="search block">
+            <div class="h">
+                <span class="icon-sprite icon-magnifier"></span>
+                <h3>中奖记录筛选</h3>
+            </div>
+            <div class="tl corner">
+            </div>
+            <div class="tr corner">
+            </div>
+            <div class="bl corner">
+            </div>
+            <div class="br corner">
+            </div>
+            <div class="cnt-wp">
+                <div class="cnt">
+
+                    <div class="search-bar">
+                        <label class="first ">用户账号：</label>
+                        <input name="username" type="text" th:value="*{username}" id="username" class="input-big" style="width: 120px;"/>
+                        <label class="first ">商品标题：</label>
+                        <input name="goodsTitle" type="text" th:value="*{goodsTitle}" id="goodsTitle" class="input-small" style="width: 120px;"/>
+                        <label class="first ">期号：</label>
+                        <input name="issueId" type="text" th:value="*{issueId}" id="issueId" class="input-small" style="width: 120px;"/>
+                        <br/>
+                        <br/>
+                        <label class="first ">揭晓时间：</label>
+                        <input name="startTime" type="text" id="startTime" placeholder=" [开始日期]"
+                               th:value="*{startTime}"
+                               class="input-normal Wdate"
+                               onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false})"/>-
+                        <input name="endTime" type="text" id="endTime" placeholder=" [结束日期]"
+                               th:value="*{endTime}"
+                               class="input-normal Wdate"
+                               onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false,minDate:'#F{$dp.$D(\'startTime\')}'})"/>
+
+                        &nbsp;
+                        <br/>
+                        <br/>
+                        <label class="first ">排序：</label>
+                        <select name="sort" id="sort">
+                            <option value="0" selected="selected">序号</option>
+                        </select>
+                        <style type="text/css">
+                            #raSortType label {
+                                padding-left: 0px;
+                            }
+                        </style>
+                        <span id="raSortType">
+                            <input id="raSortType_0" type="radio" name="raSortType" value="0" checked="checked" th:checked="*{raSortType==0}"/>
+                            <label for="raSortType_0">倒序</label>
+                            <input id="raSortType_1" type="radio" name="raSortType" value="1" th:checked="*{raSortType==1}"/>
+                            <label for="raSortType_1">顺序</label>
+                        </span>
+                        <br/>
+                        <br/>
+
+                        <div style="display: none;">
+                            <input type="submit" name="btnSearch" value="" id="btnSearch"/>
+                            <input type="submit" name="btnSearchAll" value="" id="btnSearchAll"/>
+                        </div>
+                        <label><a class="btn-lit btn-middle" id="search" href="javascript:searchShares();"
+                                  style="margin-bottom: 3px;"><span>搜索</span></a></label>
+                        <label><a class="btn-lit btn-middle" id="searchAll" href="javascript:searchShareAll();"
+                                  style="margin-bottom: 3px;"><span>显示全部</span></a></label>
+
+                        <br/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="h">
+                <span class="icon-sprite icon-list"></span>
+                <h3 style="float: left; width: 144px;">中奖记录列表 </h3>
+            </div>
+            <div class="cnt-wp">
+                <div id="Div1" class="om-tabs om-widget om-widget-content om-corner-all" style="height: auto;">
+                    <div class="om-tabs-headers om-helper-reset om-helper-clearfix om-widget-header om-corner-all header-no-border"
+                         style="height: 28px;">
+                        <ul style="height: 28px; line-height: 28px;">
+                            <span class="left-placeholder"></span>
+                            <li class="om-state-default om-corner-top  " id="ddgl1">
+                                <span class="lileft"></span><a href="javascript:showList(0);" class="om-tabs-inner" style="width: auto; height: 27px;">全部</a><span class="liright"></span>
+                            </li>
+                            <span class="right-placeholder"></span>
+                        </ul>
+                    </div>
+                    <div class="om-tabs-panels om-widget-content om-corner-bottom">
+                        <div class="om-widget om-panel ">
+                            <div id="Div2"
+                                 class="om-panel-body om-widget-content om-panel-noheader om-state-nobd">
+                                <div class="cnt">
+                                    <table class="data-table even1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <th scope="col">期号
+                                            </th>
+                                            <th scope="col">中奖用户
+                                            </th>
+                                            <th scope="col">中奖商品
+                                            </th>
+                                            <th scope="col">揭晓时间
+                                            </th>
+                                            <th scope="col">幸运号码
+                                            </th>
+                                            <th scope="col">查看更多
+                                            </th>
+                                        </tr>
+                                        <tbody th:remove="all-but-first" id="o1">
+                                        <tr th:each="webIssueListModel:${webIssueListModels}" class="even">
+                                            <td class="txt20" style="width: 15px;" th:text="${webIssueListModel.id}">
+                                            </td>
+                                            <td class="txt80"  th:text="${webIssueListModel.awardingUser!=null ? webIssueListModel.awardingUser :'缺失' }">
+                                            </td>
+                                            <td class="txt120"  th:text="${webIssueListModel.goodsTitle !=null ? webIssueListModel.goodsTitle :'缺失'}">
+                                            </td>
+                                            <td class="txt80" th:text="${webIssueListModel.awardingDate==null?'缺失': #dates.format(webIssueListModel.awardingDate, 'yyyy-MM-dd  HH:mm')}">
+                                            </td>
+                                            <td class="txt20"  th:text="${webIssueListModel.luckyNumber}">
+                                            </td>
+                                            <td class="txt40 c tail">
+                                                    <a th:attr="id=${webIssueListModel.id}" onclick="showDetail(this)" th:text="'查看'">查看</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pager-bar">
+                                    <div class="msg" style="margin-left: 10px;">共
+                                        <span th:text="${totalRecords}">2</span>条记录，当前第
+                                        <span th:text="${pageNo}" id="noNumber">1</span>/共
+                                        <span  id="numberBug" th:text="${totalPages}">1</span>页，每页
+                                        <span>20</span>条记录
+                                    </div>
+                                    <a class="button-white" href="javascript:queryForst()"><span>首页</span></a>
+                                    <a class="button-white" href="javascript:queryUp(-1)">
+                                        <span>上一页</span>
+                                    </a>
+                                    <a class="button-white" href="javascript:queryVoid(1)">
+                                        <span>下一页</span>
+                                    </a>
+                                    <a class="button-white" href="javascript:queryLast()">
+                                        <span>未页</span>
+                                    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;第
+                                    <input id="current-index" onkeydown="J.EnterSubmit(event, Pager.Jump);" class="input-small" style="text-align:center;" type="text" value="1" th:value="${pageNo}"/>页&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a class="button-white" href="javascript:goToNo();"><span>跳转</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<script type="text/javascript" th:inline="javascript">
+
+    function showDetail(obj) {
+        var rid = $(obj).attr("id");
+        var url="getLotteryInfo?issueId="+rid;
+        J.PopupIFrame(url, "中奖详情", 1100, 400, "batchdelivery", null, "auto", "", function (result) {
+            //alert(result);
+        });
+
+    }
+    /*<![CDATA[*/
+    function setUser(obj){
+        var userId = $(obj).attr("userId");
+        var text=$(obj).html();
+        var type;
+        switch (text){
+            case '禁言':
+                type=1;
+                ajaxSetUpload(userId,type,obj);
+                return;
+            case '冻结':
+                type=2;
+                ajaxSetUpload(userId,type,obj);
+                return;
+            case '解冻':
+                type=0;
+                ajaxSetUpload(userId,type,obj);
+                return;
+            case '解禁':
+                type=0;
+                ajaxSetUpload(userId,type,obj);
+                return;
+
+        }
+    }
+
+    function ajaxSetUpload(userId,type,obj){
+        $.ajax({
+            type:'POST',
+            url: 'setUser',
+            dataType: 'json',
+            data: {userId:userId,type:type},
+            success:function(result){
+                if(result.code==1){
+//                    var text=$(obj).html();
+//                    $(obj).html(result.message);
+                    jBox.tip("修改成功");
+                    window.location.reload();
+                }else {
+                    jBox.tip(result.message);
+                }
+            },
+            error:function(e){
+                $.jBox.tip("修改出错，请检查网络");
+            }
+        });
+
+    }
+
+
+    function searchShares() {
+        $('#form1').submit();
+    }
+    function queryVoid(no) {//下页
+        var size = 0;
+        var numberBug = Number($("#numberBug").text());//最大页数
+        size = Number($("#noNumber").text()) + Number(no);//前往的页数
+        if (size > numberBug) {
+            size = numberBug;
+        }
+        $("#pageNoStr").attr("value", size);
+        $('#form1').submit();
+    }
+    function queryUp(no) {//上页
+        var size = 0;
+        var numberBug = Number($("#numberBug").text());//最大页数
+        size = Number($("#noNumber").text()) + Number(no);//前往的页数
+        if (size > numberBug) {
+            size = numberBug;
+        }
+        if (size < 0) {
+            size = 0;
+        }
+        $("#pageNoStr").attr("value", size);
+        $('#form1').submit();
+    }
+    function queryForst() {//首页
+        $("#pageNoStr").attr("value", 0);
+        $('#form1').submit();
+    }
+    function queryLast() {//尾页
+        var numberBug = Number($("#numberBug").text());//最大页数
+        $("#pageNoStr").attr("value", numberBug);
+        $('#form1').submit();
+    }
+    function goToNo() {
+        var size = Number($("#current-index").val());
+        var numberBug = Number($("#numberBug").text());//最大页数
+        if (size > numberBug) {
+            size = numberBug;
+        }
+        $("#pageNoStr").attr("value", size);
+        $('#form1').submit();
+    }
+    function searchShareAll() {
+        $("#shareTitle").attr("value", "");
+        $("#shareType").attr("value", -1);
+        $("#ownerType").attr("value", 1);
+        $("#sort").attr("value", 0);
+        $("#raSortType").attr("value", 0);
+        $("#startTime").attr("value", "");
+        $("#endTime").attr("value", "");
+        $("#pageNoStr").attr("value", 0);
+        $('#form1').submit();
+    }
+    function createRight() {//左页面点击事件
+        searchShareAll();
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -107,6 +107,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.huotu.huobanplus</groupId>
+            <artifactId>mall-sdk</artifactId>
+            <version>1.4.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.1</version>

@@ -32,9 +32,11 @@ import java.net.URISyntaxException;
  */
 public interface StaticResourceService {
     /**
-     * 用户头像文件夹
+     * 用户头像文件夹 todo
      */
     String USER_HEAD_PATH="/_resource/userhead/";
+
+    String IMG="/_resource/image/";
 
     /**
      * 红包分享图片路径
