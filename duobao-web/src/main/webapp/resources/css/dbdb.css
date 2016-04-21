@@ -248,6 +248,13 @@ a.zuijia{background-color:#FF3F00;
     width:50px; text-align:center;   
     border-radius:4px; display:block;float: right; padding:4px 0px; margin-top:2px}
 	.zjmd{background-color:#f1f1f1; padding:15px;}
+
+input.jiesun{background-color:#FF3F00;
+    border: 1px solid #f0373c;
+    color: #fff;
+    width:50px; text-align:center;
+    border-radius:4px; display:block;float: right; padding:4px 0px; margin-top:2px}
+
 	
 /***夺宝记录****/
 

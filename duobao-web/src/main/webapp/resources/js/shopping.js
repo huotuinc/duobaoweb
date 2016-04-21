@@ -52,7 +52,7 @@ function toPayModel(payMoney1, detail1, cartsId1, payType1, type1) {
     return obj;
 }
 
-var shoppingBuy = function (buyNum, issueId, customerId) {
+var shoppingBuy = function (buyNum, issueId, customerId,onclickpay) {
     $.jBox.tip("正在添加购物车...", "loading");
     $.ajax({
         url: "../shopping/joinToCarts",
@@ -74,6 +74,7 @@ var shoppingBuy = function (buyNum, issueId, customerId) {
         },
         error: function (data) {
             $.jBox.tip("网络异常,请关闭页面重试！");
+            onclickpay=0;
         }
     })
 }

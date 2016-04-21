@@ -62,6 +62,11 @@
         }
 
         var balance=function(){
+            var notShow =/*[[${notShow}]]*/'';
+            var overTime =/*[[${overTime}]]*/'';
+            if(overTime=="1"||notShow=="1"){
+                return false;
+            }
             var issueId=/*[[${issueId}]]*/'';
             var customerId=/*[[${customerId}]]*/'';
             var cartId =/*[[${shoppingCarts.cartId}]]*/'';
@@ -142,7 +147,7 @@
   <input name="buyMoney" id="buyMoney" type="hidden" th:value="*{buyMoney}"/>
       <p class="tit_rem hui">夺宝有风险，参与需谨慎</p>
   </div>
-  <div style="position:absolute; right:10px;bottom:10px"><a href="#" class="zuijia tit_rem_big" style="padding:5px 10px" onclick="balance()">结算</a></div>
+  <div style="position:absolute; right:10px;bottom:10px"><a type="button" id="paybutton" name="paybutton" class="zuijia tit_rem_big" style="padding:5px 10px" onclick="balance()" >结算</a></div>
   <P class="clear"></P>
    
   </div></div>
