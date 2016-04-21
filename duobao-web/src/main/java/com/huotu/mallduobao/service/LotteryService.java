@@ -17,7 +17,7 @@ public interface LotteryService {
      * @param webIssueSearchModel page列表
      * @return WebPersonnalIssueListModel
      */
-    WebPersonnalIssueListModel getWebIssueListModel(WebIssueSearchModel webIssueSearchModel);
+    WebPersonnalIssueListModel getWebIssueListModel(WebIssueSearchModel webIssueSearchModel,Long customerId);
 
 
     /**

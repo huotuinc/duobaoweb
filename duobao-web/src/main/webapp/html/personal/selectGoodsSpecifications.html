@@ -165,7 +165,7 @@
                 <div class="sku_wrap" style="margin-top: 10px;">
                     <div id="prop-list">
                         <div class="sku" th:each="mgs:${list}">
-                            <h3 th:text="${mgs.name+':'}">规格1：</h3>
+                            <h3 th:text="${mgs.name+'：'}">规格1：</h3>
                             <div class="sku_list">
                                 <span class="option " id=""  th:each="spec:${mgs.specDescriptionList}" th:text="${spec.specValue}" >红色</span>
                                 <!--<span class="option option_selected current">黑色</span>-->

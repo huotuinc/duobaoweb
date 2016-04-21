@@ -38,6 +38,7 @@ var Jload = {};
             return _html;
         },
         Ajax: function (options,callback) {
+
             if (typeof options.onLoading === 'function') { options.onLoading() }
             var ajaxCall = $.ajax({
                 type: options.method,
@@ -56,7 +57,6 @@ var Jload = {};
                         }
                         return;
                     }
-                    $("#lastFlag").val(data.LastFlag);
                     options.data.page++;
                     options.data.lastFlag=data.LastFlag;
                     if (data.PageIndex == 1) {//初次加载
@@ -188,9 +188,10 @@ var Jload = {};
             noneTemplete:"<div style='text-align:center;'>没有数据</div>",//没有数据模版
             callback: "",
             scorllBox:"",
-            onLoading: function () { },//加载友好显示
+            onLoading: function () {},//加载友好显示
             error: function () { },
         };
+
         var ops = $.extend(settings, options);
         //_defaultid = new Date().getTime();
         Jload.Ajax(ops, callback);
