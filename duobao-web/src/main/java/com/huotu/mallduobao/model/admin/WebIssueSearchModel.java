@@ -1,5 +1,6 @@
 package com.huotu.mallduobao.model.admin;
 
+import com.huotu.huobanplus.sdk.mall.annotation.CustomerId;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -65,10 +66,6 @@ public class WebIssueSearchModel {
      */
     private Integer pageNoStr = 0;
 
-    /**
-     * 商家id
-     */
-    private Long customerId;
 
 
 }

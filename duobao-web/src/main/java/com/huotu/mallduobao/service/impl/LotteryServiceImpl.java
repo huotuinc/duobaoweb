@@ -49,7 +49,7 @@ public class LotteryServiceImpl implements LotteryService {
     GoodsRepository duoBaoGoodsRepository;
 
     @Override
-    public WebPersonnalIssueListModel getWebIssueListModel(WebIssueSearchModel webIssueSearchModel) {
+    public WebPersonnalIssueListModel getWebIssueListModel(WebIssueSearchModel webIssueSearchModel,Long customerId) {
         //排序
         Sort.Direction direction = webIssueSearchModel.getRaSortType() == 0 ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = new Sort(direction, "id");
@@ -77,8 +77,8 @@ public class LotteryServiceImpl implements LotteryService {
                     predicate = cb.and(predicate, cb.like(root.get("goods").get("title").as(String.class), "%" + webIssueSearchModel.getGoodsTitle() + "%"));
                 }
 
-                if (!StringUtils.isEmpty(webIssueSearchModel.getCustomerId())) {
-                    predicate = cb.and(predicate, cb.equal(root.get("goods").get("merchantId").as(Long.class), webIssueSearchModel.getCustomerId()));
+                if (!StringUtils.isEmpty(customerId)) {
+                    predicate = cb.and(predicate, cb.equal(root.get("goods").get("merchantId").as(Long.class), customerId));
                 }
 
                 if (!StringUtils.isEmpty(webIssueSearchModel.getGoodsId())) {

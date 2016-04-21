@@ -53,7 +53,7 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
     @RequestMapping(value = "/getDuoBaoGoodsList", method = RequestMethod.GET)
-    public String getDuoBaoGoodsList(Long customerId, DuoBaoGoodsSearchModel duoBaoGoodsSearchModel, Map<String, Object> map) throws  Exception{
+    public String getDuoBaoGoodsList(@CustomerId Long customerId, DuoBaoGoodsSearchModel duoBaoGoodsSearchModel, Map<String, Object> map) throws  Exception{
 
         if(customerId == null){
            map.put("message", "customerId不存在");

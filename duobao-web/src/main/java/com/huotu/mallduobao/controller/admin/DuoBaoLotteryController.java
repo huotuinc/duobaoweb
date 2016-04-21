@@ -1,5 +1,6 @@
 package com.huotu.mallduobao.controller.admin;
 
+import com.huotu.huobanplus.sdk.mall.annotation.CustomerId;
 import com.huotu.mallduobao.model.admin.WebIssueSearchModel;
 import com.huotu.mallduobao.model.admin.WebLotteryInfoModel;
 import com.huotu.mallduobao.model.admin.WebPersonnalIssueListModel;
@@ -8,6 +9,7 @@ import com.huotu.mallduobao.service.LotteryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -31,8 +33,11 @@ public class DuoBaoLotteryController {
      * @author lhx
      */
     @RequestMapping("/getLotteryList")
-    public String getLotteryList(WebIssueSearchModel webIssueSearchModel, Model model) {
-        WebPersonnalIssueListModel webPersonnalIssueListModel = duoBaoLotteryService.getWebIssueListModel(webIssueSearchModel);
+    public String getLotteryList(@CustomerId Long customerId,WebIssueSearchModel webIssueSearchModel, Model model) {
+        WebPersonnalIssueListModel webPersonnalIssueListModel = duoBaoLotteryService.getWebIssueListModel(webIssueSearchModel,customerId);
+        if(StringUtils.isEmpty(customerId)){
+            return "/admin/error";
+        }
         model.addAttribute("webIssueListModels", webPersonnalIssueListModel.getList());
         model.addAttribute("pageNo", webIssueSearchModel.getPageNoStr());//当前页数
         model.addAttribute("totalPages", webPersonnalIssueListModel.getTotalPages());//总页数
