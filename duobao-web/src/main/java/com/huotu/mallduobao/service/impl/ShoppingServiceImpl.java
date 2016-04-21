@@ -1,6 +1,7 @@
 package com.huotu.mallduobao.service.impl;
 
-import com.huotu.mallduobao.utils.CommonEnum;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.mallduobao.common.WeixinPayUrl;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.PayModel;
@@ -10,17 +11,21 @@ import com.huotu.mallduobao.repository.OrdersItemRepository;
 import com.huotu.mallduobao.repository.OrdersRepository;
 import com.huotu.mallduobao.repository.ShoppingCartRepository;
 import com.huotu.mallduobao.repository.UserRepository;
-import com.huotu.mallduobao.service.*;
-import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
-import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
+import com.huotu.mallduobao.service.CommonConfigService;
+import com.huotu.mallduobao.service.RaidersCoreService;
+import com.huotu.mallduobao.service.SecurityService;
+import com.huotu.mallduobao.service.ShoppingService;
+import com.huotu.mallduobao.utils.CommonEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,28 +88,28 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
     public ShoppingCartsModel getShoppingCartsModel(Long userId) throws URISyntaxException {
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findOneByUserId(userId);
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findOneByUserId(userId);
         ShoppingCartsModel shoppingCartsModel = new ShoppingCartsModel();
-        if(shoppingCart==null){
+        if(shoppingCarts.size()==0){
             return null;
-        } else if (shoppingCart != null && shoppingCart.getIssue().getStatus() != CommonEnum.IssueStatus.going) {
+        } else if (shoppingCarts.size() != 0 && shoppingCarts.get(0).getIssue().getStatus() != CommonEnum.IssueStatus.going) {
             //如果购物车中的信息已过期则删除购物车中的信息
             shoppingCartRepository.clearShoppingCarts(userRepository.findOne(userId));
             return null;
         }
-        if (shoppingCart != null) {
-            Long left = shoppingCart.getIssue().getToAmount() - shoppingCart.getIssue().getBuyAmount();
-            shoppingCartsModel.setCartId(shoppingCart.getId());
-            shoppingCartsModel.setNeedNumber(shoppingCart.getIssue().getToAmount());
-            shoppingCartsModel.setPerMoney(shoppingCart.getIssue().getPricePercentAmount().doubleValue());
+        if (shoppingCarts.size() != 0) {
+            Long left = shoppingCarts.get(0).getIssue().getToAmount() - shoppingCarts.get(0).getIssue().getBuyAmount();
+            shoppingCartsModel.setCartId(shoppingCarts.get(0).getId());
+            shoppingCartsModel.setNeedNumber(shoppingCarts.get(0).getIssue().getToAmount());
+            shoppingCartsModel.setPerMoney(shoppingCarts.get(0).getIssue().getPricePercentAmount().doubleValue());
             shoppingCartsModel.setLeftNumber(left);
             //得到图片绝对地址
-            shoppingCartsModel.setImgUrl(commonConfigService.getResourceUri() + shoppingCart.getIssue().getGoods().getDefaultPictureUrl());
+            shoppingCartsModel.setImgUrl(commonConfigService.getResourceUri() + shoppingCarts.get(0).getIssue().getGoods().getDefaultPictureUrl());
             //如果购买量大于库存量，默认调整为库存量
-            shoppingCartsModel.setBuyNum(shoppingCart.getBuyAmount() > left ? left : shoppingCart.getBuyAmount());
+            shoppingCartsModel.setBuyNum(shoppingCarts.get(0).getBuyAmount() > left ? left : shoppingCarts.get(0).getBuyAmount());
 
-            shoppingCartsModel.setStepNum(shoppingCart.getIssue().getStepAmount());
-            shoppingCartsModel.setDetail(shoppingCart.getIssue().getGoods().getTitle());
+            shoppingCartsModel.setStepNum(shoppingCarts.get(0).getIssue().getStepAmount());
+            shoppingCartsModel.setDetail(shoppingCarts.get(0).getIssue().getGoods().getTitle());
             shoppingCartsModel.setBuyMoney(shoppingCartsModel.getPerMoney() * shoppingCartsModel.getBuyNum());
         }
         return shoppingCartsModel;
