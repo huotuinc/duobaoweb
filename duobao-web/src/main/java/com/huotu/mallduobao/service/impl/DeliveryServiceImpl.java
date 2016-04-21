@@ -102,15 +102,15 @@ public class DeliveryServiceImpl implements DeliveryService {
         String [] detail = details.split(",");
         map.put("action","submit");
         //todo lhx
-//        map.put("customerid",customerId+"");
-        map.put("customerid",3447+"");
+        map.put("customerid",customerId+"");
+//        map.put("customerid",3447+"");
         //todo lhx
-//        map.put("goodsid",delivery.getIssue().getGoods().getToMallGoodsId()+"");
-        map.put("goodsid",17066+"");
+        map.put("goodsid",delivery.getIssue().getGoods().getToMallGoodsId()+"");
+//        map.put("goodsid",17066+"");
         //todo lhx
-//        map.put("productid", delivery.getProductId()+"");
+        map.put("productid", delivery.getProductId()+"");
         //todo lhx
-        map.put("productid", 13281+"");
+//        map.put("productid", 13281+"");
         map.put("nums","1");
         map.put("shipname",URLEncoder.encode(receiver,"utf-8"));
         map.put("shipmobile",mobile);
@@ -119,9 +119,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         map.put("shipcity", URLEncoder.encode(detail[1],"utf-8"));
         map.put("shiparea",URLEncoder.encode(detail[2],"utf-8"));
         map.put("memo",URLEncoder.encode(remark,"utf-8"));
-//        map.put("openid",common.getOpenId());
         //todo lhx 用户openid
-        map.put("openid","oJtvet5XBcAG3J9EK9N4llL_dwaA");
+        map.put("openid",common.getOpenId());
+//        map.put("openid","oJtvet5XBcAG3J9EK9N4llL_dwaA");
         map.put("memberid","0");
         map.put("srctype","5");
         map.put("srcid",delivery.getIssue().getGoods().getId()+"");
