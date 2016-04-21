@@ -183,7 +183,7 @@ public class ShoppingController {
         ShoppingCartsModel shoppingCartsModel = shoppingService.getShoppingCartsModel(common.getCurrentUser().getId());
 
         //如果不存在，则让前端不显示购物车，同时支付变为0
-        if (shoppingCartsModel != null) {
+        if (shoppingCartsModel == null) {
             model.addAttribute("notShow", "1");
             model.addAttribute("issueId", common.getIssueId());
             model.addAttribute("customerId", common.getCustomerId());
