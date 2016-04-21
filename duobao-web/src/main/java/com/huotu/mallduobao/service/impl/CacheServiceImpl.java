@@ -19,7 +19,7 @@ public class CacheServiceImpl implements CacheService {
      * 缓存的抽奖号码
      * 用于快速生成用户的抽奖号码
      */
-    private String cacheLotteryNumberKey = "LotteryNumber_";
+    private String cacheLotteryNumberKey = "MallLotteryNumber_";
 
 
     @Override

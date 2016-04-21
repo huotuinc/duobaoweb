@@ -14,7 +14,6 @@ import javax.persistence.*;
 @Entity
 @Setter
 @Getter
-@Cacheable(value = false)
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user", "issue"})})
 public class UserBuyFlow {
     @Id

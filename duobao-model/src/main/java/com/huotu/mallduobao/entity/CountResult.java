@@ -16,7 +16,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Cacheable(value = false)
 public class CountResult {
 
 

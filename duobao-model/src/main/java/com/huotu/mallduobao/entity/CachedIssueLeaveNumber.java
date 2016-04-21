@@ -16,7 +16,6 @@ import javax.persistence.IdClass;
 @Entity
 @Getter
 @Setter
-@Cacheable(value = false)
 @IdClass(value = CachedIssueLeaveNumberPK.class)
 public class CachedIssueLeaveNumber {
 

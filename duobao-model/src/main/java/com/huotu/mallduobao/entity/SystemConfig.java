@@ -17,7 +17,6 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-@Cacheable(value = false)
 @AllArgsConstructor
 public class SystemConfig {
     @Id
