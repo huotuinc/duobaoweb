@@ -155,7 +155,7 @@ public class DuoBaoGoodsController {
         }
 
         duoBaoGoodsService.saveDuoBaoGoods(duoBaoGoodsInputModel);
-        return "redirect:/admin/getDuoBaoGoodsList?customerId="+customerId;
+        return "redirect:/admin/getDuoBaoGoodsList";
     }
 
     /**
@@ -193,7 +193,7 @@ public class DuoBaoGoodsController {
      * @throws Exception
      */
    @RequestMapping(value = "/getDuoBaoGoodsDatailInfo")
-   public String getDuoBaoGoodsDatailInfo(@CustomerId Long goodsId, Map<String, Object> map) throws Exception{
+   public String getDuoBaoGoodsDatailInfo(Long goodsId, Map<String, Object> map) throws Exception{
        duoBaoGoodsService.getDuoBaoGoodsDatailInfo(goodsId, map);
       return "/admin/goods/goodsInfo";
    }

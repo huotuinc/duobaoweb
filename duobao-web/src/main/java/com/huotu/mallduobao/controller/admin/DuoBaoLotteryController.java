@@ -7,6 +7,7 @@ import com.huotu.mallduobao.model.admin.WebPersonnalIssueListModel;
 import com.huotu.mallduobao.model.admin.WebUserNumberModel;
 import com.huotu.mallduobao.service.LotteryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,6 +25,9 @@ public class DuoBaoLotteryController {
     @Autowired
     LotteryService duoBaoLotteryService;
 
+    @Autowired
+    private Environment env;
+
     /**
      * 获取中奖纪录列表
      *
@@ -35,6 +39,12 @@ public class DuoBaoLotteryController {
     @RequestMapping("/getLotteryList")
     public String getLotteryList(@CustomerId Long customerId,WebIssueSearchModel webIssueSearchModel, Model model) {
         WebPersonnalIssueListModel webPersonnalIssueListModel = duoBaoLotteryService.getWebIssueListModel(webIssueSearchModel,customerId);
+
+        if(env.acceptsProfiles("development")){
+            customerId = 3447L;
+        }
+
+
         if(StringUtils.isEmpty(customerId)){
             return "/admin/error";
         }
@@ -42,7 +52,7 @@ public class DuoBaoLotteryController {
         model.addAttribute("pageNo", webIssueSearchModel.getPageNoStr());//当前页数
         model.addAttribute("totalPages", webPersonnalIssueListModel.getTotalPages());//总页数
         model.addAttribute("totalRecords", webPersonnalIssueListModel.getTotalRecords());//总记录数
-        return "/duobao/lottery/lotteryList";
+        return "/admin/lottery/lotteryList";
     }
 
     /**
@@ -58,7 +68,7 @@ public class DuoBaoLotteryController {
         model.addAttribute("webLotteryInfoModel", webLotteryInfoModel);
         List<WebUserNumberModel> userNumbers = duoBaoLotteryService.getMyRaiderNumbers(webLotteryInfoModel.getUserId(), issueId);
         model.addAttribute("userNumbers", userNumbers);
-        return "/duobao/lottery/lotteryInfo";
+        return "/admin/lottery/lotteryInfo";
     }
 
 }

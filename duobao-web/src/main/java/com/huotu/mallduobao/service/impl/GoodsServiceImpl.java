@@ -70,9 +70,6 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private CommonConfigService commonConfigService;
 
-    @Autowired
-    private LotteryService lotteryService;
-
 
     /**
      * 跳转到商品活动首页
@@ -606,7 +603,7 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public void getMallGoodsList(MallGoodsSearchModel mallGoodsSearchModel, Long customerId, Map<String, Object> map) throws Exception {
         List<MallGoodsListModel> mallGoodsListModelList = new ArrayList<>();
-        Sort sort = new Sort(Sort.Direction.ASC, "id");
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
         Page<com.huotu.huobanplus.common.entity.Goods> page = null;
         page = goodsRestRepository.findByTitleAndCategoryAndScenes(mallGoodsSearchModel.getTitle(), null, customerId ,4 , new PageRequest(mallGoodsSearchModel.getPageNoStr(), 20, sort));
 
