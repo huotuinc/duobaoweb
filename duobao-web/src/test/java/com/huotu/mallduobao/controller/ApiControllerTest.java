@@ -104,6 +104,7 @@ public class ApiControllerTest extends BaseTest {
         mockIssue = daisyMockIssue(mockGoods);
         mockGoods.setIssue(mockIssue);
         goodsRepository.saveAndFlush(mockGoods);
+
         //当前库中最新的期号
         Long issueId = mockIssue.getId();
         String sign = DigestUtils.md5DigestAsHex((mockGoods.getId().toString() +
