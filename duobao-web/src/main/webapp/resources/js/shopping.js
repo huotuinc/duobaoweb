@@ -38,7 +38,7 @@ var payToService = function (payMoney, detail, cartsId, payType, type, issueId, 
             }
         },
         error: function (data) {
-            $.jBox.tip("异常，请关闭页面重试！");
+            $.jBox.tip("网络异常，请关闭页面重试！");
         }
     })
 }
@@ -73,7 +73,7 @@ var shoppingBuy = function (buyNum, issueId, customerId) {
             }
         },
         error: function (data) {
-            $.jBox.tip("异常,请关闭页面重试！");
+            $.jBox.tip("网络异常,请关闭页面重试！");
         }
     })
 }
