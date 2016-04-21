@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by xhk on 2016/3/25.
  */
@@ -23,5 +25,5 @@ public interface ShoppingCartRepository  extends JpaRepository<ShoppingCart, Lon
 
 
     @Query("select sc from ShoppingCart as sc where sc.user.id=?1")
-    ShoppingCart findOneByUserId(Long userId);
+    List<ShoppingCart> findOneByUserId(Long userId);
 }

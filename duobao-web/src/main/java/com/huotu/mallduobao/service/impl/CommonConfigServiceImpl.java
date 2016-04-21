@@ -53,12 +53,6 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getNetMallResourceUrl() {
-        return env.getProperty("mall.resource.url", "http://192.168.3.86:8088/huobanplusmanager");
-    }
-
-
-    @Override
     public String getDuobaoKey() {
         return env.getProperty("duobao.key", "91d214037e584213b5a1352855c502af");
     }
@@ -74,5 +68,19 @@ public class CommonConfigServiceImpl implements CommonConfigService {
         return env.getProperty("mall.key", "1165a8d240b29af3f418b8d10599d0dc");
     }
 
+    @Override
+    public String getHuobanplusOpenApiAppid() {
+        return env.getProperty("com.huotu.huobanplus.open.api.appid", "_demo");
+    }
+
+    @Override
+    public String getHuobanplusOpenApiAppsecrect() {
+        return env.getProperty("com.huotu.huobanplus.open.api.appsecrect", "1f2f3f4f5f6f7f8f");
+    }
+
+    @Override
+    public String getHuobanplusOpenApiRoot() {
+        return env.getProperty("com.huotu.huobanplus.open.api.root", "http://api.open.fancat.cn:8081");
+    }
 
 }

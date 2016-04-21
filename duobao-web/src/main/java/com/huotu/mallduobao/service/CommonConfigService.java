@@ -49,12 +49,6 @@ public interface CommonConfigService {
      */
     String getResourceUri();
 
-    /**
-     * 商城图片资源地址
-     */
-    String getNetMallResourceUrl();
-
-
 
     /**
      * 夺宝的key
@@ -75,5 +69,12 @@ public interface CommonConfigService {
      * @return
      */
     String getMallKey();
+
+
+    String getHuobanplusOpenApiAppid();
+
+    String getHuobanplusOpenApiAppsecrect();
+
+    String getHuobanplusOpenApiRoot();
 
 }

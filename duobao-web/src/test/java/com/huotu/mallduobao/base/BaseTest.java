@@ -429,10 +429,10 @@ public class BaseTest {
         mockIssue.setStepAmount(goods.getStepAmount());//单次购买最低量
         mockIssue.setDefaultAmount(goods.getDefaultAmount()); //缺省购买人次
         mockIssue.setToAmount(goods.getToAmount()); //总需购买人次
-        mockIssue.setBuyAmount(2L); //已购买的人次
+        mockIssue.setBuyAmount(0L); //已购买的人次
         mockIssue.setPricePercentAmount(goods.getPricePercentAmount()); //每人次单价
         mockIssue.setAttendAmount(goods.getAttendAmount()); //购买次数,在中奖时从每期中累计此值
-        mockIssue.setStatus(CommonEnum.IssueStatus.drawing);//状态
+        mockIssue.setStatus(CommonEnum.IssueStatus.going);//状态
         mockIssue.setAwardingDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-04-11 05:00:00"));//开奖日期
         mockIssue = issueRepository.saveAndFlush(mockIssue);
         return mockIssue;

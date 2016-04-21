@@ -38,7 +38,7 @@ public class GoodsController {
     /**
      * 跳转到商品活动的首页
      *
-     * @param issueId
+     * @param goodsId
      * @param map
      * @return
      * @throws Exception

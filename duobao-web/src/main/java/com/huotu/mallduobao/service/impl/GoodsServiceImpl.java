@@ -1,5 +1,7 @@
 package com.huotu.mallduobao.service.impl;
 
+import com.huotu.common.base.HttpHelper;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.*;
@@ -7,10 +9,11 @@ import com.huotu.mallduobao.repository.GoodsRepository;
 import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserBuyFlowRepository;
 import com.huotu.mallduobao.service.*;
-import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -403,9 +406,24 @@ public class GoodsServiceImpl implements GoodsService {
      * @return
      */
     private String convertImageUrl(String imageUrl){
+        String res = "";
+        try {
+            String apiid = commonConfigService.getHuobanplusOpenApiAppid();
+            String appsecrect = commonConfigService.getHuobanplusOpenApiAppsecrect();
+            String mallApi = commonConfigService.getHuobanplusOpenApiRoot();
+            long curTime = System.currentTimeMillis();
+            String sign = "appid=" + apiid + "&timestamp=" + curTime + appsecrect;
+            sign = DigestUtils.md5DigestAsHex(sign.toString().getBytes("UTF-8")).toLowerCase();
+            res = HttpHelper.getRequest(mallApi + "/system?appid=" + apiid + "&timestamp=" + curTime + "&sign=" + sign);
+            res = JsonPath.read(res, "$.mallResourceUriRoot");
+        }catch (Exception e){
+            e.printStackTrace();
+            res= "";
+        }
+
         if(imageUrl != null){
             imageUrl = imageUrl.replaceAll("\"", "'");
-            imageUrl = imageUrl.replaceAll("src='/", "src='" + commonConfigService.getNetMallResourceUrl()+"/");
+            imageUrl = imageUrl.replaceAll("src='/", "src='" + res);
         }
         return imageUrl;
     }
