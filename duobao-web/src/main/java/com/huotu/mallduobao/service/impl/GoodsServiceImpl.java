@@ -1,11 +1,11 @@
 package com.huotu.mallduobao.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.huotu.common.base.HttpHelper;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.entity.*;
+import com.huotu.mallduobao.exceptions.GoodsOrIssueException;
 import com.huotu.mallduobao.model.*;
 import com.huotu.mallduobao.model.admin.*;
 import com.huotu.mallduobao.repository.GoodsRepository;
@@ -90,9 +90,14 @@ public class GoodsServiceImpl implements GoodsService {
 
         //1.通过商品Id获取对应的商品
         Goods goods = goodsRepository.findOne(goodsId);
+        if(goods == null){
+            throw new GoodsOrIssueException("商品ID为" +goodsId+"的活动不存在");
+        }
+
+
         Issue issue = goods.getIssue();
-        if(issue == null || goods == null || goods.getStatus().getValue() == 2){
-            throw new Exception("商品不存在或期号不存在或商品已下架");
+        if(issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)){
+            throw new GoodsOrIssueException("商品不存在或期号不存在或商品已下架---goodsId=" + goodsId);
         }
 
         //2.获取商品中正在进行的期且封装数据
@@ -128,7 +133,7 @@ public class GoodsServiceImpl implements GoodsService {
             goodsIndexModel.setJoined(false);
         }
 
-        //6.获取该商品所有的参与次数 todo
+        //6.获取该商品所有的参与次数
         Long attentAmount = 0L;
         attentAmount = attentAmount + (issue.getAttendAmount() == null ? 0L : issue.getAttendAmount());
         attentAmount = attentAmount + (goods.getAttendAmount() == null ? 0L : goods.getAttendAmount());
@@ -165,10 +170,18 @@ public class GoodsServiceImpl implements GoodsService {
 
         //1.通过商品Id获取商品
         Goods goods = goodsRepository.findOne(goodsId);
+        if(goods == null){
+            throw new GoodsOrIssueException("商品ID为" +goodsId+"的活动不存在");
+        }
 
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
             Issue issue = goods.getIssue();
+
+            if(issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)){
+                throw new GoodsOrIssueException("商品不存在或期号不存在或商品已下架---goodsId=" + goodsId);
+            }
+
 
             goodsDetailModel.setId(goodsId);
             goodsDetailModel.setTitle(goods.getTitle());
@@ -273,6 +286,10 @@ public class GoodsServiceImpl implements GoodsService {
 
         //1.通过期号获取定义的期
         Issue issue = issueRepository.findOne(issueId);
+
+        if(issue == null){
+            throw new GoodsOrIssueException("期号ID为" +issueId+"的活动不存在");
+        }
 
         //2.封装数据
         if (issue != null) {
@@ -380,6 +397,10 @@ public class GoodsServiceImpl implements GoodsService {
         //1.通过期号获取指定的期
         Issue issue = issueRepository.findOne(issueId);
 
+        if(issue == null){
+            throw new GoodsOrIssueException("期号ID为" +issueId+"的活动不存在");
+        }
+
         //2.获取期对应的计算详情
         CountResult countResult = issue.getCountResult();
         CountResultModel countResultModel = new CountResultModel();
@@ -452,6 +473,10 @@ public class GoodsServiceImpl implements GoodsService {
         //1.获取商品活动
         Goods goods = goodsRepository.findOne(goodsId);
 
+        if(goods == null){
+            throw new GoodsOrIssueException("商品ID为" +goodsId+"的活动不存在");
+        }
+
         //2.获取商城商品
         com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
 
@@ -468,6 +493,11 @@ public class GoodsServiceImpl implements GoodsService {
 
         //1.获取期号对用的期
         Issue issue = issueRepository.findOne(issueId);
+
+        if(issueId == null){
+            throw new GoodsOrIssueException("期号ID为" +issueId+"的活动不存在");
+        }
+
 
         //2.获取期号对应的活动商品
         if(issue != null){
