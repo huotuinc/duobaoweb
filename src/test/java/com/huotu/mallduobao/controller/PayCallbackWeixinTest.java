@@ -201,7 +201,7 @@ public class PayCallbackWeixinTest extends BaseTest {
         Assert.assertEquals("产生了金额流水", 0, userMoneyFlowService.getUserMoneyFlowByUserId(mockUser.getId()).size());
     }
 
-    //支付时，本次订单所购人次>本期可购次数
+    //支付时，本次订单所购人次>本期可购次数，看是否生成购买失败记录
     @Test
     public void testPassFull() throws Exception {
         //已购买人数

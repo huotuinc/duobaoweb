@@ -449,7 +449,7 @@ public class BaseTest {
         return issueId;
     }
 
-    //找出list中购买失败记录ID最大的
+    //找出list中购买记录ID最大的
     public Long findMaxBuyFail(List<UserBuyFail> userBuyFails) {
         int j = userBuyFails.size();
         Long userBuyFailsId = userBuyFails.get(0).getId();
