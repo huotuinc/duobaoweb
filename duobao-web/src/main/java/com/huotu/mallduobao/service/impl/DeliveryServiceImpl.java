@@ -13,6 +13,8 @@ import com.huotu.mallduobao.service.DeliveryService;
 import com.huotu.mallduobao.service.StaticResourceService;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ import java.util.TreeMap;
  */
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
-
+    private static Log log = LogFactory.getLog(DeliveryServiceImpl.class);
     @Autowired
     DeliveryRepository deliveryRepository;
 
@@ -140,12 +142,14 @@ public class DeliveryServiceImpl implements DeliveryService {
             delivery.setRemark(remark);
             delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.ConfirmAddress);
             String mallOrderId = JsonPath.read(json, "$.data.orderid");
+            log.info("------添加商城收货地址成功 单号："+mallOrderId);
             delivery.setIsCommit(true);
             delivery.setMallOrderId(mallOrderId);
             delivery.setDeliveryStatus(CommonEnum.DeliveryStatus.ConfirmOrder);
             deliveryRepository.saveAndFlush(delivery);
             return true;
         }
+        log.info("======添加收货地址失败：=======");
         return false;
     }
 

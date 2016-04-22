@@ -57,6 +57,7 @@ public interface DeliveryService {
      * @return
      */
     String getSign(Map<String, String> map) throws UnsupportedEncodingException;
+
     /**
      * 添加货品信息
      * @param issueId
