@@ -96,9 +96,9 @@ public class DeliveryServiceImpl implements DeliveryService {
     public boolean addRecpeiptAddress(Long customerId,Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         Delivery delivery = deliveryRepository.findByIssueId(deliveryId);
-        log.info("开始添加商城收货单");
+        log.info("-------开始添加商城收货单");
         if (delivery.getIsCommit()){
-            log.info("该中奖信息以提单");
+            log.info("======该中奖信息以提单");
             return false;
         }
         Date date = new Date();
