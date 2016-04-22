@@ -39,6 +39,7 @@ public class WebInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         WebPublicModel webPublicModel = initPublicParam(request);
 
+        //todo 正式发布环境要进行修改
         if(!environment.acceptsProfiles("development")) {
             //在非测试环境下进行正常请求
             if (request.getParameter("customerId") == null) {
