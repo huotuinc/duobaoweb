@@ -1,8 +1,7 @@
 package com.huotu.mallduobao.service;
 
-import com.huotu.mallduobao.utils.CommonEnum;
-import com.huotu.mallduobao.entity.Orders;
 import com.huotu.mallduobao.model.PayResultModel;
+import com.huotu.mallduobao.utils.CommonEnum;
 
 import java.io.IOException;
 
@@ -23,5 +22,5 @@ public interface PayService {
      * @param orders
      * @param money
      */
-    PayResultModel doPay(Orders orders, float money, String outOrderNo, CommonEnum.PayType purchaseSource) throws IOException;
+    PayResultModel doPay(String orders, float money, String outOrderNo, CommonEnum.PayType purchaseSource) throws IOException;
 }
