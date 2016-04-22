@@ -49,7 +49,6 @@ public interface CommonConfigService {
      */
     String getResourceUri();
 
-
     /**
      * 夺宝的key
      * @return
@@ -61,7 +60,6 @@ public interface CommonConfigService {
      * @return
      */
     String getMaindomain();
-
 
 
     /**

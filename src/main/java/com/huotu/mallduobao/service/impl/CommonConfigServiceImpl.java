@@ -29,7 +29,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getWebUrl() {
-        return env.getProperty("duobao.web.url", "http://mallduobao.51flashmall.com:8091");
+        return env.getProperty("duobao.web.url", "http://192.168.3.86:8080/duobaoweb");
     }//http://mallduobao.51flashmall.com:8091,http://192.168.1.41:8080/duobaoweb
 
     @Override
