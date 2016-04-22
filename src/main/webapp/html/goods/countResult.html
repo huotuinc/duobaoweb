@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="description" content=""/>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/commfont.css" th:href="@{/resources/css/commfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" th:href="@{/resources/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" href="css/dbdb.css" th:href="@{/resources/css/dbdb.css}"/>
+
+    <title>计算结果</title>
+    <style>
+    </style>
+
+</head>
+
+<body style="background-color:#f5f5f5;">
+
+<form method="post" id="form1" th:object="${countResultModel}">
+    <div class="commfont">
+        <div class="js">
+            <p class="tit_rem_big jsszp">计算公式</p>
+
+            <p class=" jsszp">[(数值A+数值B)÷商品所需人次]取余数+100000001</p>
+        </div>
+        <!--数值A-->
+        <div class="jssz">
+            <p class="tit_rem_big jsszp">计算A</p>
+
+            <p class=" jsszp">=截止该商品开奖时间点前最后20条全站参与纪录 </p>
+
+            <p class="jsszp ">
+                <span class=" " style="color:#ef6314;">=<span th:text="*{numberA}">7580283979</span></span>
+                <a href="#">
+                    <span class="jsszright"><img src="images/db002.png" th:src="@{/resources/images/db002.png}"
+                                                 style="width:14px; vertical-align:middle; margin-top:5px"/></span>
+                    <span id="open" class="jsszright">展开</span></a>
+
+            </p>
+        </div>
+        <!--数值A END-->
+
+
+        <!--点击展开后显示-->
+        <div id="info" style="display:none;">
+            <ul class="jess tit_rem">
+                <li>
+                    <p class="jssleft tit_rem_big">夺宝时间 </p>
+                    <p class="jssright tit_rem_big">用户账号 </p>
+                    <p class="clear"></p>
+                </li>
+                <li th:each="userNumber:*{userNumbers}">
+                    <p class="jssleft "><span th:text="${userNumber.buyTime}">2016/12/11&nbsp;14:30:00</span><i style="color:#058cff;">&nbsp;→<span th:text="${userNumber.number}">7580283979</span></i></p>
+
+                    <p class="jssright  ccc"><span th:text="${userNumber.nickName}">付小虎</span></p>
+
+                    <p class="clear"></p>
+                </li>
+            </ul>
+        </div>
+
+        <!--点击展开后显示-->
+
+
+        <!--数值B-->
+        <div class="jssz">
+            <p class="tit_rem_big jsszp">数值B</p>
+
+            <p class="jsszp">=最近一期福利彩票“老时彩票”开奖结果</p>
+
+            <p class="jsszp"><i style="color:#ef6314;"> =<span th:text="*{numberB}">81256</span></i> (第<span
+                    th:text="*{issueNo}">20160318</span>期)<a href="http://caipiao.163.com/award/cqssc/"><i
+                    style="color:#058cff; padding-left:10px; ">开奖查询</i> </a></p>
+        </div>
+        <!--数值B END-->
+
+        <P style="height:10px; border-bottom:1px solid #ddd;  "></P>
+
+
+        <!--计算结果-->
+        <div class="jssz">
+            <p class="tit_rem_big jsszp">计算结果</p>
+
+            <p class="jsszp">幸运号码：<i style="color:#ef6314;"><span th:text="*{luckNumber}">10000006</span></i></p>
+
+        </div>
+        <!--计算结果 END-->
+    </div>
+</form>
+
+<script type="text/javascript" th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+   $(function(){
+
+       $("#open").click(function(){
+          var text = $(this).text();
+          if(text == "展开"){
+              $("#open").text("收起");
+              $("#info").css("display", "block");
+          }else{
+              $("#open").text("展开");
+              $("#info").css("display", "none");
+          }
+       })
+   })
+
+
+</script>
+
+</body>
+</html>
