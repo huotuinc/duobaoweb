@@ -113,7 +113,7 @@
 
     <!--已揭晓-->
     <div th:if="*{status eq 2}" class="yjx">
-      <p style="position:absolute;"><img src="images/db004.png" th:src="*{awardUserHead}" style="width:50px;"/></p>
+      <p style="position:absolute;"><img src="images/db004.png" th:src="@{/resources/images/db004.png}" style="width:50px;"/></p>
       <div class="yjx_a">
         <div class="zjj_alll">
           <div class="zjj_all_rightt">
@@ -133,7 +133,7 @@
             </div>
           </div>
           <div class="zjj_all_leftt">
-            <img src="images/moren.png" th:src="@{/resources/images/moren.png}" style="width:60px; border-radius:50px;"  />
+            <img src="images/moren.png" th:src="*{awardUserHead}" style="width:60px; border-radius:50px;"  />
           </div>
           <p class="clear"></p>
         </div>
