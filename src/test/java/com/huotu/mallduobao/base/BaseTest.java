@@ -449,16 +449,28 @@ public class BaseTest {
         return issueId;
     }
 
+    //找出list中购买失败记录ID最大的
+    public Long findMaxBuyFail(List<UserBuyFail> userBuyFails) {
+        int j = userBuyFails.size();
+        Long userBuyFailsId = userBuyFails.get(0).getId();
+        for (int i = 1; i < j; i++) {
+            Long nextID = userBuyFails.get(i).getId();
+            if (userBuyFailsId < nextID)
+                userBuyFailsId = nextID;
+        }
+        return userBuyFailsId;
+    }
 
 
-    /***************************COSY测试商品，不准你动*************************/
+    /***************************
+     * COSY测试商品，不准你动
+     *************************/
 
 
     //创建商品
     Goods goods;
 
-    public Goods createGoods()
-    {
+    public Goods createGoods() {
         //商品
         goods = new Goods();
         goods.setTitle("cosytest");
@@ -478,8 +490,8 @@ public class BaseTest {
 
     //创建用户
     User currentUser;
-    public  User createUser()
-    {
+
+    public User createUser() {
         currentUser = new User();
         currentUser.setUsername("cosylj");
         currentUser.setPassword("123456");
@@ -489,15 +501,14 @@ public class BaseTest {
         currentUser.setMerchantId(3447L);
         currentUser.setMoney(new BigDecimal(100));
         currentUser.setRegTime(new Date());
-        currentUser=userRepository.saveAndFlush(currentUser);
+        currentUser = userRepository.saveAndFlush(currentUser);
         return currentUser;
     }
 
     //期号
     Issue currentIssue;
 
-    public Issue createIssue(Goods goods,User currentUser) throws Exception
-    {
+    public Issue createIssue(Goods goods, User currentUser) throws Exception {
         currentIssue = new Issue();
         currentIssue.setGoods(goods);
         currentIssue.setDefaultAmount(10L);
@@ -508,15 +519,14 @@ public class BaseTest {
         currentIssue.setAttendAmount(10L);
         currentIssue.setStatus(CommonEnum.IssueStatus.drawed);
         currentIssue.setAwardingUser(currentUser);
-        currentIssue= issueRepository.saveAndFlush(currentIssue);
+        currentIssue = issueRepository.saveAndFlush(currentIssue);
         return currentIssue;
     }
 
     //收货地址
     Delivery delivery;
 
-    public Delivery  createDelivery(Issue currentIssue,User currentUser) throws Exception
-    {
+    public Delivery createDelivery(Issue currentIssue, User currentUser) throws Exception {
 
 
         delivery = new Delivery();
@@ -531,20 +541,19 @@ public class BaseTest {
     //用户购买商品的记录
     UserBuyFlow userBuyFlow;
 
-    public UserBuyFlow createUserBuyFlow () throws Exception
-    {
+    public UserBuyFlow createUserBuyFlow() throws Exception {
 
 
         userBuyFlow = new UserBuyFlow();
         userBuyFlow.setUser(currentUser);
         userBuyFlow.setIssue(currentIssue);
         userBuyFlow.setAmount(10L);
-        userBuyFlow= userBuyFlowRepository.saveAndFlush(userBuyFlow);
-        for (int i=0 ; i<10; i++){
+        userBuyFlow = userBuyFlowRepository.saveAndFlush(userBuyFlow);
+        for (int i = 0; i < 10; i++) {
             UserNumber userNumber = new UserNumber();
             userNumber.setIssue(currentIssue);
             userNumber.setUser(currentUser);
-            userNumber.setNumber(100000L+i);
+            userNumber.setNumber(100000L + i);
             userNumberRepository.save(userNumber);
 
         }
@@ -553,12 +562,10 @@ public class BaseTest {
     }
 
 
-
     //创建订单
     Orders orders;
 
-    public Orders createOrders()
-    {
+    public Orders createOrders() {
         orders = new Orders();
         orders.setId("2016011508080848599");
         orders.setUser(currentUser);
@@ -569,7 +576,7 @@ public class BaseTest {
         orders.setPayType(CommonEnum.PayType.alipay);
         orders.setStatus(CommonEnum.OrderStatus.payed);
         orders.setDetails("aaaaa");
-        orders= ordersRepository.saveAndFlush(orders);
+        orders = ordersRepository.saveAndFlush(orders);
         return orders;
     }
 

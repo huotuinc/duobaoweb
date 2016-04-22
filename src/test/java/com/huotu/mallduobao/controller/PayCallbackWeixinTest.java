@@ -74,6 +74,8 @@ public class PayCallbackWeixinTest extends BaseTest {
     private UserMoneyFlowService userMoneyFlowService;
     @Autowired
     private UserNumberRepository userNumberRepository;
+    @Autowired
+    private UserBuyFailRepository userBuyFailRepository;
 
     private User mockUser;
     private Goods mockGoods;
@@ -114,19 +116,20 @@ public class PayCallbackWeixinTest extends BaseTest {
     @Test
     public void testPayCallBackWeiXinSuccess() throws Exception {
         Long BuyAmount = mockIssue.getBuyAmount();
+        String outtradeno = "777777777";
         MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", mockOrder.getId()).param("totalfee", mockOrder.getMoney().toString())
-                .param("outtradeno", "7777777777"))
+                .param("outtradeno", outtradeno))
                 .andExpect(status().isOk())
                 .andExpect((jsonPath("$.msg").value("支付成功！")))
                 .andExpect((jsonPath("$.code").value(1)))
                 .andDo(print())
                 .andReturn();
-//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-//        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
-//        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
+        //获取数据库里的订单
+        Orders DBorders = ordersRepository.findOne(mockOrder.getId());
         Assert.assertEquals("订单状态没改变", CommonEnum.OrderStatus.payed,
-                ordersRepository.findOne(mockOrder.getId()).getStatus());
+                DBorders.getStatus());
+        Assert.assertEquals("外部流水号写入错误", outtradeno, DBorders.getOutOrderNo());
         Assert.assertEquals("订单详情状态没改变", CommonEnum.OrderStatus.payed,
                 ordersItemRepository.findOne(mockItem.getId()).getStatus());
         Assert.assertEquals("已购买数量并没有增加", String.valueOf(BuyAmount + mockItem.getAmount()),
@@ -144,7 +147,7 @@ public class PayCallbackWeixinTest extends BaseTest {
         UserMoneyFlow userMoneyFlow = userMoneyFlowService.getUserMoneyFlowByUserId(mockUser.getId()).get(0);
         //判断金额流水中的各属性值是否正确
         Assert.assertEquals("流水类型错误", CommonEnum.MoneyFlowType.buy, userMoneyFlow.getMoneyFlowType());
-        Assert.assertEquals("金额出错", mockOrder.getMoney(), userMoneyFlow.getMoney());
+        Assert.assertEquals("流水金额出错", mockOrder.getMoney(), userMoneyFlow.getMoney());
         Assert.assertEquals("用户余额出错", mockUser.getMoney(), userMoneyFlow.getCurrentMoney());
         Assert.assertNotNull("购买时间缺失", userMoneyFlow.getTime());
         Assert.assertEquals("购买", userMoneyFlow.getRemarek());
@@ -153,19 +156,13 @@ public class PayCallbackWeixinTest extends BaseTest {
     //订单不存在
     @Test
     public void testOrderNotFind() throws Exception {
-        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
+        mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", "999999").param("totalfee", mockOrder.getMoney().toString())
                 .param("outtradeno", "7777777777"))
                 .andExpect(status().isOk())
                 .andExpect((jsonPath("$.msg").value("支付失败！")))
-                .andExpect((jsonPath("$.code").value(0)))
-                .andReturn();
-//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-//        Assert.assertEquals("code值错误", "0", payResult.getCode().toString());
-//        Assert.assertEquals("提示信息错误", "支付失败！", payResult.getMsg());
-
+                .andExpect((jsonPath("$.code").value(0)));
     }
-    //支付时，是最后一笔订单，则立即新建一期商品
 
     //订单已经被支付成功,再次收到回调请求，则直接返回支付成功
     @Test
@@ -176,34 +173,26 @@ public class PayCallbackWeixinTest extends BaseTest {
         //设置订单详情状态为已支付
         mockItem.setStatus(CommonEnum.OrderStatus.payed);
         ordersItemRepository.saveAndFlush(mockItem);
-        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
+        mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
                 .param("outtradeno", "7777777777"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect((jsonPath("$.msg").value("支付成功！")))
-                .andExpect((jsonPath("$.code").value(1)))
-                .andReturn();
-//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-//        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
-//        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
-
+                .andExpect((jsonPath("$.code").value(1)));
     }
 
     //支付金额不对
     @Test
     public void testMoneyWrong() throws Exception {
         Long BuyAmount = mockIssue.getBuyAmount();
-        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
+        mockMvcPay.perform(post("/pay/payCallbackWeixin")
                 .param("orderNo", mockOrder.getId().toString()).param("totalfee", "20")
                 .param("outtradeno", "7777777777"))
                 .andExpect(status().isOk())
                 .andExpect((jsonPath("$.msg").value("支付失败！")))
                 .andExpect((jsonPath("$.code").value(0)))
                 .andReturn();
-//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-//        Assert.assertEquals("code值错误", "0", payResult.getCode().toString());
-//        Assert.assertEquals("提示信息错误", "支付失败！", payResult.getMsg());
         Assert.assertEquals("订单状态改变", CommonEnum.OrderStatus.paying, ordersRepository.findOne(mockOrder.getId()).getStatus());
         Assert.assertEquals("订单详情状态改变", CommonEnum.OrderStatus.paying, ordersItemRepository.findOne(mockItem.getId()).getStatus());
         Assert.assertEquals("购买数量被增加", BuyAmount.toString(), issueRepository.findOne(mockIssue.getId()).getBuyAmount().toString());
@@ -212,140 +201,40 @@ public class PayCallbackWeixinTest extends BaseTest {
         Assert.assertEquals("产生了金额流水", 0, userMoneyFlowService.getUserMoneyFlowByUserId(mockUser.getId()).size());
     }
 
-    //支付时，已完被抢完，但状态是待开奖
-//    @Test
-//    public void testIssueOver() throws Exception {
-//        //设置期号为已买完
-//        mockIssue.setBuyAmount(20L);
-//        mockIssue.setStatus(CommonEnum.IssueStatus.drawing);
-//        issueRepository.saveAndFlush(mockIssue);
-//        //本期
-//        Long BuyAmount = mockIssue.getBuyAmount();
-//        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
-//                .param("orderNo", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
-//                .param("outtradeno", "7777777777"))
-//                .andExpect(status().isOk())
-//                .andExpect(model().attributeExists("payResult"))
-//                .andReturn();
-//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-//        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
-//        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
-//        Assert.assertEquals("订单状态没改变", CommonEnum.OrderStatus.payed,
-//                ordersRepository.findOne(mockOrder.getId()).getStatus());
-//        Assert.assertEquals("订单详情状态没改变", CommonEnum.OrderStatus.payed,
-//                ordersItemRepository.findOne(mockItem.getId()).getStatus());
-//        //不会在本次再次增加已购数量
-//        Assert.assertEquals("在本期增加了购买人数", BuyAmount, issueRepository.findOne(mockIssue.getId()).getBuyAmount());
-//        //新一期的期号
-//        Long newIssueId = findMaxIssueId(issueRepository.findAllIssueByGoodsId(mockGoods.getId()));
-//        Assert.assertNotEquals("并没有生成下一期", mockIssue.getId(), newIssueId);
-//        //订单详情中的新期号
-//        Long newOrderItemIssueId = ordersItemRepository.findOne(mockItem.getId()).getIssue().getId();
-//        Assert.assertNotEquals("并没有更新期次", mockIssue.getId(), newOrderItemIssueId);
-//        Assert.assertEquals("已购买数量并没有增加", mockItem.getAmount(), issueRepository.findOne(newIssueId).getBuyAmount());
-//        //获取购买记录
-//        UserBuyFlow userBuyFlow = userBuyFlowRepository.findAllByIssueAndUser(newIssueId, mockUser.getId()).get(0);
-//        //判断购买记录中的值是否正确
-//        Assert.assertEquals("购买记录中数量不对", mockItem.getAmount(), userBuyFlow.getAmount());
-//        Assert.assertEquals("购买用户不对", mockUser, userBuyFlow.getUser());
-//        Assert.assertNotNull("没有期号", userBuyFlow.getIssue());
-//        Assert.assertNotNull("购买时间缺失", userBuyFlow.getTime());
-//        //获取用户中奖号码
-//        Assert.assertNotNull("没有产生用户中奖号码", userNumberRepository.findByIssueAndUser(issueRepository.findOne(newIssueId), mockUser));
-//        //获取金额流水
-//        UserMoneyFlow userMoneyFlow = userMoneyFlowService.getUserMoneyFlowByUserId(mockUser.getId()).get(0);
-//        //判断金额流水中的各属性值是否正确
-//        Assert.assertEquals("流水类型错误", CommonEnum.MoneyFlowType.buy, userMoneyFlow.getMoneyFlowType());
-//        Assert.assertEquals("金额出错", mockOrder.getMoney(), userMoneyFlow.getMoney());
-//        Assert.assertEquals("用户余额出错", mockUser.getMoney(), userMoneyFlow.getCurrentMoney());
-//        Assert.assertNotNull("购买时间缺失", userMoneyFlow.getTime());
-//        Assert.assertEquals("购买", userMoneyFlow.getRemarek());
-//
-//    }
-//    //支付时，已经是已开奖状态
-//
-//    @Test
-//    public void testIssueDrawed() throws Exception {
-//        //设置期号为已买完
-//        mockIssue.setBuyAmount(20L);
-//        mockIssue.setStatus(CommonEnum.IssueStatus.drawed);
-//        issueRepository.saveAndFlush(mockIssue);
-//        //本期
-//        Long BuyAmount = mockIssue.getBuyAmount();
-//        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
-//                .param("orderNo", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
-//                .param("outtradeno", "7777777777"))
-//                .andExpect(status().isOk())
-//                .andExpect(model().attributeExists("payResult"))
-//                .andReturn();
-//        PayResult payResult = (PayResult) result.getModelAndView().getModel().get("payResult");
-//        Assert.assertEquals("code值错误", "1", payResult.getCode().toString());
-//        Assert.assertEquals("提示信息错误", "支付成功！", payResult.getMsg());
-//        Assert.assertEquals("订单状态没改变", CommonEnum.OrderStatus.payed,
-//                ordersRepository.findOne(mockOrder.getId()).getStatus());
-//        Assert.assertEquals("订单详情状态没改变", CommonEnum.OrderStatus.payed,
-//                ordersItemRepository.findOne(mockItem.getId()).getStatus());
-//        //不会在本次再次增加已购数量
-//        Assert.assertEquals("在本期增加了购买人数", BuyAmount, issueRepository.findOne(mockIssue.getId()).getBuyAmount());
-//        //新一期的期号
-//        Long newIssueId = findMaxIssueId(issueRepository.findAllIssueByGoodsId(mockGoods.getId()));
-//        Assert.assertNotEquals("并没有生成下一期", mockIssue.getId(), newIssueId);
-//        //订单详情中的新期号
-//        Long newOrderItemIssueId = ordersItemRepository.findOne(mockItem.getId()).getIssue().getId();
-//        Assert.assertNotEquals("并没有更新期次", mockIssue.getId(), newOrderItemIssueId);
-//        Assert.assertEquals("已购买数量并没有增加", mockItem.getAmount(), issueRepository.findOne(newIssueId).getBuyAmount());
-//        //获取购买记录
-//        UserBuyFlow userBuyFlow = userBuyFlowRepository.findAllByIssueAndUser(newIssueId, mockUser.getId()).get(0);
-//        //判断购买记录中的值是否正确
-//        Assert.assertEquals("购买记录中数量不对", mockItem.getAmount(), userBuyFlow.getAmount());
-//        Assert.assertEquals("购买用户不对", mockUser, userBuyFlow.getUser());
-//        Assert.assertNotNull("没有期号", userBuyFlow.getIssue());
-//        Assert.assertNotNull("购买时间缺失", userBuyFlow.getTime());
-//        //获取用户中奖号码
-//        Assert.assertNotNull("没有产生用户中奖号码", userNumberRepository.findByIssueAndUser(issueRepository.findOne(newIssueId), mockUser));
-//        //获取金额流水
-//        UserMoneyFlow userMoneyFlow = userMoneyFlowService.getUserMoneyFlowByUserId(mockUser.getId()).get(0);
-//        //判断金额流水中的各属性值是否正确
-//        Assert.assertEquals("流水类型错误", CommonEnum.MoneyFlowType.buy, userMoneyFlow.getMoneyFlowType());
-//        Assert.assertEquals("金额出错", mockOrder.getMoney(), userMoneyFlow.getMoney());
-//        Assert.assertEquals("用户余额出错", mockUser.getMoney(), userMoneyFlow.getCurrentMoney());
-//        Assert.assertNotNull("购买时间缺失", userMoneyFlow.getTime());
-//        Assert.assertEquals("购买", userMoneyFlow.getRemarek());
-//    }
-
-
-//    //充值订单，正常完成
-//    @Test
-//    public void testAddMoney() throws Exception {
-//        //设置订单类型为充值订单
-//        mockOrder.setOrderType(CommonEnum.OrderType.put);
-//        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
-//                .param("tradeno", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
-//                .param("outtradeno", "7777777777"))
-//                .andExpect(status().isOk())
-//                .andExpect(model().attributeExists("payResult"))
-//                .andReturn();
-
-//    }
-
-//    /**
-//     * 测试两个订单支付成功，但是剩余人次不足，写入“订单失败”表 by xhk
-//     */
-//    @Test
-//    @Rollback(false)
-//    public void testOrderFail() throws Exception {
-//        MvcResult result = mockMvcPay.perform(post("/pay/payCallbackWeixin")
-//                .param("orderNo", "201604181610345011")
-//                .param("totalfee", "0.01")
-//                .param("outtradeno", "123456"))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        MvcResult result1 = mockMvcPay.perform(post("/pay/payCallbackWeixin")
-//                .param("orderNo", "2016041816111983120")
-//                .param("totalfee", "0.01")
-//                .param("outtradeno", "654321"))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//    }
+    //支付时，本次订单所购人次>本期可购次数
+    @Test
+    public void testPassFull() throws Exception {
+        //已购买人数
+        Long Buyed = 3L;
+        //设置已购人数
+        mockIssue.setBuyAmount(Buyed);
+        issueRepository.saveAndFlush(mockIssue);
+        //订置订单详情购买人次大于剩余可购次数
+        mockItem.setAmount(mockIssue.getToAmount() - mockIssue.getBuyAmount() + 1);
+        ordersItemRepository.saveAndFlush(mockItem);
+        mockMvcPay.perform(post("/pay/payCallbackWeixin")
+                .param("orderNo", mockOrder.getId().toString()).param("totalfee", mockOrder.getMoney().toString())
+                .param("outtradeno", "7777777777"))
+                .andExpect(status().isOk())
+                .andExpect((jsonPath("$.msg").value("支付成功！")))
+                .andExpect((jsonPath("$.code").value(1)))
+                .andDo(print());
+        //订单状态为5
+        Assert.assertEquals("订单状态错误", CommonEnum.OrderStatus.fail, ordersRepository.findOne(mockOrder.getId()).getStatus());
+        Assert.assertEquals("订单详情状态错误", CommonEnum.OrderStatus.fail, ordersItemRepository.findOne(mockItem.getId()).getStatus());
+        //本期状态不会
+        Assert.assertEquals("本期状态被改变", CommonEnum.IssueStatus.going, issueRepository.findOne(mockIssue.getId()).getStatus());
+        //已购买人数不变
+        Assert.assertEquals("已购买人数被改变", Buyed, issueRepository.findOne(mockIssue.getId()).getBuyAmount());
+        //生成userBuyFail
+        //查找最新失败购买记录Id
+        Long BuyFailId = findMaxBuyFail(userBuyFailRepository.findAll());
+        UserBuyFail userBuyFail = userBuyFailRepository.findOne(BuyFailId);
+        Assert.assertEquals("购买的期号不对", mockIssue.getId(), userBuyFail.getIssue().getId());
+        Assert.assertEquals("购买的用户不对", mockUser.getId(), userBuyFail.getUser().getId());
+        Assert.assertEquals("购买的商品不对", mockGoods.getId(), userBuyFail.getGoods().getId());
+        Assert.assertEquals("购买的金额不对", mockOrder.getMoney(), userBuyFail.getMoney());
+        Assert.assertEquals("订单来源ID不对", mockOrder.getId(), userBuyFail.getSourceOrders().getId());
+    }
 
 }
