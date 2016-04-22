@@ -96,7 +96,9 @@ public class DeliveryServiceImpl implements DeliveryService {
     public boolean addRecpeiptAddress(Long customerId,Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         Delivery delivery = deliveryRepository.findByIssueId(deliveryId);
+        log.info("开始添加商城收货单");
         if (delivery.getIsCommit()){
+            log.info("该中奖信息以提单");
             return false;
         }
         Date date = new Date();
@@ -133,6 +135,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMaindomain().trim()+"/api/order.aspx";
 //        url = "http://192.168.1.16:8899/api/order.aspx";
         String json = HttpHelper.postRequest(url, map);
+        log.info("*****添加商城收货单："+json);
         int code = JsonPath.read(json, "$.code");
         if (code==1){
             delivery.setReceiver(receiver);
