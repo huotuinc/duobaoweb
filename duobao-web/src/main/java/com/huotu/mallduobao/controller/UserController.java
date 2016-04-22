@@ -67,16 +67,16 @@ public class UserController {
 
 
         Cookie custId=new Cookie("customerId",customerId);
-        custId.setMaxAge(60*10); //单位是秒 todo 正式上线的时候时间设置长一点
+        custId.setMaxAge(60*60*24*365*5); //单位是秒 todo 正式上线的时候时间设置长一点 5年
         custId.setPath("/");
         Cookie userId=new Cookie("userId",String.valueOf(user.getId()));
-        userId.setMaxAge(60*10);
+        userId.setMaxAge(60*60*24*365*5);
         userId.setPath("/");
         Cookie openId=new Cookie("openId",retuinfo.getOpenid());
-        openId.setMaxAge(60*10);
+        openId.setMaxAge(60*60*24*365*5);
         openId.setPath("/");
         Cookie sign=new Cookie("sign",userService.getSign(user));
-        sign.setMaxAge(60*10);
+        sign.setMaxAge(60*60*24*365*5);
         sign.setPath("/");
         response.addCookie(custId);
         response.addCookie(userId);
