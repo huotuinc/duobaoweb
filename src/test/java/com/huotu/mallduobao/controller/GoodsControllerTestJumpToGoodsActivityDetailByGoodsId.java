@@ -14,7 +14,6 @@ import com.huotu.mallduobao.boot.RootConfig;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.model.GoodsDetailModel;
 import com.huotu.mallduobao.repository.GoodsRepository;
-import com.huotu.mallduobao.repository.IssueRepository;
 import com.huotu.mallduobao.repository.UserBuyFlowRepository;
 import com.huotu.mallduobao.repository.UserRepository;
 import com.huotu.mallduobao.utils.CommonEnum;
@@ -36,7 +35,6 @@ import java.text.SimpleDateFormat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Created by daisy.zhang on 2016/4/6.
@@ -52,8 +50,6 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
 
     @Autowired
     private GoodsRepository mockGoodsRep;
-    @Autowired
-    private IssueRepository issueRepository;
     @Autowired
     private UserRepository mockUserRep;
     @Autowired
@@ -114,6 +110,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
                 goodsDetailModel.getRemainAmount().toString());
         Assert.assertEquals("默认购买量错误", mockGoods.getDefaultAmount(), goodsDetailModel.getDefaultAmount());
         Assert.assertEquals("单次购买最低量错误", mockIssue.getStepAmount(), goodsDetailModel.getStepAmount());
+        Assert.assertEquals("参与人数错误", mockIssue.getBuyAmount().toString(), goodsDetailModel.getJoinCount().toString());
         Assert.assertNull("参与号码不应该有", goodsDetailModel.getNumber());
         Assert.assertEquals("全额购买金额错误", costPrice, goodsDetailModel.getFullPrice());
         Assert.assertNull("距离开奖时间不应该有", goodsDetailModel.getToAwardTime());
@@ -133,12 +130,13 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
     @Test
     public void TestUserJoined() throws Exception {
         //更新购买人数
-        mockIssue.setBuyAmount(1L);
-        issueRepository.saveAndFlush(mockIssue);
-        //一个用户模拟1条购买记录
+        mockIssue.setBuyAmount(2L);
+        //一个用户模拟2条购买记录
         mockUserBuyFlowA = saveUserBuyFlow(mockUserA, mockIssue);
-        //模拟用户的1个中奖号码
+        mockUserBuyFlowB = saveUserBuyFlow(mockUserA, mockIssue);
+        //模拟用户的两个中奖号码
         mockUserNumberA = saveUserNumber(mockUserA, mockIssue, 1);
+        mockUserNumberB = saveUserNumber(mockUserA, mockIssue, 2);
 
         MvcResult result = mockMvc.perform(get("/goods/detailByGoodsId").param("goodsId", mockGoods.getId().toString())
                 .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
@@ -149,7 +147,6 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
                 .andExpect(model().attribute("customerId", 3447L))
                 .andDo(print())
                 .andReturn();
-//        System.out.println("test------" + );
         GoodsDetailModel goodsDetailModel = (GoodsDetailModel) result.getModelAndView().getModel().get("goodsDetailModel");
         Assert.assertEquals("商品ID错误", mockGoods.getId(), goodsDetailModel.getId());
         Assert.assertEquals("商品期号错误", mockIssue.getId(), goodsDetailModel.getIssueId());
@@ -157,14 +154,15 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
         Assert.assertEquals("图片列表数量不对", 2, goodsDetailModel.getPictureUrls().size());
         Assert.assertEquals("商品状态错误", "0", goodsDetailModel.getStatus().toString());
         Assert.assertEquals("商品标题错误", mockGoods.getTitle(), goodsDetailModel.getTitle());
-        Assert.assertEquals("购买进度错误", String.valueOf(mockIssue.getBuyAmount() *100 / mockGoods.getToAmount()),
+        Assert.assertEquals("购买进度错误", String.valueOf(mockIssue.getBuyAmount() / mockGoods.getToAmount()),
                 goodsDetailModel.getProgress().toString());
         Assert.assertEquals("商品总需错误", mockGoods.getToAmount(), goodsDetailModel.getToAmount());
         Assert.assertEquals("商品剩余数量错误", String.valueOf(mockIssue.getToAmount() - mockIssue.getBuyAmount()),
                 goodsDetailModel.getRemainAmount().toString());
         Assert.assertEquals("默认购买量错误", mockGoods.getDefaultAmount(), goodsDetailModel.getDefaultAmount());
         Assert.assertEquals("单次购买最低量错误", mockIssue.getStepAmount(), goodsDetailModel.getStepAmount());
-         Assert.assertNotNull("参与号码不存在", goodsDetailModel.getNumber());
+        Assert.assertEquals("参与人数错误", mockIssue.getBuyAmount().toString(), goodsDetailModel.getJoinCount().toString());
+       // Assert.assertNotNull("参与号码不存在", goodsDetailModel.getNumber());
         Assert.assertEquals("全额购买金额错误", costPrice, goodsDetailModel.getFullPrice());
         Assert.assertNull("距离开奖时间不应该有", goodsDetailModel.getToAwardTime());
         Assert.assertNull("中奖用户不应该存在", goodsDetailModel.getAwardUserName());
@@ -184,7 +182,6 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
         mockIssue.setStatus(CommonEnum.IssueStatus.drawing);
         mockIssue.setToAmount(2L);
         mockIssue.setBuyAmount(2L);
-        issueRepository.saveAndFlush(mockIssue);
         //两个用户模拟2条购买记录
         mockUserBuyFlowA = saveUserBuyFlow(mockUserA, mockIssue);
         mockUserBuyFlowB = saveUserBuyFlow(mockUserB, mockIssue);
@@ -212,11 +209,14 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
         Assert.assertNull("商品剩余数量不应该有", goodsDetailModel.getRemainAmount());
         Assert.assertEquals("默认购买量错误", mockGoods.getDefaultAmount(), goodsDetailModel.getDefaultAmount());
         Assert.assertEquals("单次购买最低量错误", mockIssue.getStepAmount(), goodsDetailModel.getStepAmount());
+        //Assert.assertEquals("参与人数错误", mockIssue.getBuyAmount().toString(), goodsDetailModel.getJoinCount().toString());
+       // Assert.assertEquals("参与号码", mockUserNumberA.getNumber(), goodsDetailModel.getNumber());
         Assert.assertNotNull("距离开奖时间缺失", goodsDetailModel.getToAwardTime());
         Assert.assertNull("中奖用户不应该存在", goodsDetailModel.getAwardUserName());
         Assert.assertNull("中奖用户城市不应该存在", goodsDetailModel.getAwardUserCityName());
         Assert.assertNull("三奖用户ip不应该存在", goodsDetailModel.getAwardUserIp());
         Assert.assertNull("中奖用户参与次数不应该有", goodsDetailModel.getAwardUserJoinCount());
+        //Assert.assertNotNull("开奖时间没有", goodsDetailModel.getAwardTime());
         Assert.assertNull("中奖号码不应该有", goodsDetailModel.getLuckNumber());
         Assert.assertNull("中奖用户头像不应该有", goodsDetailModel.getAwardUserHead());
         Assert.assertNotNull("首次购买时间缺失", goodsDetailModel.getFirstBuyTime());
@@ -265,6 +265,8 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
         Assert.assertEquals("商品标题错误", mockGoods.getTitle(), goodsDetailModel.getTitle());
         Assert.assertEquals("默认购买量错误", mockGoods.getDefaultAmount(), goodsDetailModel.getDefaultAmount());
         Assert.assertEquals("单次购买最低量错误", mockIssue.getStepAmount(), goodsDetailModel.getStepAmount());
+      //  Assert.assertEquals("参与人数错误", mockIssue.getBuyAmount(), goodsDetailModel.getJoinCount());
+      //  Assert.assertNotNull("参与号码", goodsDetailModel.getNumber());
         Assert.assertEquals("中奖用户名错误", mockIssue.getAwardingUser().getRealName(), goodsDetailModel.getAwardUserName());
         Assert.assertEquals("中奖用户城市错误", mockIssue.getAwardingUser().getCityName(), goodsDetailModel.getAwardUserCityName());
         Assert.assertEquals("中奖用户IP错误", mockIssue.getAwardingUser().getIp(), goodsDetailModel.getAwardUserIp());
@@ -281,18 +283,18 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
     @Test
     public void TestNoGoodsID() throws Exception {
         mockMvc.perform(get("/goods/detailByGoodsId").param("goodsId", "")
-                .param("customerId", "3447"))
-                .andExpect(view().name("/html/error"))
-                .andExpect(model().attribute("message", "商品ID不能为空"));
+                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //期号ID错误,判断容错（错误码还未定义，定义后统一修改）
     @Test
     public void TestWrongGoodsID() throws Exception {
         mockMvc.perform(get("/goods/detailByGoodsId").param("goodsId", "abc")
-                .param("customerId", "3447"))
-                .andExpect(view().name("redirect:/html/error.html"))
-                .andExpect(model().attributeExists("message"));
+                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //期号ID在数据库中不存在,判断容错（错误码还未定义，定义后统一修改）
@@ -300,24 +302,44 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
     public void TestNotFindGoods() throws Exception {
         mockMvc.perform(get("/goods/detailByGoodsId").param("goodsId", "999999999")
                 .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
-                .andExpect(view().name("redirect:/html/error.html"))
-                .andExpect(model().attribute("message", "商品ID为999999999的活动不存在"));
-
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
 
     //商品状态未审核,判断容错（错误码还未定义，定义后统一修改）
     @Test
     public void TestGoodUnCheck() throws Exception {
         mockGoods.setStatus(CommonEnum.GoodsStatus.uncheck);
-        mockGoods.setIssue(null);
-        mockGoodsRep.saveAndFlush(mockGoods);
         mockMvc.perform(get("/goods/detailByGoodsId").param("goodsId", mockGoods.getId().toString())
-                .param("customerId", "3447"))
-                .andExpect(view().name("redirect:/html/error.html"))
-                .andExpect(model().attribute("message", "商品不存在或期号不存在或商品已下架---goodsId="
-                        + mockGoods.getId()));
+                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
 
     }
+
+    //商品已经过期,判断容错（错误码还未定义，定义后统一修改）
+    @Test
+    public void TestExpired() throws Exception {
+        mockGoods.setStatus(CommonEnum.GoodsStatus.up);
+        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-03-27 00:00:00"));
+        mockMvc.perform(get("/goods/detailByGoodsId").param("goodsId", mockGoods.getId().toString())
+                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
+    }
+
+    //商品还未开始活动,判断容错（错误码还未定义，定义后统一修改）
+    @Test
+    public void TestNotStart() throws Exception {
+        mockGoods.setStatus(CommonEnum.GoodsStatus.up);
+        mockGoods.setStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2018-03-27 00:00:00"));
+        mockGoods.setEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2019-03-27 00:00:00"));
+        mockMvc.perform(get("/goods/detailByGoodsId").param("goodsId", mockGoods.getId().toString())
+                .param("customerId", "3447").param("issueId", mockIssue.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:/html/goods/XXXX"));
+    }
+
 
 
 }
