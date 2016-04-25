@@ -149,7 +149,7 @@ public class PersonalController {
         WebPublicModel common = PublicParameterHolder.getParameters();
         DeliveryModel deliveryModel = deliveryService.findByIssueId(common.getIssueId());
         //todo lhx
-        String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMaindomain().trim();
+        String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMainDomain().trim();
         model.addAttribute("mallOrderUrl",url);
         model.addAttribute("customerId",common.getCustomerId());
         model.addAttribute("issueId",common.getIssueId());
@@ -232,7 +232,7 @@ public class PersonalController {
     @RequestMapping("/addRecpeiptAddress")
     public String addRecpeiptAddress(Model model, Long deliveryId, String receiver, String mobile, String details,String remark) throws Exception {
         WebPublicModel common = PublicParameterHolder.getParameters();
-        deliveryService.addRecpeiptAddress(common.getCustomerId(),deliveryId, receiver, mobile, details,remark);
+        deliveryService.addRecpeiptAddress(deliveryId, receiver, mobile, details,remark);
         model.addAttribute("customerId", common.getCustomerId());
         model.addAttribute("issueId", common.getIssueId());
         return "redirect:/personal/getOneLotteryInfo?issueId="+common.getIssueId()+"&customerId="+common.getCustomerId();

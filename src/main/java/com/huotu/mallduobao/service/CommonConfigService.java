@@ -24,48 +24,42 @@ public interface CommonConfigService {
      */
     String getWebUrl();
 
-
     /**
-     * 商城的商家Id
-     * @return
-     */
-    String getMallCustomerId();
-
-
-    /**
-     * 夺宝的apikey
-     * @return
-     */
-    String getDuobaoApiKey();
-
-    /**
-     * 上传资源的服务地址
+     * 上传资源的物理路径
+     *
      * @return
      */
     String getResourcesHome();
 
     /**
-     * 伙伴商城管理Web资源地址
+     * 网站上传资源URI地址
+     *
+     * @return
      */
     String getResourceUri();
 
 
     /**
      * 夺宝的key
+     * 用于用户登录的openId和customerId的安全加密
+     *
      * @return
      */
     String getDuobaoKey();
 
     /**
-     * 得到商城的顶级域名
+     * 商城的顶级域名
+     * 用于提交订单
+     *
      * @return
      */
-    String getMaindomain();
-
+    String getMainDomain();
 
 
     /**
      * 商城对接秘钥
+     * 用户商城微信支付加密 商城订单提交加密
+     *
      * @return
      */
     String getMallKey();

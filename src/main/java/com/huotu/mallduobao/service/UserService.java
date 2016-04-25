@@ -59,5 +59,5 @@ public interface UserService {
      * @param common
      * @return
      */
-    String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws UnsupportedEncodingException;
+    String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws IOException;
 }
