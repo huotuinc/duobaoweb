@@ -58,6 +58,7 @@ public interface CommonConfigService {
 
     /**
      * 商城对接秘钥
+     * 用户商城微信支付加密 商城订单提交加密
      *
      * @return
      */

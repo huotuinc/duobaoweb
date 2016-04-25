@@ -2,6 +2,7 @@ package com.huotu.mallduobao.service.impl;
 
 
 import com.huotu.common.base.HttpHelper;
+import com.huotu.mallduobao.service.SecurityService;
 import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.entity.Delivery;
@@ -46,6 +47,9 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Autowired
     MerchantRestRepository merchantRestRepository;
+
+    @Autowired
+    private SecurityService securityService;
 
     @Override
     public Delivery getOneByIssueId(Long issueId) {
@@ -132,7 +136,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         map.put("srctype","5");
         map.put("srcid",delivery.getIssue().getGoods().getId()+"");
         map.put("timestamp", date.getTime()+ "");
-        String sign = getSign(map);
+        String sign = securityService.getPaySign(map);
         map.put("sign", sign);
         String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(customerId)).getSubDomain()+"."+commonConfigService.getMainDomain().trim()+"/api/order.aspx";
 //        url = "http://192.168.1.16:8899/api/order.aspx";
@@ -158,21 +162,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         return false;
     }
 
-    @Override
-    public String getSign(Map<String, String> map) throws UnsupportedEncodingException {
-        Map<String, String> resultMap = new TreeMap<>();
-        for (Object key : map.keySet()) {
-            resultMap.put(key.toString(), map.get(key));
-        }
-        StringBuilder strB = new StringBuilder();
-        for (String key : resultMap.keySet()) {
-            if (!"sign".equals(key) && !StringUtils.isEmpty(resultMap.get(key))) {
-                strB.append("&" + key + "=" + resultMap.get(key));
-            }
-        }
-        String toSign = (strB.toString().length() > 0 ? strB.toString().substring(1) : "") + commonConfigService.getMallKey();
-        return DigestUtils.md5DigestAsHex(toSign.getBytes("UTF-8")).toLowerCase();
-    }
 
     @Override
     public void addDeliveryProductInfo(Long issueId, Long productId, String productName) {

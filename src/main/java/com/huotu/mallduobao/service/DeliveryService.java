@@ -51,12 +51,7 @@ public interface DeliveryService {
      */
     boolean addRecpeiptAddress(Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException;
 
-    /**
-     * 对数据进行签名
-     * @param map
-     * @return
-     */
-    String getSign(Map<String, String> map) throws UnsupportedEncodingException;
+
 
     /**
      * 添加货品信息
