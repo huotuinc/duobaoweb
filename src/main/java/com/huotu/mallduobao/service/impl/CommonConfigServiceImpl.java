@@ -46,7 +46,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getDuobaoKey() {
-        return env.getProperty("mallduobao.key", "91d214037e584213b5a1352855c502af");
+        return env.getProperty("duobao.key", "91d214037e584213b5a1352855c502af");
     }
 
     @Override
