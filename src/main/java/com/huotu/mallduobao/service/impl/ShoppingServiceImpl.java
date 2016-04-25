@@ -168,6 +168,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 //        notifyurl = URLEncoder.encode(notifyurl,"UTF-8");
 //        returnurl = URLEncoder.encode(returnurl,"UTF-8");
         WeixinPayUrl.subdomain=merchantRestRepository.getOneByPK(String.valueOf(WeixinPayUrl.customerid)).getSubDomain();
+        WeixinPayUrl.maindomain=commonConfigService.getMainDomain();
         WeixinPayUrl.notifyurl=notifyurl;
         WeixinPayUrl.returnurl=returnurl;
         WeixinPayUrl.outtradeno=orders.getId();

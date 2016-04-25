@@ -49,7 +49,7 @@ public interface DeliveryService {
      * @param mobile
      * @param details
      */
-    boolean addRecpeiptAddress(Long customerId,Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException;
+    boolean addRecpeiptAddress(Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException;
 
     /**
      * 对数据进行签名

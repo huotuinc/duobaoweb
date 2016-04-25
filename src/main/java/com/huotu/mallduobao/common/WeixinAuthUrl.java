@@ -7,10 +7,14 @@ package com.huotu.mallduobao.common;
 public class WeixinAuthUrl {
 
     /**
-     * 商家域名
+     * 商家二级域名
      */
-    public static String customerdomain="cosytest.51flashmall.com";
+    public static String subdomain = "cosytest";
 
+    /**
+     * 顶级域名
+     */
+    public static String maindomain = "51flashmall.com";
     /**
      * 商户编号
      */
@@ -36,7 +40,7 @@ public class WeixinAuthUrl {
      */
     public static String getWeixinAuthUrl()
     {
-       String  weixinAuthUrl = "http://" + customerdomain
+       String  weixinAuthUrl ="http://" + subdomain + "." + maindomain
                 + "/OAuth2/WeixinAuthorize.aspx?customerid=" + customerid
                 + "&redirecturl=" + encode_url
                 + "&scope=" + scope

@@ -93,10 +93,12 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     @Transactional
-    public boolean addRecpeiptAddress(Long customerId,Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException {
+    public boolean addRecpeiptAddress(Long deliveryId, String receiver, String mobile, String details,String remark) throws IOException {
         WebPublicModel common = PublicParameterHolder.getParameters();
         Delivery delivery = deliveryRepository.findByIssueId(deliveryId);
-        log.info("-------开始添加商城收货单");
+        Long customerId = delivery.getIssue().getGoods().getMerchantId();
+
+        log.info("开始添加商城收货单");
         if (delivery.getIsCommit()){
             log.info("======该中奖信息以提单");
             return false;
@@ -132,7 +134,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         map.put("timestamp", date.getTime()+ "");
         String sign = getSign(map);
         map.put("sign", sign);
-        String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(common.getCustomerId())).getSubDomain()+"."+commonConfigService.getMaindomain().trim()+"/api/order.aspx";
+        String url = "http://"+merchantRestRepository.getOneByPK(String.valueOf(customerId)).getSubDomain()+"."+commonConfigService.getMainDomain().trim()+"/api/order.aspx";
 //        url = "http://192.168.1.16:8899/api/order.aspx";
         String json = HttpHelper.postRequest(url, map);
         log.info("*****添加商城收货单："+json);
