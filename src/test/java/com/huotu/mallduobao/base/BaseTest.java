@@ -180,7 +180,7 @@ public class BaseTest {
         goods.setToAmount(amount);
         goods.setDefaultAmount(10L);
         goods.setPricePercentAmount(new BigDecimal(1));
-        goods.setMerchantId(Long.parseLong(commonConfigService.getMallCustomerId()));
+        goods.setMerchantId(4471L);
 
         com.huotu.huobanplus.common.entity.Goods mallGoods = generateMallGoods();
         goods.setToMallGoodsId(mallGoods.getId());

@@ -692,7 +692,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             ordersItem.setAmount(userBuyFail.getAmount());
             ordersItemRepository.saveAndFlush(ordersItem);
 
-            PayResultModel resultModel = payService.doPay(userOrder, userBuyFail.getMoney().floatValue()
+            PayResultModel resultModel = payService.doPay(userOrder.getId(), userBuyFail.getMoney().floatValue()
                     , userBuyFail.getSourceOrders().getOutOrderNo(), userBuyFail.getSourceOrders().getPayType());
             if (resultModel.isSuccess()) {
 

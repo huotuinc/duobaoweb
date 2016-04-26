@@ -32,15 +32,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
         return env.getProperty("duobao.web.url", "http://192.168.3.86:8080/duobaoweb");
     }//http://mallduobao.51flashmall.com:8091,http://192.168.1.41:8080/duobaoweb
 
-    @Override
-    public String getMallCustomerId() {
-        return env.getProperty("mall.customerid", "4471");//3447
-    }
 
-    @Override
-    public String getDuobaoApiKey() {
-        return env.getProperty("duobao.apikey", "f7b88579e3b948bf8658d103329dd75d");
-    }
 
     @Override
     public String getResourcesHome() {
@@ -58,7 +50,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }
 
     @Override
-    public String getMaindomain() {
+    public String getMainDomain() {
         return env.getProperty("duobao.maindomain", " 51flashmall.com");
     }
 

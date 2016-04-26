@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -338,6 +339,7 @@ public class GoodsControllerTestJumpToGoodsActivityDetailByGoodsId extends BaseT
                 .andExpect(status().isOk())
                 .andExpect(view().name("redirect:/html/goods/XXXX"));
     }
+
 
 
 }

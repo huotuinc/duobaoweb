@@ -95,6 +95,9 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 
         engine.setTemplateResolver(rootTemplateResolver);
 
+        if(environment.acceptsProfiles("development"))
+            rootTemplateResolver.setCacheable(false);
+
         resolver.setTemplateEngine(engine);
 //        resolver.setOrder(99);
         resolver.setOrder(2147483647 + 10);

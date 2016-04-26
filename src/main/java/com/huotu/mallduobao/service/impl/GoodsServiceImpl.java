@@ -447,7 +447,7 @@ public class GoodsServiceImpl implements GoodsService {
             String sign = "appid=" + apiid + "&timestamp=" + curTime + appsecrect;
             sign = DigestUtils.md5DigestAsHex(sign.toString().getBytes("UTF-8")).toLowerCase();
             res = HttpHelper.getRequest(mallApi + "/system?appid=" + apiid + "&timestamp=" + curTime + "&sign=" + sign);
-            res = JsonPath.read(res, "$.resourceUriRoot");
+            res = JsonPath.read(res, "$.mallResourceUriRoot");
         }catch (Exception e){
             e.printStackTrace();
             res= "";

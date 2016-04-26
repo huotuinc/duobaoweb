@@ -30,6 +30,24 @@
 <title>参与购买</title>
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
+        var inputNum=function(){
+            var stepNum =/*[[${shoppingCarts.stepNum}]]*/'';
+            var perMoney =/*[[${shoppingCarts.perMoney}]]*/'';
+            var leftNumber=/*[[${shoppingCarts.leftNumber}]]*/'';
+            var buyNum=Number($("#buyNum").val());
+            if(0>=buyNum){
+                buyNum=stepNum;
+            }
+            if(buyNum>=leftNumber){
+                buyNum=leftNumber;
+            }
+            var lastMoney=perMoney*buyNum;
+            $("#buyNum").attr("value",buyNum);
+            $("#buyMoney").attr("value",lastMoney);
+            $("#buyNum").html(buyNum);
+            $("#buyMoneySh").text(lastMoney);
+        }
+
         var minNum=function(){
             var stepNum =/*[[${shoppingCarts.stepNum}]]*/'';
             var perMoney =/*[[${shoppingCarts.perMoney}]]*/'';
@@ -118,7 +136,7 @@
                         <h3>参与人次：</h3>
                         <div class="num_wrap">
                             <span class="minus minus_disabled" id="minusNum" onclick="minNum()"></span>
-                            <input class="num input_clear" id="buyNum" name="buyNum" type="tel" th:value="*{buyNum}"/>
+                            <input class="num input_clear" id="buyNum" name="buyNum" type="tel" th:value="*{buyNum}" onchange="inputNum()"/>
                             <span class="plus" id="addNum" onclick="addNum()"></span>
                             <input type="hidden" id="hiddenStore" value="3349" />
                             <input type="hidden" id="hiddenBuyNum" value="0" />

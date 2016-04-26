@@ -58,19 +58,21 @@ public class PayServiceImpl implements PayService {
 
     @Override
     public PayResultModel solveWeixinPayResult(String orderNo, float money, String outOrderNo) throws IOException {
-        Orders orders = ordersRepository.findOne(orderNo);
-        return this.doPay(orders, money, outOrderNo, CommonEnum.PayType.weixin);
+        return this.doPay(orderNo, money, outOrderNo, CommonEnum.PayType.weixin);
     }
 
     /**
      * 支付成功后的操作，将物品数量减少
      *
-     * @param orders
-     * @param money
+     * @param orderNo 订单号
+     * @param money 支付金额
+     * @param outOrderNo 外部订单号
+     * @param purchaseSource 支付类型
      */
     @Transactional
-    public synchronized PayResultModel doPay(Orders orders, float money, String outOrderNo, CommonEnum.PayType purchaseSource) throws IOException {
+    public synchronized PayResultModel doPay(String orderNo, float money, String outOrderNo, CommonEnum.PayType purchaseSource) throws IOException {
         log.info("进入支付主流程，in doPay()!");
+        Orders orders = ordersRepository.findOne(orderNo);
         Date date = new Date();
         PayResultModel resultModel = new PayResultModel();
         if (orders == null) {//如果订单不存在
