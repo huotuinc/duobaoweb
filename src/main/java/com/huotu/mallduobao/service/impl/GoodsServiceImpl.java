@@ -31,6 +31,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -635,7 +636,15 @@ public class GoodsServiceImpl implements GoodsService {
         List<MallGoodsListModel> mallGoodsListModelList = new ArrayList<>();
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Page<com.huotu.huobanplus.common.entity.Goods> page = null;
-        page = goodsRestRepository.findByTitleAndCategoryAndScenes(mallGoodsSearchModel.getTitle(), null, customerId ,4 , new PageRequest(mallGoodsSearchModel.getPageNoStr(), 20, sort));
+        String title = mallGoodsSearchModel.getTitle();
+        if(title != null){
+            if(title.trim().length() == 0){
+                title = null;
+            }else{
+                title =URLEncoder.encode("%" + title.trim() + "%", "UTF-8");
+            }
+        }
+        page = goodsRestRepository.findByTitleAndCategoryAndScenes(title, null, customerId ,4 , new PageRequest(mallGoodsSearchModel.getPageNoStr(), 20, sort));
 
         List<com.huotu.huobanplus.common.entity.Goods> goodsList = page.getContent();
         for (com.huotu.huobanplus.common.entity.Goods goods : goodsList) {
