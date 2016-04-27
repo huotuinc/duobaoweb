@@ -4,7 +4,6 @@ package com.huotu.mallduobao.service.impl;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.mallduobao.common.AuthEntity;
 import com.huotu.mallduobao.common.WeixinAuthUrl;
-import com.huotu.mallduobao.common.WeixinPayUrl;
 import com.huotu.mallduobao.common.thirdparty.MD5Util;
 import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
@@ -133,8 +132,8 @@ public class UserServiceImpl implements UserService {
         //微信授权回调url，跳转到index
         WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(request,common.getCustomerId()), "utf-8");
         WeixinAuthUrl.customerid=common.getCustomerId();
-        WeixinPayUrl.subdomain=merchantRestRepository.getOneByPK(String.valueOf(WeixinPayUrl.customerid)).getSubDomain();
-        WeixinPayUrl.maindomain=commonConfigService.getMainDomain();
+        WeixinAuthUrl.subdomain=merchantRestRepository.getOneByPK(String.valueOf(WeixinAuthUrl.customerid)).getSubDomain();
+        WeixinAuthUrl.maindomain=commonConfigService.getMainDomain();
         String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
         return apiUrl;
     }
