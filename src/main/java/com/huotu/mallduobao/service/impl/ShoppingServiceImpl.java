@@ -215,8 +215,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                 orders.setUser(shoppingCart.getUser());
                 orders.setTime(new Date());
                 //todo 测试都是付一分钱
-                //orders.setMoney(shoppingCart.getIssue().getPricePercentAmount().multiply(new BigDecimal(String.valueOf(shoppingCart.getBuyAmount()))));
-                orders.setMoney(new BigDecimal("0.01"));
+                orders.setMoney(shoppingCart.getIssue().getPricePercentAmount().multiply(new BigDecimal(String.valueOf(shoppingCart.getBuyAmount()))));
+                //orders.setMoney(new BigDecimal("0.01"));
                 orders.setOrderType(CommonEnum.OrderType.raiders);
                 orders.setPayType(payModel.getPayType() == 1 ? CommonEnum.PayType.weixin : CommonEnum.PayType.alipay);
                 orders.setTotalMoney(orders.getMoney());
