@@ -452,7 +452,7 @@ public class GoodsServiceImpl implements GoodsService {
 
 
     /**
-     *
+     * 获取图文详情中图片地址前缀
      * @return
      */
     private String getMallImageUrl() {
