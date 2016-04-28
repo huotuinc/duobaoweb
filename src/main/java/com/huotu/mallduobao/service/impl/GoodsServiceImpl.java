@@ -25,6 +25,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -42,7 +43,7 @@ import java.util.*;
 @Service
 public class GoodsServiceImpl implements GoodsService {
 
-    private  static  final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
 
     @Autowired
     private GoodsRepository goodsRepository;
@@ -91,13 +92,13 @@ public class GoodsServiceImpl implements GoodsService {
 
         //1.通过商品Id获取对应的商品
         Goods goods = goodsRepository.findOne(goodsId);
-        if(goods == null){
-            throw new GoodsOrIssueException("商品ID为" +goodsId+"的活动不存在");
+        if (goods == null) {
+            throw new GoodsOrIssueException("商品ID为" + goodsId + "的活动不存在");
         }
 
 
         Issue issue = goods.getIssue();
-        if(issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)){
+        if (issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)) {
             throw new GoodsOrIssueException("商品不存在或期号不存在或商品已下架---goodsId=" + goodsId);
         }
 
@@ -140,14 +141,14 @@ public class GoodsServiceImpl implements GoodsService {
         attentAmount = attentAmount + (goods.getAttendAmount() == null ? 0L : goods.getAttendAmount());
         goodsIndexModel.setJoinCount(attentAmount);
 
-        map.put("issueId",goods.getIssue().getId());
-        map.put("customerId",goods.getMerchantId());
+        map.put("issueId", goods.getIssue().getId());
+        map.put("customerId", goods.getMerchantId());
         map.put("goodsIndexModel", goodsIndexModel);
 
         //添加分享信息
         String shareTitle = goods.getShareTitle();
         String shareDesc = goods.getShareDescription();
-        String sharePic =  staticResourceService.getResource(goods.getSharePictureUrl()).toString();
+        String sharePic = staticResourceService.getResource(goods.getSharePictureUrl()).toString();
         map.put("shareTitle", shareTitle);
         map.put("shareDesc", shareDesc);
         map.put("sharePic", sharePic);
@@ -171,15 +172,15 @@ public class GoodsServiceImpl implements GoodsService {
 
         //1.通过商品Id获取商品
         Goods goods = goodsRepository.findOne(goodsId);
-        if(goods == null){
-            throw new GoodsOrIssueException("商品ID为" +goodsId+"的活动不存在");
+        if (goods == null) {
+            throw new GoodsOrIssueException("商品ID为" + goodsId + "的活动不存在");
         }
 
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
             Issue issue = goods.getIssue();
 
-            if(issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)){
+            if (issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)) {
                 throw new GoodsOrIssueException("商品不存在或期号不存在或商品已下架---goodsId=" + goodsId);
             }
 
@@ -214,7 +215,7 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsDetailModel.setStepAmount(issue.getStepAmount());
 
                 Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
-                if(firstBuyTimeByIssueId != null){
+                if (firstBuyTimeByIssueId != null) {
                     goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
                 }
 
@@ -249,19 +250,19 @@ public class GoodsServiceImpl implements GoodsService {
                 //3.获取用户当前参与次数
                 //3.1获取当前用户
                 User user = webPublicModel.getCurrentUser();
-                if(user != null){
+                if (user != null) {
                     //3.2获取用户参与次数
                     RaiderNumbersModel myRaiderNumbers = userNumberService.getMyRaiderNumbers(user.getId(), issue.getId());
-                    if(myRaiderNumbers != null && myRaiderNumbers.getAmount() != null){
+                    if (myRaiderNumbers != null && myRaiderNumbers.getAmount() != null) {
                         int amount = myRaiderNumbers.getAmount().intValue();
                         goodsDetailModel.setJoinCount(amount);
-                        if(amount == 1){
+                        if (amount == 1) {
                             goodsDetailModel.setNumber(myRaiderNumbers.getNumbers().get(0));
                         }
-                    }else{
+                    } else {
                         goodsDetailModel.setJoinCount(0);
                     }
-                }else{
+                } else {
                     goodsDetailModel.setJoinCount(0);
                 }
             }
@@ -288,8 +289,8 @@ public class GoodsServiceImpl implements GoodsService {
         //1.通过期号获取定义的期
         Issue issue = issueRepository.findOne(issueId);
 
-        if(issue == null){
-            throw new GoodsOrIssueException("期号ID为" +issueId+"的活动不存在");
+        if (issue == null) {
+            throw new GoodsOrIssueException("期号ID为" + issueId + "的活动不存在");
         }
 
         //2.封装数据
@@ -326,7 +327,7 @@ public class GoodsServiceImpl implements GoodsService {
             goodsDetailModel.setStepAmount(issue.getStepAmount());
 
             Long firstBuyTimeByIssueId = userBuyFlowRepository.getFirstBuyTimeByIssueId(issue.getId());
-            if(firstBuyTimeByIssueId != null){
+            if (firstBuyTimeByIssueId != null) {
                 goodsDetailModel.setFirstBuyTime(new Date(firstBuyTimeByIssueId));
             }
 
@@ -361,21 +362,21 @@ public class GoodsServiceImpl implements GoodsService {
             //3.获取用户当前参与次数
             //3.1获取当前用户
             User user = webPublicModel.getCurrentUser();
-            if(user != null){
+            if (user != null) {
                 map.put("userId", user.getId());
 
                 //3.2获取用户参与次数
                 RaiderNumbersModel myRaiderNumbers = userNumberService.getMyRaiderNumbers(user.getId(), issueId);
-                if(myRaiderNumbers.getAmount() != null){
+                if (myRaiderNumbers.getAmount() != null) {
                     int amount = myRaiderNumbers.getAmount().intValue();
                     goodsDetailModel.setJoinCount(amount);
-                    if(amount == 1){
+                    if (amount == 1) {
                         goodsDetailModel.setNumber(myRaiderNumbers.getNumbers().get(0));
                     }
-                }else{
-                   goodsDetailModel.setJoinCount(0);
+                } else {
+                    goodsDetailModel.setJoinCount(0);
                 }
-            }else{
+            } else {
                 goodsDetailModel.setJoinCount(0);
             }
         }
@@ -398,15 +399,15 @@ public class GoodsServiceImpl implements GoodsService {
         //1.通过期号获取指定的期
         Issue issue = issueRepository.findOne(issueId);
 
-        if(issue == null){
-            throw new GoodsOrIssueException("期号ID为" +issueId+"的活动不存在");
+        if (issue == null) {
+            throw new GoodsOrIssueException("期号ID为" + issueId + "的活动不存在");
         }
 
         //2.获取期对应的计算详情
         CountResult countResult = issue.getCountResult();
         CountResultModel countResultModel = new CountResultModel();
 
-       if (countResult != null) {
+        if (countResult != null) {
             countResultModel.setIssueNo(countResult.getIssueNo());
             countResultModel.setNumberA(countResult.getNumberA() == null ? "" : countResult.getNumberA().toString());
             String numberB = countResult.getNumberB() == null ? "" : countResult.getNumberB().toString();
@@ -417,7 +418,7 @@ public class GoodsServiceImpl implements GoodsService {
             countResultModel.setNumberB(numberB);
             List<UserNumber> userNumberList = countResult.getUserNumbers();
             List<CountResultUserNumberListModel> countResultUserNumberListModelList = new ArrayList<>();
-            for(UserNumber userNumber : userNumberList){
+            for (UserNumber userNumber : userNumberList) {
                 Date time = new Date(userNumber.getTime());
                 String buyTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(time);
                 String number = new SimpleDateFormat("HHmmssSSS").format(time);
@@ -435,11 +436,27 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
-     * 工具方法
+     * 把图文详情中的图片地址通过huobanpus的转换工具转换为正确的商城图片地址
+     *
+     * @param content 图文详情内容
      * @return
      */
-    private String convertImageUrl(String imageUrl){
-        String res = "";
+    private String convertImageUrl(String content) {
+        String mallImageUrl = getMallImageUrl();
+        if (!StringUtils.isEmpty(mallImageUrl) && !StringUtils.isEmpty(content)) {
+            content = content.replaceAll("\"", "'");
+            content = content.replaceAll("src='/", "src='" + mallImageUrl);
+        }
+        return content;
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    private String getMallImageUrl() {
+        String url = "";
         try {
             String apiid = commonConfigService.getHuobanplusOpenApiAppid();
             String appsecrect = commonConfigService.getHuobanplusOpenApiAppsecrect();
@@ -447,35 +464,29 @@ public class GoodsServiceImpl implements GoodsService {
             long curTime = System.currentTimeMillis();
             String sign = "appid=" + apiid + "&timestamp=" + curTime + appsecrect;
             sign = DigestUtils.md5DigestAsHex(sign.toString().getBytes("UTF-8")).toLowerCase();
-            res = HttpHelper.getRequest(mallApi + "/system?appid=" + apiid + "&timestamp=" + curTime + "&sign=" + sign);
-            res = JsonPath.read(res, "$.mallResourceUriRoot");
-        }catch (Exception e){
-            e.printStackTrace();
-            res= "";
+            url = HttpHelper.getRequest(mallApi + "/system?appid=" + apiid + "&timestamp=" + curTime + "&sign=" + sign);
+            url = JsonPath.read(url, "$.mallResourceUriRoot");
+        } catch (Exception e) {
         }
-
-        if(imageUrl != null){
-            imageUrl = imageUrl.replaceAll("\"", "'");
-            imageUrl = imageUrl.replaceAll("src='/", "src='" + res);
-        }
-        return imageUrl;
+        return url;
     }
 
 
     /**
      * 获取商品图文详情
+     *
      * @param goodsId
      * @param map
      */
     @Override
-    public void jumpToImageTextDetail(Long goodsId, Map<String, Object> map) throws Exception{
-         if(goodsId == null) return;
+    public void jumpToImageTextDetail(Long goodsId, Map<String, Object> map) throws Exception {
+        if (goodsId == null) return;
 
         //1.获取商品活动
         Goods goods = goodsRepository.findOne(goodsId);
 
-        if(goods == null){
-            throw new GoodsOrIssueException("商品ID为" +goodsId+"的活动不存在");
+        if (goods == null) {
+            throw new GoodsOrIssueException("商品ID为" + goodsId + "的活动不存在");
         }
 
         //2.获取商城商品
@@ -489,22 +500,22 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public SelGoodsSpecModel getSelGoodsSpecModelByIssueId(Long issueId) throws Exception {
-        if(issueId == null) return null;
+        if (issueId == null) return null;
         SelGoodsSpecModel selGoodsSpecModel = new SelGoodsSpecModel();
 
         //1.获取期号对用的期
         Issue issue = issueRepository.findOne(issueId);
 
-        if(issueId == null){
-            throw new GoodsOrIssueException("期号ID为" +issueId+"的活动不存在");
+        if (issueId == null) {
+            throw new GoodsOrIssueException("期号ID为" + issueId + "的活动不存在");
         }
 
 
         //2.获取期号对应的活动商品
-        if(issue != null){
+        if (issue != null) {
             Goods goods = issue.getGoods();
 
-            if(goods != null){
+            if (goods != null) {
                 selGoodsSpecModel.setId(goods.getId());
                 selGoodsSpecModel.setTitle(goods.getTitle());
                 selGoodsSpecModel.setMallGoodsId(goods.getToMallGoodsId());
@@ -512,9 +523,9 @@ public class GoodsServiceImpl implements GoodsService {
 
                 String pictureUrls = goods.getPictureUrls();
                 List<String> pictureUrlList = new ArrayList<>();
-                if(pictureUrls != null){
+                if (pictureUrls != null) {
                     String[] pics = pictureUrls.split(",");
-                    for(int i = 0; i < pics.length; ++i){
+                    for (int i = 0; i < pics.length; ++i) {
                         pictureUrlList.add(staticResourceService.getResource(pics[i]).toString());
                     }
                 }
@@ -530,6 +541,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 异步获取参与记录
+     *
      * @param issueId
      * @param page
      * @param pageSize
@@ -537,22 +549,22 @@ public class GoodsServiceImpl implements GoodsService {
      * @throws Exception
      */
     @Override
-    public BuyListModelAjax getBuyListByIssueId(Long issueId, Long lastFlag, Long page, Long pageSize) throws Exception{
+    public BuyListModelAjax getBuyListByIssueId(Long issueId, Long lastFlag, Long page, Long pageSize) throws Exception {
         BuyListModelAjax buyListModelAjax = userBuyFlowService.ajaxFindBuyListByIssueId(issueId, lastFlag, page, pageSize);
         return buyListModelAjax;
     }
 
     @Override
-    public Goods upateGoodsAttendAmount(Goods goods){
+    public Goods upateGoodsAttendAmount(Goods goods) {
         //1.获取期号
         Issue issue = goods.getIssue();
 
         //2.获取attentAmount
-        if(issue != null){
+        if (issue != null) {
             Long attendAmount = issue.getAttendAmount();
-            if(attendAmount != null){
+            if (attendAmount != null) {
                 Long goodsAttendAmount = goods.getAttendAmount();
-                if(goodsAttendAmount == null) goodsAttendAmount = 0L;
+                if (goodsAttendAmount == null) goodsAttendAmount = 0L;
                 goodsAttendAmount = goodsAttendAmount + attendAmount;
                 goods.setAttendAmount(goodsAttendAmount);
                 goods = goodsRepository.save(goods);
@@ -564,6 +576,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 获取后台商品活动列表
+     *
      * @param duoBaoGoodsSearchModel
      * @param map
      * @throws Exception
@@ -573,9 +586,9 @@ public class GoodsServiceImpl implements GoodsService {
         Page<Goods> page = null;
         Sort.Direction direction = duoBaoGoodsSearchModel.getRaSortType() == 0 ? Sort.Direction.DESC : Sort.Direction.ASC;
         String s;
-        if(duoBaoGoodsSearchModel.getSort().intValue() == 0){
+        if (duoBaoGoodsSearchModel.getSort().intValue() == 0) {
             s = "id";
-        }else{
+        } else {
             s = "toAmout";
         }
         Sort sort = new Sort(direction, s);
@@ -589,10 +602,10 @@ public class GoodsServiceImpl implements GoodsService {
 
                 String title = duoBaoGoodsSearchModel.getTitle();
                 if (title != null && title.trim().length() > 0) {
-                    predicate = cb.and(predicate,cb.like(root.get("title"), "%" + title + "%"));
+                    predicate = cb.and(predicate, cb.like(root.get("title"), "%" + title + "%"));
                 }
 
-                if(duoBaoGoodsSearchModel.getStatus() != -1){
+                if (duoBaoGoodsSearchModel.getStatus() != -1) {
                     predicate = cb.and(predicate, cb.equal(root.get("status").as(CommonEnum.GoodsStatus.class), EnumHelper.getEnumType(CommonEnum.GoodsStatus.class, duoBaoGoodsSearchModel.getStatus())));
                 }
                 return predicate;
@@ -637,14 +650,14 @@ public class GoodsServiceImpl implements GoodsService {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Page<com.huotu.huobanplus.common.entity.Goods> page = null;
         String title = mallGoodsSearchModel.getTitle();
-        if(title != null){
-            if(title.trim().length() == 0){
+        if (title != null) {
+            if (title.trim().length() == 0) {
                 title = null;
-            }else{
-                title =URLEncoder.encode("%" + title.trim() + "%", "UTF-8");
+            } else {
+                title = URLEncoder.encode("%" + title.trim() + "%", "UTF-8");
             }
         }
-        page = goodsRestRepository.findByTitleAndCategoryAndScenes(title, null, customerId ,4 , new PageRequest(mallGoodsSearchModel.getPageNoStr(), 20, sort));
+        page = goodsRestRepository.findByTitleAndCategoryAndScenes(title, null, customerId, 4, new PageRequest(mallGoodsSearchModel.getPageNoStr(), 20, sort));
 
         List<com.huotu.huobanplus.common.entity.Goods> goodsList = page.getContent();
         for (com.huotu.huobanplus.common.entity.Goods goods : goodsList) {
@@ -658,7 +671,7 @@ public class GoodsServiceImpl implements GoodsService {
 
             //商家
             Merchant owner = goods.getOwner();
-            if(owner != null){
+            if (owner != null) {
                 mallGoodsListModel.setMerchantId(owner.getId());
             }
 
@@ -828,6 +841,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 异步更新商品状态
+     *
      * @param goodsId
      * @param map
      * @throws Exception
@@ -839,21 +853,21 @@ public class GoodsServiceImpl implements GoodsService {
         Goods duobaoGoods = goodsRepository.findOne(goodsId);
 
         //2.获取商品状态
-        if(duobaoGoods != null){
+        if (duobaoGoods != null) {
             CommonEnum.GoodsStatus status = duobaoGoods.getStatus();
 
-            try{
-                if(status == CommonEnum.GoodsStatus.up){
+            try {
+                if (status == CommonEnum.GoodsStatus.up) {
                     //下架
                     duobaoGoods.setStatus(CommonEnum.GoodsStatus.down);
                     goodsRepository.save(duobaoGoods);
                     map.put("msg", "下架成功");
                     map.put("msgCode", 1);
-                }else{
+                } else {
                     //先检测活动是否结束
                     Date endTime = duobaoGoods.getEndTime();
 
-                    if(endTime.compareTo(new Date()) < 0){
+                    if (endTime.compareTo(new Date()) < 0) {
                         map.put("msg", "活动已结束,不能上架");
                         map.put("msgCode", 0);
                         return;
@@ -862,14 +876,14 @@ public class GoodsServiceImpl implements GoodsService {
                     //上架前先检测商品的库存
                     com.huotu.huobanplus.common.entity.Goods goods = goodsRestRepository.getOneByPK(duobaoGoods.getToMallGoodsId());
                     int stock = -1;
-                    if(goods != null){
+                    if (goods != null) {
                         stock = goodsRestRepository.getOneByPK(duobaoGoods.getToMallGoodsId()).getStock();
                     }
 
-                    if(stock > 0 || stock == -1){
-                        if(status == CommonEnum.GoodsStatus.uncheck){
+                    if (stock > 0 || stock == -1) {
+                        if (status == CommonEnum.GoodsStatus.uncheck) {
                             map.put("msg", "审核成功且上架成功");
-                        }else{
+                        } else {
                             map.put("msg", "上架成功");
                         }
                         duobaoGoods.setStatus(CommonEnum.GoodsStatus.up);
@@ -881,31 +895,31 @@ public class GoodsServiceImpl implements GoodsService {
                         }
                         map.put("msgCode", 1);
 
-                    }else{
-                        if(status == CommonEnum.GoodsStatus.uncheck) {
+                    } else {
+                        if (status == CommonEnum.GoodsStatus.uncheck) {
                             map.put("msg", "审核成功但商品无库存,不能上架");
                             duobaoGoods.setStatus(CommonEnum.GoodsStatus.down);
                             goodsRepository.save(duobaoGoods);
                             map.put("msgCode", 1);
-                        }else{
+                        } else {
                             map.put("msg", "商品无库存,不能上架");
                         }
                         map.put("msgCode", 0);
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-                if(status == CommonEnum.GoodsStatus.uncheck){
+                if (status == CommonEnum.GoodsStatus.uncheck) {
                     map.put("msg", "商品审核失败");
-                }else if(status == CommonEnum.GoodsStatus.up){
+                } else if (status == CommonEnum.GoodsStatus.up) {
                     map.put("msg", "商品下架失败");
-                }else{
+                } else {
                     map.put("msg", "商品上架失败");
                 }
                 map.put("code", 0);
-                throw  new Exception(e);
+                throw new Exception(e);
             }
-        }else{
+        } else {
             map.put("msg", "该商品不存在");
             map.put("msgCode", 0);
         }
