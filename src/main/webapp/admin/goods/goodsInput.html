@@ -313,42 +313,42 @@
     function checkDataValid() {
         var mallGoodsId = $("#mallGoodsId").val().trim();
         if(mallGoodsId.length == 0){
-            layer.msg("请选择活动商品");
+            $.jBox.tip("请选择活动商品");
             return;
         }
 
         var title = $("#title").val().trim();
         if (title.length == 0) {
             $("#title").focus();
-            layer.msg("商品标题不能为空");
+            $.jBox.tip("商品标题不能为空");
             return false;
         }
 
         var character = $("#characters").val().trim();
         if (character.length == 0) {
             $("#characters").focus();
-            layer.msg("商品特性不能为空");
+            $.jBox.tip("商品特性不能为空");
             return false;
         }
 
         var defaultAmount = $("#defaultAmount").val().trim();
         if (!checkNumIsInt(defaultAmount) || defaultAmount.length == 0) {
             $("#defaultAmount").focus();
-            layer.msg("购买缺省量不是一个有效的数字");
+            $.jBox.tip("购买缺省量不是一个有效的数字");
             return false;
         }
 
         var stepAmount = $("#stepAmount").val().trim();
         if(!checkNumIsInt(stepAmount) || defaultAmount.length == 0){
            $("#stepAmount").focus();
-            layer.msg("单次最少购买量不是一个有效的数字");
+            $.jBox.tip("单次最少购买量不是一个有效的数字");
             return false;
         }
 
         var toAmount = $("#toAmount").val().trim();
         if (!checkNumIsInt(toAmount) || toAmount.length == 0) {
             $("#toAmount").focus();
-            layer.msg("总需人次不是一个有效的数字");
+            $.jBox.tip("总需人次不是一个有效的数字");
             return false;
         }
 
@@ -357,19 +357,19 @@
         var defaultAmountNum = parseInt($("#defaultAmount").val());
         if(toAmountNum % stepAmountNum != 0){
             $("#stepAmount").focus();
-            layer.msg("总需人次必须是单次最少购买量的倍数");
+            $.jBox.tip("总需人次必须是单次最少购买量的倍数");
             return false;
         }
 
         if(defaultAmountNum % stepAmountNum != 0){
             $("#stepAmount").focus();
-            layer.msg("默认缺省量必须是单次最少购买量的倍数");
+            $.jBox.tip("默认缺省量必须是单次最少购买量的倍数");
             return false;
         }
 
         if(stepAmountNum > defaultAmountNum){
             $("#stepAmount").focus();
-            layer.msg("默认缺省量必须大于单次最少购买量的倍数");
+            $.jBox.tip("默认缺省量必须大于单次最少购买量的倍数");
             return false;
         }
 
@@ -377,76 +377,76 @@
         var pricePercentAmount = $("#pricePercentAmount").val().trim();
         if (isNaN(pricePercentAmount) || pricePercentAmount.length == 0) {
             $("#pricePercentAmount").focus();
-            layer.msg("每人次单价不是一个有效的数字");
+            $.jBox.tip("每人次单价不是一个有效的数字");
             return false;
         }
 
         var defaultPictureUrl = $("#pictureUrls1").val().trim();
         if (defaultPictureUrl.length == 0) {
             $("#uploadpic1").focus();
-            layer.msg("请上传商品图片");
+            $.jBox.tip("请上传商品图片");
             return false;
         }
 
         var startTime = $("#startTime").val().trim();
         if(startTime.length == 0){
             $("#startTime").focus();
-            layer.msg("开始时间不能为空");
+            $.jBox.tip("开始时间不能为空");
             return false;
         }
 
         var endTime = $("#endTime").val().trim();
         if(endTime.length == 0){
             $("#endTime").focus();
-            layer.msg("结束时间不能为空");
+            $.jBox.tip("结束时间不能为空");
             return false;
         }
 
         if(startTime > endTime){
             $("#endTime").focus();
-            layer.msg("活动开始时间不能大于活动结束时间");
+            $.jBox.tip("活动开始时间不能大于活动结束时间");
             return false;
         }
 
         var shareTitle = $("#shareTitle").val().trim();
         if(shareTitle.length == 0){
             $("#shareTitle").focus();
-            layer.msg("分享标题不能为空");
+            $.jBox.tip("分享标题不能为空");
             return false;
         }
 
         var sharePictureUrl = $("#sharePictureUrl").val().trim();
         if(sharePictureUrl.length == 0){
             $("#uploadpic").focus();
-            layer.msg("分享图片不能为空");
+            $.jBox.tip("分享图片不能为空");
             return false;
         }
 
         var shareDescription = $("#content").val();
         if(shareDescription.length == 0){
             $("#shareDescription").focus();
-            layer.msg("分享描述不能为空");
+            $.jBox.tip("分享描述不能为空");
             return false;
         }
 
         var defaultAmountNum = parseInt(defaultAmount);
         if (0 >= defaultAmountNum) {
             $("#defaultAmount").focus();
-            layer.msg("购买缺省量必须大于0");
+            $.jBox.tip("购买缺省量必须大于0");
             return false;
         }
 
         var toAmountNum = parseInt(toAmount);
         if (0 >= toAmountNum) {
             $("#toAmount").focus();
-            layer.msg("总需必须大于0");
+            $.jBox.tip("总需必须大于0");
             return false;
         }
 
         var pricePercentAmountNum = parseFloat(pricePercentAmount);
         if (0 >= pricePercentAmountNum) {
             $("#toAmount").focus();
-            layer.msg("每人次单价必须大于0");
+            $.jBox.tip("每人次单价必须大于0");
             return false;
         }
 
