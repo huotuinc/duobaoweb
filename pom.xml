@@ -34,7 +34,7 @@
         <pluginRepository>
             <id>repo-jc</id>
             <name>JiangCai Repository</name>
-            <url>http://115.29.228.62:8082/nexus/content/groups/public/</url>
+            <url>http://repo.jiangcai.me:8082/nexus/content/groups/public/</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -42,7 +42,7 @@
         <repository>
             <id>repo-jc</id>
             <name>JiangCai Repository</name>
-            <url>http://115.29.228.62:8082/nexus/content/groups/public/</url>
+            <url>http://repo.jiangcai.me:8082/nexus/content/groups/public/</url>
         </repository>
         <repository>
             <id>repo-huotu</id>
