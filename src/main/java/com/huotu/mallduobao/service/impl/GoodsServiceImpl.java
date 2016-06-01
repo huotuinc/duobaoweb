@@ -1,10 +1,12 @@
 package com.huotu.mallduobao.service.impl;
 
 import com.huotu.common.base.HttpHelper;
-import com.huotu.huobanplus.common.entity.Merchant;
+import com.huotu.huobanplus.common.entity.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.entity.*;
+import com.huotu.mallduobao.entity.Goods;
+import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.exceptions.GoodsOrIssueException;
 import com.huotu.mallduobao.model.*;
 import com.huotu.mallduobao.model.admin.*;
@@ -74,6 +76,45 @@ public class GoodsServiceImpl implements GoodsService {
 
 
     /**
+     * 用于判断活动状态(-1:活动未开始  0:活动正在进行 1:活动已结束 2:最后一期)
+     * @param goods
+     * @return
+     */
+    private int judgeGoodsActiveStatus(Goods goods) throws Exception{
+        Date startTime = goods.getStartTime();
+        Date endTime = goods.getEndTime();
+        Date curTime = new Date();
+
+        com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
+        int stock = mallGoods.getStock();
+
+        //如果当前时间小于活动开始时间
+        if(curTime.compareTo(startTime) < 0){
+            return -1;
+        }
+
+
+        Issue issue = goods.getIssue();
+        //如果当前时间大于活动结束时间或商品下架且没有正在进行的期
+        if((curTime.compareTo(endTime) > 0 || goods.getStatus() == CommonEnum.GoodsStatus.down) &&issue.getStatus()!= CommonEnum.IssueStatus.going){
+            return 1;
+        }
+
+        //如果当前时间大于活动结束时间或商品下架且没有正在进行的期
+        if((curTime.compareTo(endTime) > 0 || goods.getStatus() == CommonEnum.GoodsStatus.down) &&issue.getStatus() == CommonEnum.IssueStatus.going){
+            return 2;
+        }
+
+        //如果库存不足
+        if(stock == 0 && issue.getStatus() != CommonEnum.IssueStatus.going){
+            return 3;
+        }
+
+
+        return 0;
+    }
+
+    /**
      * 跳转到商品活动首页
      *
      * @param goodsId 期号Id
@@ -98,9 +139,12 @@ public class GoodsServiceImpl implements GoodsService {
 
 
         Issue issue = goods.getIssue();
-        if (issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)) {
-            throw new GoodsOrIssueException("商品不存在或期号不存在或商品已下架---goodsId=" + goodsId);
+        if(issue == null){
+            throw new GoodsOrIssueException("商品对应的期号不存在-----goodsId=" + goodsId);
         }
+
+        int activeStatus = judgeGoodsActiveStatus(goods);
+        goodsIndexModel.setActiveStatus(activeStatus);
 
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
@@ -176,14 +220,16 @@ public class GoodsServiceImpl implements GoodsService {
             throw new GoodsOrIssueException("商品ID为" + goodsId + "的活动不存在");
         }
 
+        int activeStatus = judgeGoodsActiveStatus(goods);
+        goodsDetailModel.setActiveStatus(activeStatus);
+
         //2.获取商品中正在进行的期且封装数据
         if (goods != null) {
             Issue issue = goods.getIssue();
 
-            if (issue == null || goods == null || (goods.getStatus().getValue() == 2 && issue.getStatus().getValue() != 0)) {
-                throw new GoodsOrIssueException("商品不存在或期号不存在或商品已下架---goodsId=" + goodsId);
+            if(issue == null){
+                throw new GoodsOrIssueException("商品对应的期号不存在-----goodsId=" + goodsId);
             }
-
 
             goodsDetailModel.setId(goodsId);
             goodsDetailModel.setTitle(goods.getTitle());
@@ -314,6 +360,9 @@ public class GoodsServiceImpl implements GoodsService {
                     }
                     goodsDetailModel.setPictureUrls(picList);
                 }
+
+                int activeStatus = judgeGoodsActiveStatus(goods);
+                goodsDetailModel.setActiveStatus(activeStatus);
             }
 
             //0:进行中  1:倒计时  2:已揭晓

@@ -135,4 +135,10 @@ public class GoodsDetailModel {
      * 首次购买的时间
      */
     private Date firstBuyTime;
+
+    /**
+     * 活动状态
+     */
+    private Integer activeStatus;
+
 }
