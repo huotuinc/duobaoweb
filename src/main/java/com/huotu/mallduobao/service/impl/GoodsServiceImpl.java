@@ -95,19 +95,20 @@ public class GoodsServiceImpl implements GoodsService {
 
 
         Issue issue = goods.getIssue();
-        //如果当前时间大于活动结束时间或商品下架且没有正在进行的期
-        if((curTime.compareTo(endTime) > 0 || goods.getStatus() == CommonEnum.GoodsStatus.down) &&issue.getStatus()!= CommonEnum.IssueStatus.going){
-            return 1;
-        }
-
-        //如果当前时间大于活动结束时间或商品下架且没有正在进行的期
-        if((curTime.compareTo(endTime) > 0 || goods.getStatus() == CommonEnum.GoodsStatus.down) &&issue.getStatus() == CommonEnum.IssueStatus.going){
-            return 2;
-        }
-
         //如果库存不足
         if(stock == 0 && issue.getStatus() != CommonEnum.IssueStatus.going){
             return 3;
+        }
+
+
+        //如果当前时间大于活动结束时间或商品下架且没有正在进行的期
+        if(issue.getStatus()!= CommonEnum.IssueStatus.going){
+            return 1;
+        }
+
+        //如果当前时间大于活动结束时间或商品下架且有正在进行的期
+        if((curTime.compareTo(endTime) > 0 || goods.getStatus() == CommonEnum.GoodsStatus.down) &&issue.getStatus() == CommonEnum.IssueStatus.going){
+            return 2;
         }
 
 
