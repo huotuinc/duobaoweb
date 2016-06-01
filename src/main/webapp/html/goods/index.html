@@ -30,8 +30,24 @@
             <div class="meitou">
                 <div class="endtime">
                     <p class=" tit_rem_big">
+                        <span th:if="*{activeStatus eq -1}">
+                        剩余&nbsp;<i><span id="day"></span>&nbsp;</i>&nbsp;天&nbsp;<i><span id="hour"></span></i>&nbsp;时&nbsp;<i><span
+                                id="minute"></span></i>&nbsp;分&nbsp;<i><span id="second"></span></i>&nbsp;秒&nbsp;开始
+                        </span>
+                        <span th:if="*{activeStatus eq 0}">
                         剩余&nbsp;<i><span id="day"></span>&nbsp;</i>&nbsp;天&nbsp;<i><span id="hour"></span></i>&nbsp;时&nbsp;<i><span
                             id="minute"></span></i>&nbsp;分&nbsp;<i><span id="second"></span></i>&nbsp;秒&nbsp;结束
+                        </span>
+                        <span th:if="*{activeStatus eq 1}">
+                            活动已结束
+                        </span>
+                        <span th:if="*{activeStatus eq 2}">
+                            最后一期进行中....
+                        </span>
+                        <span th:if="*{activeStatus eq 3}">
+                            活动商品库存不足，活动结束
+                        </span>
+
                     </p>
                 </div>
             </div>
@@ -98,17 +114,26 @@
     var andStr = /*[[${andStr}]]*/'';
     var customerId = /*[[${customerId}]]*/'';
 
+
     //2.获取商品活动结束时间
+    var startTime = goodsIndexModel.startTime;
     var endTime = goodsIndexModel.endTime;
 
     //3.获取当前时间
     var curTime = new Date().getTime();
 
     //4.获取当前时间和活动结束时间之间相差的秒数
-    var diffSecond = Math.ceil(endTime - curTime) / 1000;
-
-    //5.启动倒计时
-    setInterval("show_time()", 1000);
+    var activeStatus = goodsIndexModel.activeStatus;
+    var diffSecond;
+    if(activeStatus != 1){
+        if(activeStatus == 0){
+            diffSecond = Math.ceil(endTime - curTime) / 1000;
+        }else if(activeStatus == -1){
+            diffSecond = Math.ceil(startTime - curTime) / 1000;
+        }
+        //5.启动倒计时
+        setInterval("show_time()", 1000);
+    }
 
     function show_time() {
         diffSecond--;

@@ -109,9 +109,8 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
 
         com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
 
-        Date currentDate = new Date();
-        if (currentDate.getTime() > goods.getStartTime().getTime() && currentDate.getTime() < goods.getEndTime().getTime()
-                & goods.getStatus().equals(CommonEnum.GoodsStatus.up) && (mallGoods.getStock() == -1 || mallGoods.getStock() > 0)) {
+        Date curTime = new Date();
+        if (curTime.before(goods.getEndTime()) && goods.getStatus().equals(CommonEnum.GoodsStatus.up) && (mallGoods.getStock() == -1 || mallGoods.getStock() > 0)) {
 
             //处理下期的情况
             Issue nextIssue = new Issue();
@@ -131,7 +130,9 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             //goods.setStock(goods.getStock() - 1);
             goodsRepository.save(goods);
 
-            mallGoods.setStock(mallGoods.getStock() - 1);
+            if(mallGoods.getStock() != -1){
+                mallGoods.setStock(mallGoods.getStock() - 1);
+            }
 
             //创建抽奖号码
             List<CachedIssueLeaveNumber> cachedIssueLeaveNumberList = new ArrayList<>();

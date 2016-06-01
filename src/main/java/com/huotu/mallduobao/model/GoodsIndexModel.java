@@ -63,4 +63,9 @@ public class GoodsIndexModel {
      */
     private Long issueId;
 
+    /**
+     * 商品活动状态
+     */
+    private Integer activeStatus;
+
 }
