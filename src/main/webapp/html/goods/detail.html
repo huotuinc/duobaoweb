@@ -232,10 +232,16 @@
       </div>
       <!--弹出-->
 
-    <div th:if="*{activeStatus eq 0 || activeStatus eq 2}" style="margin:0px 10px; padding:8px 0px">
+    <div th:if="*{activeStatus eq 0}" style="margin:0px 10px; padding:8px 0px">
       <a id="join" href="javascript:join()" class="ljcy tit_rem_big"  style="display:block">立即参与</a>
       <a id="buy"  href="#" class="ljcy tit_rem_big" style="display:none" onclick="buy()">夺宝购买</a>
     </div>
+
+      <div th:if="*{activeStatus eq 2 and status eq 0 }" style="margin:0px 10px; padding:8px 0px">
+        <a id="join" href="javascript:join()" class="ljcy tit_rem_big"  style="display:block">立即参与</a>
+        <a id="buy"  href="#" class="ljcy tit_rem_big" style="display:none" onclick="buy()">夺宝购买</a>
+      </div>
+
     <!--按钮end-->
   </div>
    </div>
