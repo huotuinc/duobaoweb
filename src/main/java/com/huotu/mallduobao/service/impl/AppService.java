@@ -47,8 +47,22 @@ public class AppService implements ApplicationListener<ContextRefreshedEvent> {
             }
 
             //系统升级
-            baseService.systemUpgrade("DatabaseVersion", CommonVersion.class, CommonVersion.Version101, (upgrade) -> {
+            baseService.systemUpgrade("DatabaseVersion", CommonVersion.class, CommonVersion.Version102, (upgrade) -> {
                 switch (upgrade) {
+                    case Version102:
+                        //系统初始化
+                        try {
+                            jdbcService.runJdbcWork(connection -> {
+                                Statement statement = connection.getConnection().createStatement();
+                                String hql = "alter TABLE GOODS ADD COLUMN STOCK BIGINT(20)";
+                                statement.execute(hql);
+                            });
+
+                        } catch (Exception e) {
+                            log.info("upgrade to " + CommonVersion.Version102.ordinal() + " error", e);
+                        }
+
+                        break;
                     case Version101:
                         //系统初始化
                         try {

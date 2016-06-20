@@ -50,6 +50,12 @@ public class Goods {
     private String characters;
 
     /**
+     * 库存数量
+     * 库存为0，状态改为下架
+     */
+    private Long stock;
+
+    /**
      * 单次购买最低量
      * 前台条件：商品总需人次/(单次购买最低量/每人次单价) 为整数
      */
