@@ -293,5 +293,13 @@ public class DuoBaoGoodsController {
         return "/admin/goods/goodsShareAddress";
     }
 
+    @RequestMapping("/ajaxGetMallGoodsStock")
+    @ResponseBody
+    public Map<String, Object> ajaxGetMallGoodsStock(Long mallGoodsId) throws Exception{
+        Map<String, Object> map = duoBaoGoodsService.getMallGoodsStock(mallGoodsId);
+        return map;
+    }
+
+
 
 }

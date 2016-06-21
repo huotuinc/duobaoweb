@@ -185,6 +185,9 @@
 
                                             <th scope="col">库存
                                             </th>
+
+                                            <th scope="col">冻结库存
+                                            </th>
                                         </tr>
                                         <tbody th:remove="all-but-first" id="o1">
 
@@ -226,6 +229,10 @@
                                             </td>
 
                                             <td class="txt20 c" th:text="${mallGoodsListModel.stock}">
+                                                一级
+                                            </td>
+
+                                            <td class="txt20 c" th:text="${mallGoodsListModel.lockStock}">
                                                 一级
                                             </td>
                                         </tr>

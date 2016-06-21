@@ -36,6 +36,17 @@ public class DuoBaoGoodsInputModel {
     private String characters;
 
     /**
+     * 库存
+     */
+    private Long stock;
+
+
+    /**
+     * 商城商品可用库存
+     */
+    private int availableStock;
+
+    /**
      * 单次购买最低量
      */
     private Long stepAmount;

@@ -3,6 +3,7 @@ package com.huotu.mallduobao.service.impl;
 import com.huotu.common.base.HttpHelper;
 import com.huotu.huobanplus.common.entity.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.entity.Goods;
@@ -74,6 +75,10 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private CommonConfigService commonConfigService;
 
+    @Autowired
+    private ProductRestRepository productRestRepository;
+
+
 
     /**
      * 用于判断活动状态(-1:活动未开始  0:活动正在进行 1:活动已结束 2:最后一期)
@@ -85,8 +90,8 @@ public class GoodsServiceImpl implements GoodsService {
         Date endTime = goods.getEndTime();
         Date curTime = new Date();
 
-        com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
-        int stock = mallGoods.getStock();
+       // com.huotu.huobanplus.common.entity.Goods mallGoods = goodsRestRepository.getOneByPK(goods.getToMallGoodsId());
+        Long stock = goods.getStock();
 
         //如果当前时间小于活动开始时间
         if(curTime.compareTo(startTime) < 0){
@@ -677,6 +682,7 @@ public class GoodsServiceImpl implements GoodsService {
             duoBaoGoodsListModel.setStatusName(duobaoGoods.getStatus().getName());
             duoBaoGoodsListModel.setPricePercentAmount(duobaoGoods.getPricePercentAmount());
             duoBaoGoodsListModel.setStatus(duobaoGoods.getStatus().getValue());
+            duoBaoGoodsListModel.setStock(duobaoGoods.getStock());
             duoBaoGoodsListModelList.add(duoBaoGoodsListModel);
         }
 
@@ -717,7 +723,9 @@ public class GoodsServiceImpl implements GoodsService {
             mallGoodsListModel.setCost(goods.getCost());
             mallGoodsListModel.setMarkerPrice(goods.getMarketPrice());
             mallGoodsListModel.setPrice(goods.getPrice());
-            mallGoodsListModel.setStock(goods.getStock());
+            Map<String, Object> mallGoodsStock = getMallGoodsStock(goods.getId());
+            mallGoodsListModel.setStock((int)mallGoodsStock.get("stock"));
+            mallGoodsListModel.setLockStock((int)mallGoodsStock.get("freeze"));
 
             //商家
             Merchant owner = goods.getOwner();
@@ -783,6 +791,8 @@ public class GoodsServiceImpl implements GoodsService {
         duobaoGoods.setShareDescription(duoBaoGoodsInputModel.getShareDescription());
         duobaoGoods.setStepAmount(duoBaoGoodsInputModel.getStepAmount());
         duobaoGoods.setToAmount(duoBaoGoodsInputModel.getToAmount());
+        duobaoGoods.setStock(duoBaoGoodsInputModel.getStock());
+
         goodsRepository.save(duobaoGoods);
     }
 
@@ -816,6 +826,10 @@ public class GoodsServiceImpl implements GoodsService {
             duoBaoGoodsInputModel.setPricePercentAmount(duobaoGoods.getPricePercentAmount());
             duoBaoGoodsInputModel.setStartTime(duobaoGoods.getStartTime());
             duoBaoGoodsInputModel.setEndTime(duobaoGoods.getEndTime());
+            duoBaoGoodsInputModel.setStock(duobaoGoods.getStock());
+            Map<String, Object> mallGoodsStock = getMallGoodsStock(duobaoGoods.getToMallGoodsId());
+            duoBaoGoodsInputModel.setAvailableStock((int)mallGoodsStock.get("availableStock"));
+
 
             String pictureUrls = duobaoGoods.getPictureUrls();
             if (pictureUrls != null) {
@@ -973,6 +987,35 @@ public class GoodsServiceImpl implements GoodsService {
             map.put("msg", "该商品不存在");
             map.put("msgCode", 0);
         }
+    }
+
+    /**
+     * 获取商品指定商品的库存
+     *
+     * @param mallGoodsId
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public  Map<String, Object> getMallGoodsStock(Long mallGoodsId) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        int stock = 0;   //库存
+        int freeze = 0;  //冻结
+        int availableStock = 0; //可用库存
+
+        com.huotu.huobanplus.common.entity.Goods goods = goodsRestRepository.getOneByPK(mallGoodsId);
+        List<Product> products = productRestRepository.findByGoods(goods);
+        for(Product product : products){
+             stock += product.getStock();
+             freeze += product.getFreeze();
+             availableStock += (product.getStock() - product.getFreeze());
+        }
+
+        map.put("stock", stock);
+        map.put("freeze", freeze);
+        map.put("availableStock", availableStock);
+
+        return  map;
     }
 
 }

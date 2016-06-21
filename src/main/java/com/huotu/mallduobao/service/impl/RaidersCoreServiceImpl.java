@@ -2,20 +2,20 @@ package com.huotu.mallduobao.service.impl;
 
 import com.huotu.common.base.DateHelper;
 import com.huotu.common.base.HttpHelper;
-import com.huotu.mallduobao.model.PayResultModel;
-import com.huotu.mallduobao.utils.CommonEnum;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.mallduobao.common.LotteryCode;
-import com.huotu.mallduobao.utils.SysRegex;
 import com.huotu.mallduobao.entity.*;
 import com.huotu.mallduobao.exceptions.CrabLotteryCodeRepeatException;
 import com.huotu.mallduobao.exceptions.InterrelatedException;
 import com.huotu.mallduobao.exceptions.LotteryCodeError;
+import com.huotu.mallduobao.model.PayResultModel;
 import com.huotu.mallduobao.repository.*;
 import com.huotu.mallduobao.service.CacheService;
 import com.huotu.mallduobao.service.PayService;
 import com.huotu.mallduobao.service.RaidersCoreService;
 import com.huotu.mallduobao.service.UserNumberService;
-import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.mallduobao.utils.CommonEnum;
+import com.huotu.mallduobao.utils.SysRegex;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
@@ -126,7 +126,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
 
             goods.setIssue(nextIssue);
 
-            //goods.setStock(goods.getStock() - 1);
+            goods.setStock(goods.getStock() - 1);
             goodsRepository.save(goods);
 
             //创建抽奖号码

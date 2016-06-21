@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -25,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -47,6 +50,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     MerchantRestRepository merchantRestRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
 
     @Override
     public String getIndexUrl(HttpServletRequest request,Long customerId) throws UnsupportedEncodingException {
@@ -56,13 +62,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException {
+    public synchronized User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException {
         User user=userRepository.findByWeixinOpenId(authEntity.getOpenid());
+        //User user = findByWeixinOpenId(authEntity.getOpenid());
         //如果在数据库中没有这个微信信息则注册一个新的用户
         if(user==null){
             user=new User();
             user.setRegTime(new Date());
             user.setEnabled(true);
+
             user.setUsername(UUID.randomUUID().toString().replace("-",""));
             user.setWeixinOpenId(authEntity.getOpenid());
             user.setRealName(authEntity.getNickname());
@@ -119,6 +127,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkOpenid(String openId, String sign) {
         User user=userRepository.findByWeixinOpenId(openId);
+        //User user = findByWeixinOpenId(openId);
         if(user!=null&&this.getSign(user).equals(sign)){
                 return true;
         }
@@ -137,4 +146,14 @@ public class UserServiceImpl implements UserService {
         String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
         return apiUrl;
     }
+
+/*    @Override
+    public User findByWeixinOpenId(String weixinOpenId) {
+        String hql = "SELECT u FROM User u WHERE u.weixinOpenId = :weixinOpenId";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("weixinOpenId", weixinOpenId);
+        List<User> userList = query.getResultList();
+        log.info("findByWeixinOpenId ---> " + userList.size());
+        return userList.size() == 0 ? null : userList.get(userList.size() -1);
+    }*/
 }

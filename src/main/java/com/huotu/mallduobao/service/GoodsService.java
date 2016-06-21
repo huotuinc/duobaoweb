@@ -124,4 +124,15 @@ public interface GoodsService {
      */
     void ajaxUpdateStatus(Long goodsId, Map<String, Object> map) throws Exception;
 
+    /**
+     * 获取商城指定商品的可用库存
+     *
+     * @param mallGoodsId
+     * @param
+     * @return
+     * @throws Exception
+     */
+    Map<String, Object> getMallGoodsStock(Long mallGoodsId) throws Exception;
+
+
 }

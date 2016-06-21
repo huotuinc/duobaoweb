@@ -60,4 +60,7 @@ public interface UserService {
      * @return
      */
     String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws IOException;
+
+
+   // User findByWeixinOpenId(String weixinOpenId);
 }

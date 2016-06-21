@@ -35,5 +35,10 @@ public class DuoBaoGoodsListModel {
 
     private Integer status;
 
+    private Long stock;
+
+    private  int mallGoodsStock;
+
+    private int mallGoodsLockStock;
 
 }

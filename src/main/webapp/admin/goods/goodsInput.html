@@ -81,6 +81,14 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th>商品库存</th>
+                                            <td style="border-top: 1px solid #ddd;">
+                                                <input maxlength="24" style="width:300px" name="stock" type="text"
+                                                       id="stock" class="input-normal" placeholder="请输入商品库存" th:value="*{stock}" value="0" />
+                                                <span>(目前商城商品的可用库存为<span id="availableStock" th:text="*{availableStock}"></span>)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <th>购买时缺省量:</th>
                                             <td style="border-top: 1px solid #ddd;">
                                                 <input maxlength="13" style="width:170px" name="defaultAmount"
@@ -273,6 +281,19 @@
         $("#mallGoodsTitle").val(title);
         $("#mallGoodsId").val(id);
         $("#merchantId").val(merchantId);
+
+        $.ajax({
+            url:"ajaxGetMallGoodsStock",
+            data:{"mallGoodsId" : id},
+            type:"post",
+            dataType:"json",
+            success: function(data){
+                $("#availableStock").text(data.availableStock);
+                //alert(data);
+            }
+        })
+
+
     }
 
 
@@ -324,6 +345,7 @@
             return false;
         }
 
+
         var character = $("#characters").val().trim();
         if (character.length == 0) {
             $("#characters").focus();
@@ -349,6 +371,13 @@
         if (!checkNumIsInt(toAmount) || toAmount.length == 0) {
             $("#toAmount").focus();
             $.jBox.tip("总需人次不是一个有效的数字");
+            return false;
+        }
+
+        var stock = $("#stock").val().trim();
+        if (!checkNumIsInt(stock) || toAmount.length == 0) {
+            $("#stock").focus();
+            $.jBox.tip("库存不是一个有效的数字");
             return false;
         }
 

@@ -56,4 +56,9 @@ public class MallGoodsListModel {
      */
     private int stock;
 
+    /**
+     * 锁定库存
+     */
+    private int lockStock;
+
 }

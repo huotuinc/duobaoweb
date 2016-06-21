@@ -58,6 +58,12 @@ public class AppService implements ApplicationListener<ContextRefreshedEvent> {
                                 statement.execute(hql);
                             });
 
+                            jdbcService.runJdbcWork(connection -> {
+                                Statement statement = connection.getConnection().createStatement();
+                                String hql = "UPDATE GOODS SET STOCK = 1000";
+                                statement.execute(hql);
+                            });
+
                         } catch (Exception e) {
                             log.info("upgrade to " + CommonVersion.Version102.ordinal() + " error", e);
                         }
