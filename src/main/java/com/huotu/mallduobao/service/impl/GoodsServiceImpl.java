@@ -187,7 +187,9 @@ public class GoodsServiceImpl implements GoodsService {
 
         //6.获取该商品所有的参与次数
         Long attentAmount = 0L;
-        attentAmount = attentAmount + (issue.getAttendAmount() == null ? 0L : issue.getAttendAmount());
+        if(issue.getStatus() == CommonEnum.IssueStatus.going){
+            attentAmount = attentAmount + (issue.getAttendAmount() == null ? 0L : issue.getAttendAmount());
+        }
         attentAmount = attentAmount + (goods.getAttendAmount() == null ? 0L : goods.getAttendAmount());
         goodsIndexModel.setJoinCount(attentAmount);
 
