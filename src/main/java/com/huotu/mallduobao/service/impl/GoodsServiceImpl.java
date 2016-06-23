@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -77,6 +79,10 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private ProductRestRepository productRestRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
 
 
 
@@ -940,13 +946,8 @@ public class GoodsServiceImpl implements GoodsService {
                     }
 
                     //上架前先检测商品的库存
-                    com.huotu.huobanplus.common.entity.Goods goods = goodsRestRepository.getOneByPK(duobaoGoods.getToMallGoodsId());
-                    int stock = -1;
-                    if (goods != null) {
-                        stock = goodsRestRepository.getOneByPK(duobaoGoods.getToMallGoodsId()).getStock();
-                    }
-
-                    if (stock > 0 || stock == -1) {
+                    Long stock = duobaoGoods.getStock();
+                    if (stock > 0) {
                         if (status == CommonEnum.GoodsStatus.uncheck) {
                             map.put("msg", "审核成功且上架成功");
                         } else {
@@ -1018,6 +1019,21 @@ public class GoodsServiceImpl implements GoodsService {
         map.put("availableStock", availableStock);
 
         return  map;
+    }
+
+    @Override
+    public Map<String, Object> getMallGoodsIsUsed(Long mallGoodsId) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        String hql = "SELECT g From Goods g WHERE g.toMallGoodsId = :toMallGoodsId";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("toMallGoodsId", mallGoodsId);
+        List list = query.getResultList();
+        if(list.size() > 0){
+            map.put("enable", 0);
+        }else{
+            map.put("enable", 1);
+        }
+        return map;
     }
 
 }

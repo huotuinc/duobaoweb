@@ -300,6 +300,14 @@ public class DuoBaoGoodsController {
         return map;
     }
 
+    @RequestMapping("/ajaxGetMallGoodsIsUsed")
+    @ResponseBody
+    public Map<String, Object> ajaxGetMallGoodsIsUsed(Long mallGoodsId) throws Exception{
+        Map<String, Object> map = duoBaoGoodsService.getMallGoodsIsUsed(mallGoodsId);
+        return map;
+    }
+
+
 
 
 }

@@ -296,14 +296,34 @@
     }
 
 
+    function checkMallGoodsIsCanUse(id, title, merchantId){
+        $.ajax({
+            url:"ajaxGetMallGoodsIsUsed",
+            data:{"mallGoodsId" : id},
+            type:"post",
+            dataType:"json",
+            success: function(data){
+                if(data.enable == 0){
+                    $.jBox("该商城商品已被使用");
+                }else if(data.enable == 1){
+                    window.opener.setValue(title, id, merchantId);
+                    CloseWebPage();
+                }
+            }
+        })
+    }
+
+
     function doTrdblClick(obj) {
         var title = $(obj).find("span").eq(0).text();
         var id = $(obj).find("input").eq(0).val();
         var merchantId = $(obj).find("input").eq(1).val();
         if (window.opener && !window.opener.closed) {
-            window.opener.setValue(title, id, merchantId);
+            checkMallGoodsIsCanUse(id, title, merchantId);
+           /* checkMallGoodsIsCanUse()
+            window.opener.setValue(title, id, merchantId);*/
         }
-        CloseWebPage();
+/*        CloseWebPage();*/
     }
 
     function searchShares() {

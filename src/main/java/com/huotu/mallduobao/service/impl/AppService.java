@@ -60,7 +60,7 @@ public class AppService implements ApplicationListener<ContextRefreshedEvent> {
 
                             jdbcService.runJdbcWork(connection -> {
                                 Statement statement = connection.getConnection().createStatement();
-                                String hql = "UPDATE GOODS SET STOCK = 1000";
+                                String hql = "UPDATE GOODS SET STOCK = 10";
                                 statement.execute(hql);
                             });
 

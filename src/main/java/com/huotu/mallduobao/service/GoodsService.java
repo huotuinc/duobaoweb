@@ -135,4 +135,12 @@ public interface GoodsService {
     Map<String, Object> getMallGoodsStock(Long mallGoodsId) throws Exception;
 
 
+    /**
+     * 获取当前商城商品是否被使用
+     *
+     * @param mallGoodsId
+     * @return
+     * @throws Exception
+     */
+    Map<String,Object> getMallGoodsIsUsed(Long mallGoodsId) throws Exception;
 }

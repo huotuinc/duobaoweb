@@ -277,11 +277,7 @@
         }
     })
 
-    function setValue(title, id, merchantId){
-        $("#mallGoodsTitle").val(title);
-        $("#mallGoodsId").val(id);
-        $("#merchantId").val(merchantId);
-
+    function getMallGoodsStock(id){
         $.ajax({
             url:"ajaxGetMallGoodsStock",
             data:{"mallGoodsId" : id},
@@ -289,11 +285,17 @@
             dataType:"json",
             success: function(data){
                 $("#availableStock").text(data.availableStock);
-                //alert(data);
             }
         })
+    }
 
 
+    function setValue(title, id, merchantId){
+        $("#mallGoodsTitle").val(title);
+        $("#mallGoodsId").val(id);
+        $("#merchantId").val(merchantId);
+
+        getMallGoodsStock(id);
     }
 
 
