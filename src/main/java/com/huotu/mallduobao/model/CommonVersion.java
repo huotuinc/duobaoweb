@@ -7,5 +7,6 @@ package com.huotu.mallduobao.model;
 public enum CommonVersion {
     initVersion,
     Version101,
-    Version102;
+    Version102,
+    Version103;
 }

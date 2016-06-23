@@ -47,22 +47,30 @@ public class AppService implements ApplicationListener<ContextRefreshedEvent> {
             }
 
             //系统升级
-            baseService.systemUpgrade("DatabaseVersion", CommonVersion.class, CommonVersion.Version102, (upgrade) -> {
+            baseService.systemUpgrade("DatabaseVersion", CommonVersion.class, CommonVersion.Version103, (upgrade) -> {
                 switch (upgrade) {
+                    case Version103:
+
+                        jdbcService.runJdbcWork(connection -> {
+                            Statement statement = connection.getConnection().createStatement();
+                            String hql = "alter table USER modify REALNAME varchar(100) character set utf8mb4";
+                            statement.execute(hql);
+                        });
+                        break;
                     case Version102:
                         //系统初始化
                         try {
-                            jdbcService.runJdbcWork(connection -> {
-                                Statement statement = connection.getConnection().createStatement();
-                                String hql = "alter TABLE GOODS ADD COLUMN STOCK BIGINT(20)";
-                                statement.execute(hql);
-                            });
-
-                            jdbcService.runJdbcWork(connection -> {
-                                Statement statement = connection.getConnection().createStatement();
-                                String hql = "UPDATE GOODS SET STOCK = 10";
-                                statement.execute(hql);
-                            });
+//                            jdbcService.runJdbcWork(connection -> {
+//                                Statement statement = connection.getConnection().createStatement();
+//                                String hql = "alter TABLE GOODS ADD COLUMN STOCK BIGINT(20)";
+//                                statement.execute(hql);
+//                            });
+//
+//                            jdbcService.runJdbcWork(connection -> {
+//                                Statement statement = connection.getConnection().createStatement();
+//                                String hql = "UPDATE GOODS SET STOCK = 10";
+//                                statement.execute(hql);
+//                            });
 
                         } catch (Exception e) {
                             log.info("upgrade to " + CommonVersion.Version102.ordinal() + " error", e);
