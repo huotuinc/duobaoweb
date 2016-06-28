@@ -103,10 +103,11 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         //改变上期的状态
         Issue issue = goods.getIssue();
         if (issue != null) {
-            issue.setStatus(CommonEnum.IssueStatus.drawing);
-            issueRepository.save(issue);
+            if(issue.getStatus().equals(CommonEnum.IssueStatus.going)){
+                issue.setStatus(CommonEnum.IssueStatus.drawing);
+                issueRepository.save(issue);
+            }
         }
-
 
         Date curTime = new Date();
         if (curTime.before(goods.getEndTime()) && goods.getStatus().equals(CommonEnum.GoodsStatus.up) && goods.getStock() > 0) {
@@ -585,7 +586,7 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
     @Override
     public Long getAwardingTime(Calendar calendar, Calendar awardingCalendar) {
         Long result;
-        Integer delayTime = 5;
+        Integer delayTime = 0;
 
         int curHour = calendar.get(Calendar.HOUR_OF_DAY);
         int curMinute = calendar.get(Calendar.MINUTE);
@@ -604,10 +605,16 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
                 toCalendar.set(Calendar.MINUTE, 44);
             } else if (curMinute < 54) {
                 toCalendar.set(Calendar.MINUTE, 54);
+            }else{
+                toCalendar.add(Calendar.MINUTE, 10);
+                toCalendar.set(Calendar.MINUTE, 4);
             }
-            toCalendar.set(Calendar.SECOND, delayTime);//延迟10秒
+
+            toCalendar.set(Calendar.SECOND, delayTime);
             toCalendar.set(Calendar.MILLISECOND, 0);
             result = (toCalendar.getTime().getTime() - calendar.getTime().getTime());
+            if(result<10 * 60 *1000 && result >= (9 * 60 + 30) * 1000) result = 0L;
+
         } else if ((curHour >= 22 && curHour < 24) || (curHour >= 0 && curHour < 2)) {
             //4,9,14,19,24,29,34,39,44,49,54,59
             Calendar toCalendar = awardingCalendar;
@@ -635,11 +642,18 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
                 toCalendar.set(Calendar.MINUTE, 54);
             } else if (curMinute < 59) {
                 toCalendar.set(Calendar.MINUTE, 59);
+            }else{
+                if(curHour == 1){
+                    toCalendar.add(Calendar.HOUR_OF_DAY, 8);
+                }
+                toCalendar.add(Calendar.MINUTE, 5);
+                toCalendar.set(Calendar.MINUTE, 4);
             }
 
             toCalendar.set(Calendar.SECOND, delayTime);//延迟10秒
             toCalendar.set(Calendar.MILLISECOND, 0);
             result = (toCalendar.getTime().getTime() - calendar.getTime().getTime());
+            if(result<5 * 60 *1000 && result >= (4 * 60 + 30) * 1000) result = 0L;
         } else {
             Calendar toCalendar = awardingCalendar;
             toCalendar.set(Calendar.HOUR_OF_DAY, 10);
@@ -648,7 +662,8 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
             toCalendar.set(Calendar.MILLISECOND, 0);
             result = (toCalendar.getTime().getTime() - calendar.getTime().getTime());
         }
-        return result / 1000;
+
+        return result / 1000 ;
     }
 
     @Override
