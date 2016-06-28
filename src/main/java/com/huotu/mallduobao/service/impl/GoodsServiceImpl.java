@@ -211,6 +211,13 @@ public class GoodsServiceImpl implements GoodsService {
         map.put("shareDesc", shareDesc);
         map.put("sharePic", sharePic);
         map.put("andStr", "&");
+
+        int status = issue.getStatus().getValue();
+        map.put("status",status);
+//        map.put("issueId",issue.getId());
+        map.put("toAmount",issue.getToAmount());
+        map.put("remainAmount",(issue.getToAmount() - issue.getBuyAmount()));
+
     }
 
     /**

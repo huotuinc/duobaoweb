@@ -61,6 +61,25 @@
     </p>
 
     <P class="h10"></P>
+        <!-- 进行中时显示-->
+        <div style="padding:0px 5%;" th:if="${status eq 0}">
+            <div class="left_ss">
+                <div class="left_in_ss">
+                    <p class=" huii"> 参与期号：<span th:text="${issueId}"></span></p>
+                    <div class="jdtboxx offf" style="display:block">
+                        <div id="progress" class="jdtboxx2 on">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="huii">
+                <span style="float:left"> 总需：<span th:text="${toAmount}"></span> </span>
+                  <span style="float:right;"> 剩余&nbsp;<i style=" color:#009BFF"><span th:text="${remainAmount}"></span></i>
+                  </span>
+            </div>
+            <p style=" clear:both">
+            </p>
+        </div>
 
     <p class="sycy">已有<span class="red tit_rem_big_big"><span th:text="*{joinCount}"></span></span>人正在参与</p>
 
