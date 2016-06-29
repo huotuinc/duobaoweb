@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
             user.setUsername(UUID.randomUUID().toString().replace("-",""));
             user.setWeixinOpenId(authEntity.getOpenid());
-            user.setRealName(authEntity.getNickname());
+            user.setRealName(Mb4Helper.utf8mb4Remove(authEntity.getNickname()));
             user.setIp(ip);
 
             //设置用户头像

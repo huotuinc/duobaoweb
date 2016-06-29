@@ -217,6 +217,7 @@ public class GoodsServiceImpl implements GoodsService {
 //        map.put("issueId",issue.getId());
         map.put("toAmount",issue.getToAmount());
         map.put("remainAmount",(issue.getToAmount() - issue.getBuyAmount()));
+        map.put("progress",issue.getToAmount() == 0 ? 0 : (int) (issue.getBuyAmount() * 100 / issue.getToAmount()));
 
     }
 

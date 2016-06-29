@@ -132,7 +132,9 @@
     var goodsIndexModel = /*[[${goodsIndexModel}]]*/'';
     var andStr = /*[[${andStr}]]*/'';
     var customerId = /*[[${customerId}]]*/'';
-
+    var progress = /*[[${progress}]]*/'0';
+    //3.为进度条赋值
+    $("#progress").css("width", progress + "%");
 
     //2.获取商品活动结束时间
     var startTime = goodsIndexModel.startTime;
