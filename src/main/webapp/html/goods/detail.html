@@ -181,11 +181,23 @@
       <p class="hhhh"></p>
     </div>
 
+    <style>
+      .zjjl-right_in-lq {
+        margin-left: 5px
+      }
+
+      .sycy {
+        padding-bottom: 0px;
+        padding-top: 0px
+      }
+    </style>
+
     <!--参与纪录-->
     <div style="display:block">
       <P class="sy" ><span class="fl">所有参与纪录</span><span th:if="*{firstBuyTime ne null}" class="hui fr "><span th:text="*{#dates.format(firstBuyTime, 'yyyy-MM-dd HH:mm:ss')}">2016-12-12 12:12:12</span>开始</span></P>
       <P class="clear"></P>
-      <div id="content" class="zjjl-all-lq tit_rem">
+
+      <div id="content" class="zjjl-all-lq" style="font-size: 12px">
 
       </div>
     </div>
@@ -474,24 +486,20 @@
   }
 </script>
 <script type="text/template" id="detailTemplate">
-  <div class="zjjl-right-lq">
+  <div class="zjjl-right-lq" >
     <div class="zjjl-right_in-lq">
       {{each Rows as row i}}
-<!--      <div class="clear moren sycy" style="padding: 3px 0px 20px 0px">-->
-      <div class="clear moren sycy">
-        <p class="ddii td5t">{{row.nickName}}</p>
-        <p class="hui">（{{row.city}}&nbsp;IP{{row.ip}}）</p>
-        <p  class="td5t">参与了<i style="color:#ff3f00;">{{row.attendAmount}}</i>人次 <i class="hui">{{row.date}}</i></p>
+      <div class="clear" style="margin-top: 5px; margin-bottom: 5px">
+        <img src="{{row.userHeadUrl}}" style="float: left; width: 50px; border-radius: 100%"/>
+        <div class="moren sycy" style="float: left">
+          <p class="ddii td5t">{{row.nickName}}</p>
+          <p class="hui">（{{row.city}}&nbsp;IP{{row.ip}}）</p>
+          <p class="td5t">参与了<i style="color:#ff3f00;">{{row.attendAmount}}</i>人次 <i class="hui">{{row.date}}</i></p>
+        </div>
+        <p class="clear"></p>
       </div>
       {{/each}}
     </div>
-  </div>
-  <div class="zjjl-left_s-lq" style="overflow: hidden;">
-    {{each Rows as row i}}
-    <div>
-      <img src="{{row.userHeadUrl}}" class="tututu" />
-    </div>
-    {{/each}}
   </div>
   <p class="clear"></p>
 </script>
