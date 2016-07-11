@@ -55,33 +55,35 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String getIndexUrl(HttpServletRequest request,Long customerId) throws UnsupportedEncodingException {
+    public String getIndexUrl(HttpServletRequest request, Long customerId) throws UnsupportedEncodingException {
         String url = commonConfigService.getWebUrl() + "/user/getOpid?redirectUrl=" + URLEncoder.encode(request.getRequestURL()
                 + (StringUtils.isEmpty(request.getQueryString()) ? "" : "?" + request.getQueryString()), "utf-8");
-        return url+"&customerId="+customerId;
+        return url + "&customerId=" + customerId;
     }
 
     @Override
-    public synchronized User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException {
-        User user=userRepository.findByWeixinOpenId(authEntity.getOpenid());
+    public synchronized User registerUser(AuthEntity authEntity, String customerId, String ip) throws IOException, URISyntaxException {
+        User user = userRepository.findByWeixinOpenId(authEntity.getOpenid());
         //User user = findByWeixinOpenId(authEntity.getOpenid());
         //如果在数据库中没有这个微信信息则注册一个新的用户
-        if(user==null){
-            user=new User();
+        if (user != null) {
+            user.setIp(ip);
+        } else {
+            user = new User();
             user.setRegTime(new Date());
             user.setEnabled(true);
 
-            user.setUsername(UUID.randomUUID().toString().replace("-",""));
+            user.setUsername(UUID.randomUUID().toString().replace("-", ""));
             user.setWeixinOpenId(authEntity.getOpenid());
             user.setRealName(Mb4Helper.utf8mb4Remove(authEntity.getNickname()));
             user.setIp(ip);
 
             //设置用户头像
-            String head=authEntity.getHeadimgurl();
+            String head = authEntity.getHeadimgurl();
             String fileName = head.substring(head.lastIndexOf("/") + 1);
             String headPath = StaticResourceService.USER_HEAD_PATH + UUID.randomUUID().toString() + fileName;
             //String pat="http://wx.qlogo.cn/mmopen/HAVcjF9mzkWewuoejVjwuBtDgLMxYbiafyMZmk0ZmU3VeWy6micgDeiadOIug6heOmHPKibILKibZzEvqXp0NOuF73PK5UIehDNyd/0";
-            if (head != null) {
+            if (!StringUtils.isEmpty(head)) {
                 URL uri = new URL(head);
                 InputStream in = uri.openStream();
                 BufferedImage bufferedImage = ImageIO.read(in);
@@ -92,24 +94,21 @@ public class UserServiceImpl implements UserService {
             }
 
             user.setWeixinBinded(true);
-            if(customerId!=null&&!customerId.equals("null")){
+            if (!StringUtils.isEmpty(customerId) && !customerId.equals("null")) {
                 //如果商家id不为空并且不是null字符串在进行一下操作
                 user.setMerchantId(Long.parseLong(customerId));
             }
-        }else{
-            user.setIp(ip);
         }
-
         return userRepository.saveAndFlush(user);
     }
 
     @Override
     public WebPublicModel getWebPublicModel(User user, Issue issue) {
-        String sign=this.getSign(user);
-        WebPublicModel webPublicModel=new WebPublicModel();
-        if(issue!=null&&issue.getId()!=null) {
+        String sign = this.getSign(user);
+        WebPublicModel webPublicModel = new WebPublicModel();
+        if (issue != null && issue.getId() != null) {
             webPublicModel.setCustomerId(issue.getGoods().getMerchantId());
-            webPublicModel.setIssueId(issue.getId());
+//            webPublicModel.setIssueId(issue.getId());
             webPublicModel.setOpenId(user.getWeixinOpenId());
             webPublicModel.setSign(sign);
         }
@@ -119,30 +118,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getSign(User user) {
-        String secretId=user.getMerchantId()+user.getWeixinOpenId()+commonConfigService.getDuobaoKey();
-        String sign=MD5Util.MD5Encode(secretId,null);
+        String secretId = user.getMerchantId() + user.getWeixinOpenId() + commonConfigService.getDuobaoKey();
+        String sign = MD5Util.MD5Encode(secretId, null);
         return sign;
     }
 
     @Override
     public boolean checkOpenid(String openId, String sign) {
-        User user=userRepository.findByWeixinOpenId(openId);
+        User user = userRepository.findByWeixinOpenId(openId);
         //User user = findByWeixinOpenId(openId);
-        if(user!=null&&this.getSign(user).equals(sign)){
-                return true;
+        if (user != null && this.getSign(user).equals(sign)) {
+            return true;
         }
         return false;
     }
 
     @Override
-    public String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws IOException {
+    public String getWeixinAuthUrl(HttpServletRequest request, WebPublicModel common) throws IOException {
 
 
         //微信授权回调url，跳转到index
-        WeixinAuthUrl.encode_url= java.net.URLEncoder.encode(this.getIndexUrl(request,common.getCustomerId()), "utf-8");
-        WeixinAuthUrl.customerid=common.getCustomerId();
-        WeixinAuthUrl.subdomain=merchantRestRepository.getOneByPK(String.valueOf(WeixinAuthUrl.customerid)).getSubDomain();
-        WeixinAuthUrl.maindomain=commonConfigService.getMainDomain();
+        WeixinAuthUrl.encode_url = java.net.URLEncoder.encode(this.getIndexUrl(request, common.getCustomerId()), "utf-8");
+        WeixinAuthUrl.customerid = common.getCustomerId();
+        WeixinAuthUrl.subdomain = merchantRestRepository.getOneByPK(String.valueOf(WeixinAuthUrl.customerid)).getSubDomain();
+        WeixinAuthUrl.maindomain = commonConfigService.getMainDomain();
         String apiUrl = WeixinAuthUrl.getWeixinAuthUrl();
         return apiUrl;
     }

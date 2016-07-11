@@ -40,11 +40,11 @@ public class WebInterceptor implements HandlerInterceptor {
         WebPublicModel webPublicModel = initPublicParam(request);
 
         //todo 正式发布环境要进行修改
-        if(!environment.acceptsProfiles("development")) {
+        if (!environment.acceptsProfiles("development")) {
             //在非测试环境下进行正常请求
             if (request.getParameter("customerId") == null) {
                 log.info("初始化认证失败啦！！！！！！");
-                String errorUrl="/html/error.html";
+                String errorUrl = "/html/error.html";
                 //跳转到错误页面
                 response.sendRedirect(errorUrl);
                 return false;
@@ -55,24 +55,24 @@ public class WebInterceptor implements HandlerInterceptor {
                 //校验openid是否正确 需要进行认证
                 log.info("开始进行认证服务！！");
                 //todo 这是认证服务，暂时注释，不允许删除
-            if(!request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))){
-                //如果商户号与cookie中存的不一样则以传过来的商户为准进行请求
-                webPublicModel.setCustomerId(Long.parseLong(request.getParameter("customerId")));
-            }
-            PublicParameterHolder.putParameters(webPublicModel);
-            String openidUrl=userService.getWeixinAuthUrl(request,webPublicModel);
-            response.sendRedirect(openidUrl);
-            return false;
+                if (!request.getParameter("customerId").equals(String.valueOf(webPublicModel.getCustomerId()))) {
+                    //如果商户号与cookie中存的不一样则以传过来的商户为准进行请求
+                    webPublicModel.setCustomerId(Long.parseLong(request.getParameter("customerId")));
+                }
+                PublicParameterHolder.putParameters(webPublicModel);
+                String openidUrl = userService.getWeixinAuthUrl(request, webPublicModel);
+                response.sendRedirect(openidUrl);
+                return false;
                 //进行微信认证
             }
-        }else{
+        } else {
             //在测试环境下，获取所有用户中的第一个用户，如果数据库中没有用户则请求失败
-            List<User> userList=userRepository.findAll();
-            if(userList==null||userList.size()<1){
+            List<User> userList = userRepository.findAll();
+            if (userList == null || userList.size() < 1) {
                 return false;
             }
             //默认取第一个用户
-            User user=userList.get(0);
+            User user = userList.get(0);
             webPublicModel.setOpenId(user.getWeixinOpenId());
             webPublicModel.setSign(userService.getSign(user));
             webPublicModel.setCurrentUser(user);
@@ -93,16 +93,16 @@ public class WebInterceptor implements HandlerInterceptor {
         webPublicModel.setCurrentUser(userRepository.findOne(1L));
         webPublicModel.setIp(getIp(request));
 
-        if(request.getParameter("issueId")!=null&&request.getParameter("issueId")!="") {
+        if (!StringUtils.isEmpty(request.getParameter("issueId"))) {
             webPublicModel.setIssueId(Long.parseLong(request.getParameter("issueId")));
-        }else {
+        } else {
             webPublicModel.setIssueId(null);
         }
         //获取cookies
-        Cookie[] cookies=request.getCookies();
-        Map<String,String> map=new HashMap<String,String>();
+        Cookie[] cookies = request.getCookies();
+        Map<String, String> map = new HashMap<String, String>();
 
-        if(cookies!=null) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 map.put(cookie.getName(), cookie.getValue());
             }
@@ -120,7 +120,7 @@ public class WebInterceptor implements HandlerInterceptor {
             }
             if (webPublicModel.getOpenId() != null) {
                 webPublicModel.setCurrentUser(userRepository.findByWeixinOpenId(webPublicModel.getOpenId()));
-               // webPublicModel.setCurrentUser(userService.findByWeixinOpenId(webPublicModel.getOpenId()));
+                // webPublicModel.setCurrentUser(userService.findByWeixinOpenId(webPublicModel.getOpenId()));
             }
             if (map.get("sign") != null) {
                 webPublicModel.setSign(map.get("sign"));
