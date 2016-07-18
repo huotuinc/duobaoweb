@@ -25,11 +25,25 @@ public interface UserService {
     String getIndexUrl(HttpServletRequest request,Long customerId) throws UnsupportedEncodingException;
 
     /**
+     * 由于未登陆直接返回首页
+     * @param customerId
+     * @return
+     */
+    String getAppIndexUrl(HttpServletRequest request,Long customerId, String openId) throws UnsupportedEncodingException;
+
+    String getReturnUrl(HttpServletRequest request, Long customerId) throws UnsupportedEncodingException;
+
+
+
+    /**
      * 通过openid注册一个用户
      * @param authEntity
      * @return
      */
     User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException;
+
+    User registerAppUser(String customerId,String openId, String ip, String userId, String wxheadimg, String wxnickname) throws IOException,URISyntaxException;
+
 
     /**
      * 获取公用model
@@ -62,5 +76,11 @@ public interface UserService {
     String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws IOException;
 
 
-   // User findByWeixinOpenId(String weixinOpenId);
+    /**
+     * 通过手机号查找用户
+     * @param mobile
+     * @return
+     */
+    User findByMobile(String mobile);
+
 }

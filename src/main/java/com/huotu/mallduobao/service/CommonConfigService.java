@@ -69,4 +69,6 @@ public interface CommonConfigService {
 
     String getHuobanplusOpenApiRoot();
 
+    String getHuobanplusCustomerApiAppsecrect();
+
 }

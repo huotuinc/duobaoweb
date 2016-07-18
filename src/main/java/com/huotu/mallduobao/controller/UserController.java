@@ -88,6 +88,32 @@ public class UserController {
         return "redirect:" + redirectUrl;
     }
 
+    @RequestMapping(value = "/appAccredit", method = RequestMethod.GET)
+    public String appAccredit(HttpServletRequest request, String customerId, String redirectUrl, String openId, String userid, String wxheadimg, String wxnickname) throws Exception{
+        log.info("redirectUrl:" + redirectUrl);
+        log.info("userid=" + userid + ",wxheadimg="+ wxheadimg + ",wxnickname=" + wxnickname);
+        User user = userService.registerAppUser(customerId, openId,getIp(request), userid, wxheadimg, wxnickname);
+
+        Cookie custId=new Cookie("customerId",customerId);
+        custId.setMaxAge(60*60*24*365*5); //单位是秒 todo 正式上线的时候时间设置长一点 5年
+        custId.setPath("/");
+        Cookie userId=new Cookie("userId",String.valueOf(user.getId()));
+        userId.setMaxAge(60*60*24*365*5);
+        userId.setPath("/");
+        Cookie cOpenId=new Cookie("openId",openId);
+        cOpenId.setMaxAge(60*60*24*365*5);
+        cOpenId.setPath("/");
+        Cookie sign=new Cookie("sign",userService.getSign(user));
+        sign.setMaxAge(60*60*24*365*5);
+        sign.setPath("/");
+        response.addCookie(custId);
+        response.addCookie(userId);
+        response.addCookie(cOpenId);
+        response.addCookie(sign);
+        return "redirect:" + redirectUrl;
+    }
+
+
     /**
      * 支付结果显示
      *

@@ -1055,3 +1055,36 @@ outline: 0; border-radius:0px}
 	color: #09bb07
 }
 .weui_icon_checked{ display:block; height:24px; width:24px;}
+
+/*手机注册*/
+.inputta {
+
+    padding: 0px;
+    margin-bottom: 0px;
+    width: 100%;
+    border: 1px solid #dcdcdc;
+    background-color: #fff;
+    border-radius: 0;
+    height: 40px;
+    color:#B1B1B1;
+    text-indent: 12px;
+
+    -webkit-appearance: none;
+    vertical-align: top;
+    line-height: normal;
+    margin-top:20px;
+}
+
+.zhuce{ background-color: #519aff;
+    display: block;
+    border: 1px solid #519aff;
+    color: #fff;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    border-radius: 3px;
+    text-align: center;}
+
+/*手机注册end*/
+.wzpa{padding: 20px 0px;}
+

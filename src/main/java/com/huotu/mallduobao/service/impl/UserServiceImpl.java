@@ -3,6 +3,7 @@ package com.huotu.mallduobao.service.impl;
 
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.mallduobao.common.AuthEntity;
+import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.common.WeixinAuthUrl;
 import com.huotu.mallduobao.common.thirdparty.MD5Util;
 import com.huotu.mallduobao.entity.Issue;
@@ -62,6 +63,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getAppIndexUrl(HttpServletRequest request, Long customerId, String openId) throws UnsupportedEncodingException{
+        String goodsId = request.getParameter("goodsId");
+        String url = commonConfigService.getWebUrl() + "/user/appAccredit?redirectUrl=" + URLEncoder.encode(commonConfigService.getWebUrl() + "/goods/index?goodsId=" + goodsId + "&customerId=" + customerId, "utf-8");
+        return url+"&customerId="+customerId+"&openId=" + openId;
+    }
+
+    @Override
+    public String getReturnUrl(HttpServletRequest request, Long customerId) throws UnsupportedEncodingException {
+        String goodsId = request.getParameter("goodsId");
+        return URLEncoder.encode(commonConfigService.getWebUrl() + "/goods/index?goodsId=" + goodsId + "&customerId=" + customerId, "utf-8");
+    }
+
+
+    @Override
     public synchronized User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException {
         User user=userRepository.findByWeixinOpenId(authEntity.getOpenid());
         //User user = findByWeixinOpenId(authEntity.getOpenid());
@@ -100,6 +115,42 @@ public class UserServiceImpl implements UserService {
             user.setIp(ip);
         }
 
+        return userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public synchronized User registerAppUser(String customerId,String openId, String ip, String userId, String wxheadimg, String wxnickname) throws IOException, URISyntaxException {
+        User user = userRepository.findByWeixinOpenId(openId);
+        if(user == null){
+            user = new User();
+            user.setRegTime(new Date());
+            user.setEnabled(true);
+
+            user.setUsername(UUID.randomUUID().toString().replace("-", ""));
+            user.setWeixinOpenId(openId);
+            user.setRealName(Mb4Helper.utf8mb4Remove(wxnickname));
+
+            String head = wxheadimg;
+            String fileName = head.substring(head.lastIndexOf("/") + 1);
+            String headPath = StaticResourceService.USER_HEAD_PATH + UUID.randomUUID().toString() + fileName;
+            if (head != null) {
+                URL uri = new URL(head);
+                InputStream in = uri.openStream();
+                BufferedImage bufferedImage = ImageIO.read(in);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "jpg", baos);
+                staticResourceService.uploadResource(headPath, new ByteArrayInputStream(baos.toByteArray()));
+                user.setUserHead(headPath);
+            }
+
+            user.setWeixinBinded(true);
+            if(customerId!=null&&!customerId.equals("null")){
+                //如果商家id不为空并且不是null字符串在进行一下操作
+                user.setMerchantId(Long.parseLong(customerId));
+            }
+        }else{
+            user.setIp(ip);
+        }
         return userRepository.saveAndFlush(user);
     }
 
@@ -147,13 +198,11 @@ public class UserServiceImpl implements UserService {
         return apiUrl;
     }
 
-/*    @Override
-    public User findByWeixinOpenId(String weixinOpenId) {
-        String hql = "SELECT u FROM User u WHERE u.weixinOpenId = :weixinOpenId";
-        Query query = entityManager.createQuery(hql);
-        query.setParameter("weixinOpenId", weixinOpenId);
-        List<User> userList = query.getResultList();
-        log.info("findByWeixinOpenId ---> " + userList.size());
-        return userList.size() == 0 ? null : userList.get(userList.size() -1);
-    }*/
+    @Override
+    public User findByMobile(String mobile) {
+        WebPublicModel parameters = PublicParameterHolder.getParameters();
+        Long customerId = parameters.getCustomerId();
+        return userRepository.findByMobileAndMerchantId(mobile, customerId);
+    }
+
 }

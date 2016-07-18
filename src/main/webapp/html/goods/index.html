@@ -126,7 +126,47 @@
     </div>
 </form>
 <script type="text/javascript" th:src="@{/resources/js/jquery-1.7.2.min.js}"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript"
+        th:src="@{${commonURL}+'/Weixin/JsSdk/RegConfig.aspx'(customerid=${customerId},debug=0)}">
+</script>
+<script th:src="@{${commonURL}+'/Weixin/JsSdk/wxShare.js?t=2'}"></script>
 <script type="text/javascript" th:inline="javascript">
+    //获取分享信息
+    var title = /*[[${shareTitle}]]*/'';
+    var shareDesc = /*[[${shareDesc}]]*/'';
+    var sharePic = /*[[${sharePic}]]*/'';
+
+
+    if (/(android)/i.test(navigator.userAgent)) {
+        android.enableShare();
+    }
+
+    var _objShareJsSDK = {
+        "Title": title, "Desc": shareDesc, "ImgUrl": sharePic,
+        "Link": window.location.href
+    };
+
+    wxShare.InitShare({
+        title: _objShareJsSDK.Title,
+        desc: _objShareJsSDK.Desc,
+        img_url: _objShareJsSDK.ImgUrl,
+        link: _objShareJsSDK.Link
+    });
+
+    var shareStr;
+    function __getShareStr() {
+        if (null == _objShareJsSDK.Desc || _objShareJsSDK.Desc.length == 0) {
+            _objShareJsSDK.Desc = _objShareJsSDK.Link;
+        }
+        shareStr = _objShareJsSDK.Title + '^' + _objShareJsSDK.Desc + '^' + _objShareJsSDK.Link + '^' + _objShareJsSDK.ImgUrl;
+        if (/(android)/i.test(navigator.userAgent)) {
+            android.sendShare(_objShareJsSDK.Title, _objShareJsSDK.Desc, _objShareJsSDK.Link, _objShareJsSDK.ImgUrl);
+            return;
+        }
+        return shareStr;
+    }
+
 
     //1.获取商品首页model
     var goodsIndexModel = /*[[${goodsIndexModel}]]*/'';

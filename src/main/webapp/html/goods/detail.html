@@ -258,6 +258,11 @@
   </div>
    </div>
 </form>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript"
+        th:src="@{${commonURL}+'/Weixin/JsSdk/RegConfig.aspx'(customerid=${customerId},debug=0)}">
+</script>
+<script th:src="@{${commonURL}+'/Weixin/JsSdk/wxShare.js?t=2'}"></script>
 <script type="text/javascript" th:inline="javascript">
 
   var toAwardTime;
@@ -268,10 +273,50 @@
   var andStr;
   var lastId = 0;
 
+  //获取分享信息
+  var title = /*[[${shareTitle}]]*/'';
+  var shareDesc = /*[[${shareDesc}]]*/'';
+  var sharePic = /*[[${sharePic}]]*/'';
+
+
+
   //1.获取商品详情model
   var goodsDetailModel = /*[[${goodsDetailModel}]]*/'';
 
   var customerId = /*[[${customerId}]]*/'';
+
+  var bindMobile = /*[[${bindMobile}]]*/'';
+
+
+  if (/(android)/i.test(navigator.userAgent)) {
+    android.enableShare();
+  }
+
+  var _objShareJsSDK = {
+    "Title": title, "Desc": shareDesc, "ImgUrl": sharePic,
+    "Link": window.location.href
+  };
+
+
+  wxShare.InitShare({
+    title: _objShareJsSDK.Title,
+    desc: _objShareJsSDK.Desc,
+    img_url: _objShareJsSDK.ImgUrl,
+    link: _objShareJsSDK.Link
+  });
+
+  var shareStr;
+  function __getShareStr() {
+    if (null == _objShareJsSDK.Desc || _objShareJsSDK.Desc.length == 0) {
+      _objShareJsSDK.Desc = _objShareJsSDK.Link;
+    }
+    shareStr = _objShareJsSDK.Title + '^' + _objShareJsSDK.Desc + '^' + _objShareJsSDK.Link + '^' + _objShareJsSDK.ImgUrl;
+    if (/(android)/i.test(navigator.userAgent)) {
+      android.sendShare(_objShareJsSDK.Title, _objShareJsSDK.Desc, _objShareJsSDK.Link, _objShareJsSDK.ImgUrl);
+      return;
+    }
+    return shareStr;
+  }
 
   $(function(){
 
@@ -394,8 +439,27 @@
   }
 
 
+
+  function jumpToBindMobilePage(){
+    var curUrl = window.location.href;
+    var index = curUrl.lastIndexOf("/");
+    curUrl = curUrl.substring(0, index);
+    index = curUrl.lastIndexOf("/");
+    curUrl = curUrl.substring(0, index + 1);
+    curUrl = curUrl + "personal/toBindMobilePage?customerId=" + customerId;
+    window.location.href = curUrl;
+  }
+
+
   //立即参与
   function join(){
+    //如何没有绑定手机先绑定手机
+    if(bindMobile == 0){
+      jumpToBindMobilePage();
+       return;
+    }
+
+
     if(status == 0){
       //隐藏立即参与按钮
       $("#join").css("display", "none");
