@@ -5,8 +5,8 @@ import com.huotu.mallduobao.model.ResultModel;
 
 public class SMSHelper {
 	private static String serverUrl = "http://222.73.117.156/msg/HttpBatchSendSM";
-	private static String account = "vip-hzht1";// vip-hzht1  fenmao
-	private static String pswd = "Ht85399300";// Ht85399300  Txb123456
+	private static String account = "huotukeji";// vip-hzht1  fenmao
+	private static String pswd = "Txb123456";// Ht85399300  Txb123456
 
 	public SMSHelper() {
 	}

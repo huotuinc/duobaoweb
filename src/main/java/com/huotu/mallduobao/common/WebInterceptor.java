@@ -133,7 +133,7 @@ public class WebInterceptor implements HandlerInterceptor {
                 response.sendRedirect(url.toString());
             } else {
                 String redirectUrl = userService.getAppIndexUrl(request, customerId, openId);
-                HttpHelper.getRequest(redirectURLForAPPInfo(customerId, openId, redirectUrl).toString());
+                response.sendRedirect(redirectURLForAPPInfo(customerId, openId, redirectUrl).toString());
             }
         } else {
             StringBuilder url = new StringBuilder(customerURL(customerId));
@@ -147,6 +147,7 @@ public class WebInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         WebPublicModel webPublicModel = initPublicParam(request);
+        log.debug("===============preHandle==================");
 
         //todo 正式发布环境要进行修改
         if (!environment.acceptsProfiles("development")) {
@@ -173,11 +174,8 @@ public class WebInterceptor implements HandlerInterceptor {
                 if (!checkRequestIsApp(request, response)) {
                     String openidUrl = userService.getWeixinAuthUrl(request, webPublicModel);
                     response.sendRedirect(openidUrl);
-                    return false;
-                } else {
-                    return true;
                 }
-
+                return false;
                 //进行微信认证
             }
         }else{

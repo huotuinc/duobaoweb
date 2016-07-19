@@ -258,6 +258,25 @@
   </div>
    </div>
 </form>
+<script type="text/template" id="detailTemplate">
+  <div class="zjjl-right-lq" >
+    <div class="zjjl-right_in-lq">
+      {{each Rows as row i}}
+      <div class="clear" style="margin-top: 5px; margin-bottom: 5px">
+        <img src="{{row.userHeadUrl}}" style="float: left; width: 50px; border-radius: 100%"/>
+        <div class="moren sycy" style="float: left">
+          <p class="ddii td5t">{{row.nickName}}</p>
+          <p class="hui">（{{row.city}}&nbsp;IP{{row.ip}}）</p>
+          <p class="td5t">参与了<i style="color:#ff3f00;">{{row.attendAmount}}</i>人次 <i class="hui">{{row.date}}</i></p>
+        </div>
+        <p class="clear"></p>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  <p class="clear"></p>
+</script>
+<script type="text/javascript" src="resources/js/buyListAjaxModel.js" th:src="@{/resources/js/buyListAjaxModel.js}"></script>
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript"
         th:src="@{${commonURL}+'/Weixin/JsSdk/RegConfig.aspx'(customerid=${customerId},debug=0)}">
@@ -279,44 +298,12 @@
   var sharePic = /*[[${sharePic}]]*/'';
 
 
-
   //1.获取商品详情model
   var goodsDetailModel = /*[[${goodsDetailModel}]]*/'';
 
   var customerId = /*[[${customerId}]]*/'';
 
   var bindMobile = /*[[${bindMobile}]]*/'';
-
-
-  if (/(android)/i.test(navigator.userAgent)) {
-    android.enableShare();
-  }
-
-  var _objShareJsSDK = {
-    "Title": title, "Desc": shareDesc, "ImgUrl": sharePic,
-    "Link": window.location.href
-  };
-
-
-  wxShare.InitShare({
-    title: _objShareJsSDK.Title,
-    desc: _objShareJsSDK.Desc,
-    img_url: _objShareJsSDK.ImgUrl,
-    link: _objShareJsSDK.Link
-  });
-
-  var shareStr;
-  function __getShareStr() {
-    if (null == _objShareJsSDK.Desc || _objShareJsSDK.Desc.length == 0) {
-      _objShareJsSDK.Desc = _objShareJsSDK.Link;
-    }
-    shareStr = _objShareJsSDK.Title + '^' + _objShareJsSDK.Desc + '^' + _objShareJsSDK.Link + '^' + _objShareJsSDK.ImgUrl;
-    if (/(android)/i.test(navigator.userAgent)) {
-      android.sendShare(_objShareJsSDK.Title, _objShareJsSDK.Desc, _objShareJsSDK.Link, _objShareJsSDK.ImgUrl);
-      return;
-    }
-    return shareStr;
-  }
 
   $(function(){
 
@@ -442,11 +429,12 @@
 
   function jumpToBindMobilePage(){
     var curUrl = window.location.href;
+    var url = window.location.href;
     var index = curUrl.lastIndexOf("/");
     curUrl = curUrl.substring(0, index);
     index = curUrl.lastIndexOf("/");
     curUrl = curUrl.substring(0, index + 1);
-    curUrl = curUrl + "personal/toBindMobilePage?customerId=" + customerId;
+    curUrl = curUrl + "personal/toBindMobilePage?customerId=" + customerId + andStr + "redirectUrl=" + encodeURI(url);
     window.location.href = curUrl;
   }
 
@@ -548,26 +536,32 @@
     var customerId=/*[[${customerId}]]*/'';
     shoppingAllBuy(issueId,customerId);
   }
-</script>
-<script type="text/template" id="detailTemplate">
-  <div class="zjjl-right-lq" >
-    <div class="zjjl-right_in-lq">
-      {{each Rows as row i}}
-      <div class="clear" style="margin-top: 5px; margin-bottom: 5px">
-        <img src="{{row.userHeadUrl}}" style="float: left; width: 50px; border-radius: 100%"/>
-        <div class="moren sycy" style="float: left">
-          <p class="ddii td5t">{{row.nickName}}</p>
-          <p class="hui">（{{row.city}}&nbsp;IP{{row.ip}}）</p>
-          <p class="td5t">参与了<i style="color:#ff3f00;">{{row.attendAmount}}</i>人次 <i class="hui">{{row.date}}</i></p>
-        </div>
-        <p class="clear"></p>
-      </div>
-      {{/each}}
-    </div>
-  </div>
-  <p class="clear"></p>
-</script>
-<script type="text/javascript" src="resources/js/buyListAjaxModel.js" th:src="@{/resources/js/buyListAjaxModel.js}"></script>
 
+  var _objShareJsSDK = {
+    "Title": title, "Desc": shareDesc, "ImgUrl": sharePic,
+    "Link": window.location.href
+  };
+
+
+  wxShare.InitShare({
+    title: _objShareJsSDK.Title,
+    desc: _objShareJsSDK.Desc,
+    img_url: _objShareJsSDK.ImgUrl,
+    link: _objShareJsSDK.Link
+  });
+
+  var shareStr;
+  function __getShareStr() {
+    if (null == _objShareJsSDK.Desc || _objShareJsSDK.Desc.length == 0) {
+      _objShareJsSDK.Desc = _objShareJsSDK.Link;
+    }
+    shareStr = _objShareJsSDK.Title + '^' + _objShareJsSDK.Desc + '^' + _objShareJsSDK.Link + '^' + _objShareJsSDK.ImgUrl;
+    if (/(android)/i.test(navigator.userAgent)) {
+      android.sendShare(_objShareJsSDK.Title, _objShareJsSDK.Desc, _objShareJsSDK.Link, _objShareJsSDK.ImgUrl);
+      return;
+    }
+    return shareStr;
+  }
+</script>
 </body>
 </html>

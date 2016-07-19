@@ -138,41 +138,12 @@
     var sharePic = /*[[${sharePic}]]*/'';
 
 
-    if (/(android)/i.test(navigator.userAgent)) {
-        android.enableShare();
-    }
-
-    var _objShareJsSDK = {
-        "Title": title, "Desc": shareDesc, "ImgUrl": sharePic,
-        "Link": window.location.href
-    };
-
-    wxShare.InitShare({
-        title: _objShareJsSDK.Title,
-        desc: _objShareJsSDK.Desc,
-        img_url: _objShareJsSDK.ImgUrl,
-        link: _objShareJsSDK.Link
-    });
-
-    var shareStr;
-    function __getShareStr() {
-        if (null == _objShareJsSDK.Desc || _objShareJsSDK.Desc.length == 0) {
-            _objShareJsSDK.Desc = _objShareJsSDK.Link;
-        }
-        shareStr = _objShareJsSDK.Title + '^' + _objShareJsSDK.Desc + '^' + _objShareJsSDK.Link + '^' + _objShareJsSDK.ImgUrl;
-        if (/(android)/i.test(navigator.userAgent)) {
-            android.sendShare(_objShareJsSDK.Title, _objShareJsSDK.Desc, _objShareJsSDK.Link, _objShareJsSDK.ImgUrl);
-            return;
-        }
-        return shareStr;
-    }
-
-
     //1.获取商品首页model
     var goodsIndexModel = /*[[${goodsIndexModel}]]*/'';
     var andStr = /*[[${andStr}]]*/'';
     var customerId = /*[[${customerId}]]*/'';
     var progress = /*[[${progress}]]*/'0';
+
     //3.为进度条赋值
     $("#progress").css("width", progress + "%");
 
@@ -237,6 +208,30 @@
         window.location.href = curUrl;
     }
 
+    var _objShareJsSDK = {
+        "Title": title, "Desc": shareDesc, "ImgUrl": sharePic,
+        "Link": window.location.href
+    };
+
+    wxShare.InitShare({
+        title: _objShareJsSDK.Title,
+        desc: _objShareJsSDK.Desc,
+        img_url: _objShareJsSDK.ImgUrl,
+        link: _objShareJsSDK.Link
+    });
+
+    var shareStr;
+    function __getShareStr() {
+        if (null == _objShareJsSDK.Desc || _objShareJsSDK.Desc.length == 0) {
+            _objShareJsSDK.Desc = _objShareJsSDK.Link;
+        }
+        shareStr = _objShareJsSDK.Title + '^' + _objShareJsSDK.Desc + '^' + _objShareJsSDK.Link + '^' + _objShareJsSDK.ImgUrl;
+        if (/(android)/i.test(navigator.userAgent)) {
+            android.sendShare(_objShareJsSDK.Title, _objShareJsSDK.Desc, _objShareJsSDK.Link, _objShareJsSDK.ImgUrl);
+            return;
+        }
+        return shareStr;
+    }
 
 </script>
 </body>

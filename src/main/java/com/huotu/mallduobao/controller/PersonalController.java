@@ -261,15 +261,13 @@ public class PersonalController {
 
     /**
      * 跳转到绑定手机页面
-     * @param request
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/toBindMobilePage", method = RequestMethod.GET)
-    public String toBindMobilePage(HttpServletRequest request, Map<String, Object> map) throws Exception{
+    public String toBindMobilePage(String redirectUrl,  Map<String, Object> map) throws Exception{
         WebPublicModel common = PublicParameterHolder.getParameters();
-        String returnUrl = request.getHeader("Referer");
-        map.put("returnUrl", returnUrl.replaceAll("&", "@"));
+        map.put("returnUrl", redirectUrl.replaceAll("&", "@") + "@customerId=" + common.getCustomerId());
         map.put("customerId", common.getCustomerId());
         return "/html/personal/bindMobile";
     }

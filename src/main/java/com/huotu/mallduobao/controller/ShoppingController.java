@@ -254,6 +254,4 @@ public class ShoppingController {
         resultModel.setUrl(url);
         return resultModel;
     }
-
-
 }

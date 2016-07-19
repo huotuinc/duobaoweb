@@ -46,6 +46,7 @@ public class UserController {
 
     @Autowired
     private IssueService issueService;
+
     /**
      * 获取微信的Auth2认证之后的用户openid
      * @param customerId 商户id
@@ -58,7 +59,7 @@ public class UserController {
         String info=request.getParameter("retuinfo");
         AuthEntity retuinfo=JSON.parseObject(info, AuthEntity.class);
         //进行用户注册(如果用户存在则不注册，不存在才注册)
-        User user = userService.registerUser(retuinfo, customerId,getIp(request));
+        User user = userService.registerUser(retuinfo, customerId, getIp(request));
 
 
         //将当前用户写入ThreadLocal
@@ -73,10 +74,10 @@ public class UserController {
         userId.setMaxAge(60*60*24*365*5);
         userId.setPath("/");
         Cookie openId=new Cookie("openId",retuinfo.getOpenid());
-        openId.setMaxAge(60*60*24*365*5);
+        openId.setMaxAge(60 * 60 * 24 * 365 * 5);
         openId.setPath("/");
         Cookie sign=new Cookie("sign",userService.getSign(user));
-        sign.setMaxAge(60*60*24*365*5);
+        sign.setMaxAge(60 * 60 * 24 * 365 * 5);
         sign.setPath("/");
         response.addCookie(custId);
         response.addCookie(userId);
@@ -92,7 +93,11 @@ public class UserController {
     public String appAccredit(HttpServletRequest request, String customerId, String redirectUrl, String openId, String userid, String wxheadimg, String wxnickname) throws Exception{
         log.info("redirectUrl:" + redirectUrl);
         log.info("userid=" + userid + ",wxheadimg="+ wxheadimg + ",wxnickname=" + wxnickname);
-        User user = userService.registerAppUser(customerId, openId,getIp(request), userid, wxheadimg, wxnickname);
+        User user = userService.registerAppUser(customerId, openId, getIp(request), userid, wxheadimg, wxnickname);
+
+        System.out.println("=====================================================");
+        System.out.println("====================appAccredit===================");
+        System.out.println("=====================================================");
 
         Cookie custId=new Cookie("customerId",customerId);
         custId.setMaxAge(60*60*24*365*5); //单位是秒 todo 正式上线的时候时间设置长一点 5年
