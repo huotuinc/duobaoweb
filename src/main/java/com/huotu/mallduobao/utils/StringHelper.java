@@ -11,11 +11,18 @@ package com.huotu.mallduobao.utils;
 
 
 import net.htmlparser.jericho.Source;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringHelper extends com.huotu.common.base.StringHelper {
+
+    private static final String SECRET = "08afd6f9ae0c6017d105b4ce580de885";
+
 
     /**
      * 获得随机数
@@ -59,6 +66,49 @@ public class StringHelper extends com.huotu.common.base.StringHelper {
         }
         return result;
     }
+
+
+
+    /**
+     * 返回app信息
+     *
+     * @param userAgent 字符串
+     * @return
+     */
+    public static String[] getRequestAppInfo(String userAgent) {
+        if (StringUtils.isEmpty(userAgent)) {
+            return null;
+        }
+        Pattern p = Pattern.compile(";hottec:([^;]+)");
+        Matcher matcher = p.matcher(userAgent);
+        StringBuilder builder = new StringBuilder();
+        while (matcher.find()) {
+            builder.append(matcher.group(1));
+        }
+        return builder.toString().split(":");
+    }
+
+    /**
+     * 判断签名是否正确
+     *
+     * @param data
+     * @return
+     */
+    public static boolean isTrueSign(String[] data) throws UnsupportedEncodingException {
+        for (String s : data) {
+            if (StringUtils.isEmpty(s)) {
+                return false;
+            }
+        }
+        String s = data[1] + data[2] + data[3] + SECRET;
+        String sign = DigestUtils.md5DigestAsHex(s.getBytes("UTF-8")).toLowerCase();
+        return sign.equals(data[0]);
+    }
+
+
+
+
+
 
 
 }

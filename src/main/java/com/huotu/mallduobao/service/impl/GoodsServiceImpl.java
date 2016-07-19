@@ -3,6 +3,7 @@ package com.huotu.mallduobao.service.impl;
 import com.huotu.common.base.HttpHelper;
 import com.huotu.huobanplus.common.entity.*;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.mallduobao.common.PublicParameterHolder;
 import com.huotu.mallduobao.entity.*;
@@ -36,6 +37,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -81,9 +83,24 @@ public class GoodsServiceImpl implements GoodsService {
     private ProductRestRepository productRestRepository;
 
     @Autowired
+    private MerchantRestRepository merchantRestRepository;
+
+    @Autowired
     private EntityManager entityManager;
 
 
+    public String customerURL(Long customerId) throws IOException {
+        Merchant merchant = merchantRestRepository.getOneByPK(customerId);
+        String commonURL = getMerchantSubDomain(merchant.getSubDomain());
+        return commonURL;
+    }
+
+    private String getMerchantSubDomain(String subDomain) {
+        if (subDomain == null) {
+            subDomain = "";
+        }
+        return "http://" + subDomain + "." + commonConfigService.getMainDomain();
+    }
 
 
     /**
@@ -214,11 +231,10 @@ public class GoodsServiceImpl implements GoodsService {
 
         int status = issue.getStatus().getValue();
         map.put("status",status);
-//        map.put("issueId",issue.getId());
         map.put("toAmount",issue.getToAmount());
         map.put("remainAmount",(issue.getToAmount() - issue.getBuyAmount()));
         map.put("progress",issue.getToAmount() == 0 ? 0 : (int) (issue.getBuyAmount() * 100 / issue.getToAmount()));
-
+        map.put("commonURL", customerURL(goods.getMerchantId()));
     }
 
     /**
@@ -330,13 +346,31 @@ public class GoodsServiceImpl implements GoodsService {
                     } else {
                         goodsDetailModel.setJoinCount(0);
                     }
+
+                    //获取用户手机号
+                    String mobile = user.getMobile();
+                    if(StringUtils.isEmpty(mobile)){
+                        map.put("bindMobile", 0);
+                    }else{
+                        map.put("bindMobile", 1);
+                    }
                 } else {
                     goodsDetailModel.setJoinCount(0);
                 }
             }
         }
+        //添加分享信息
+        String shareTitle = goods.getShareTitle();
+        String shareDesc = goods.getShareDescription();
+        String sharePic = staticResourceService.getResource(goods.getSharePictureUrl()).toString();
+        map.put("shareTitle", shareTitle);
+        map.put("shareDesc", shareDesc);
+        map.put("sharePic", sharePic);
+        map.put("andStr", "&");
+
         map.put("goodsDetailModel", goodsDetailModel);
         map.put("customerId", webPublicModel.getCustomerId());
+        map.put("commonURL", customerURL(goods.getMerchantId()));
     }
 
     /**
@@ -447,9 +481,27 @@ public class GoodsServiceImpl implements GoodsService {
                 } else {
                     goodsDetailModel.setJoinCount(0);
                 }
+
+                //获取用户手机号
+                String mobile = user.getMobile();
+                if(StringUtils.isEmpty(mobile)){
+                    map.put("bindMobile", 0);
+                }else{
+                    map.put("bindMobile", 1);
+                }
             } else {
                 goodsDetailModel.setJoinCount(0);
             }
+
+            //添加分享信息
+            String shareTitle = goods.getShareTitle();
+            String shareDesc = goods.getShareDescription();
+            String sharePic = staticResourceService.getResource(goods.getSharePictureUrl()).toString();
+            map.put("shareTitle", shareTitle);
+            map.put("shareDesc", shareDesc);
+            map.put("sharePic", sharePic);
+            map.put("andStr", "&");
+            map.put("commonURL", customerURL(goods.getMerchantId()));
         }
 
         map.put("goodsDetailModel", goodsDetailModel);

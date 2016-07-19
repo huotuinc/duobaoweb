@@ -201,6 +201,8 @@
                                             </th>
                                             <th scope="col">中奖用户
                                             </th>
+                                            <th scope="col">用户手机
+                                            </th>
                                             <th scope="col">中奖商品
                                             </th>
                                             <th scope="col">揭晓时间
@@ -212,15 +214,17 @@
                                         </tr>
                                         <tbody th:remove="all-but-first" id="o1">
                                         <tr th:each="webIssueListModel:${webIssueListModels}" class="even">
-                                            <td class="txt20" style="width: 15px;" th:text="${webIssueListModel.id}">
+                                            <td class="txt20 c" style="width: 15px;" th:text="${webIssueListModel.id}">
                                             </td>
-                                            <td class="txt80"  th:text="${webIssueListModel.awardingUser!=null ? webIssueListModel.awardingUser :'缺失' }">
+                                            <td class="txt80 c"  th:text="${webIssueListModel.awardingUser!=null ? webIssueListModel.awardingUser :'缺失' }">
                                             </td>
-                                            <td class="txt120"  th:text="${webIssueListModel.goodsTitle !=null ? webIssueListModel.goodsTitle :'缺失'}">
+                                            <td class="txt80 c"  th:text="${webIssueListModel.awardingUserMobile!=null ? webIssueListModel.awardingUserMobile :'缺失' }">
                                             </td>
-                                            <td class="txt80" th:text="${webIssueListModel.awardingDate==null?'缺失': #dates.format(webIssueListModel.awardingDate, 'yyyy-MM-dd  HH:mm')}">
+                                            <td class="txt120 c"  th:text="${webIssueListModel.goodsTitle !=null ? webIssueListModel.goodsTitle :'缺失'}">
                                             </td>
-                                            <td class="txt20"  th:text="${webIssueListModel.luckyNumber}">
+                                            <td class="txt80 c" th:text="${webIssueListModel.awardingDate==null?'缺失': #dates.format(webIssueListModel.awardingDate, 'yyyy-MM-dd  HH:mm')}">
+                                            </td>
+                                            <td class="txt20 c"  th:text="${webIssueListModel.luckyNumber}">
                                             </td>
                                             <td class="txt40 c tail">
                                                     <a th:attr="id=${webIssueListModel.id}" onclick="showDetail(this)" th:text="'查看'">查看</a>

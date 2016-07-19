@@ -8,6 +8,8 @@ import com.huotu.mallduobao.model.admin.MallGoodsSearchModel;
 import com.huotu.mallduobao.service.CommonConfigService;
 import com.huotu.mallduobao.service.GoodsService;
 import com.huotu.mallduobao.service.StaticResourceService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -18,10 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,6 +44,8 @@ import java.util.UUID;
 @RequestMapping("/admin")
 @Controller
 public class DuoBaoGoodsController {
+
+    private static Log log = LogFactory.getLog(DuoBaoGoodsController.class);
 
     //常用的图片格式
     private static final String[] PIC_EXT = {"BMP", "JPG", "JPEG", "PNG", "GIF"};
@@ -214,6 +229,55 @@ public class DuoBaoGoodsController {
         return map;
     }
 
+    /**
+     * 图片压缩
+     *
+     * @param image
+     * @param quality
+     * @return
+     * @throws Exception
+     */
+    private InputStream compressImage(BufferedImage image, double quality) throws Exception{
+        if(image == null){
+            return null;
+        }
+
+        Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpeg");
+        ImageWriter writer = iter.next();
+
+        ImageWriteParam iwp = writer.getDefaultWriteParam();
+        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        iwp.setCompressionQuality((float) quality);
+        iwp.setProgressiveMode(ImageWriteParam.MODE_DISABLED);
+        ColorModel colorModel = ColorModel.getRGBdefault();
+        iwp.setDestinationType(new ImageTypeSpecifier(colorModel, colorModel.createCompatibleSampleModel(16,16)));
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        IIOImage iImage = new IIOImage(image, null, null);
+        try{
+            writer.setOutput(ImageIO.createImageOutputStream(byteArrayOutputStream));
+            writer.write(null, iImage, iwp);
+        }catch (IOException e){
+            log.info(e.getMessage());
+        }
+
+        return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+
+/*        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        InputStream minImageInputStream;
+        JPEGEncodeParam param = JPEGCodec.getDefaultJPEGEncodeParam(image);
+        param.setQuality((float)quality, false);
+
+        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(byteArrayOutputStream, param);
+        try{
+            encoder.encode(image);
+        }catch (Exception e){
+            log.info(e.getMessage());
+        }
+        minImageInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        return  minImageInputStream;*/
+
+    }
 
     /**
      * 商品图片上传
@@ -225,7 +289,7 @@ public class DuoBaoGoodsController {
      */
     @RequestMapping(value = "/UploadGoodsImg")
     @ResponseBody
-    private ResultModel uploadGoodsImg(@RequestParam(value = "shareImage") MultipartFile shareImage, HttpServletResponse response) throws Exception {
+    public ResultModel uploadGoodsImg(@RequestParam(value = "shareImage") MultipartFile shareImage, HttpServletResponse response) throws Exception {
             ResultModel resultModel = new ResultModel();
 
             //文件格式判断
@@ -261,7 +325,14 @@ public class DuoBaoGoodsController {
 
             //保存图片
             fileName = StaticResourceService.IMG + UUID.randomUUID().toString() + DOT + ext.toLowerCase();
-            URI uri = staticResourceService.uploadResource(fileName, shareImage.getInputStream());
+            BufferedImage image = ImageIO.read(shareImage.getInputStream());
+            InputStream inputStream = compressImage(image, 0.8);
+            URI uri;
+            if(inputStream != null){
+                uri = staticResourceService.uploadResource(fileName, inputStream);
+            }else{
+                uri = staticResourceService.uploadResource(fileName, shareImage.getInputStream());
+            }
             resultModel.setCode(1);
             resultModel.setMessage(fileName);
             resultModel.setUrl(uri.toString());

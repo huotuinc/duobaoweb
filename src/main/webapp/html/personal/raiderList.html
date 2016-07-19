@@ -23,6 +23,7 @@
     <script src="JLoad/jquery.Jload.js"  th:src="@{/JLoad/jquery.Jload.js}" type="text/javascript"></script>
     <script type="text/javascript" src="../../resources/js/jBox/jquery.jBox-2.3.min.js"
             th:src="@{/resources/js/jBox/jquery.jBox-2.3.min.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/noShare.js}"></script>
     <script type="text/javascript" src="../../resources/js/shopping.js"
             th:src="@{/resources/js/shopping.js}"></script>
     <title>夺宝记录</title>
@@ -123,7 +124,9 @@
                 </div>
 
                 <div class="left">
-                    <img src="{{row.pictureUrl}}"  style="width:80px"/>
+                    <a href="../goods/detailByIssueId?{{PublicParament}}{{Hong}}issueId={{row.issueId}}" >
+                        <img src="{{row.pictureUrl}}"  style="width:80px"/>
+                    </a>
                 </div>
             </div>
         {{/each}}
@@ -160,7 +163,9 @@
                     </div>
                 </div>
                 <div class="left">
-                    <img src="{{row.defaultPictureUrl}}" style="width:80px"/>
+                    <a href="../goods/detailByIssueId?{{PublicParament}}{{Hong}}issueId={{row.issueId}}" >
+                        <img src="{{row.defaultPictureUrl}}" style="width:80px"/>
+                    </a>
                 </div>
             </div>
         {{/each}}

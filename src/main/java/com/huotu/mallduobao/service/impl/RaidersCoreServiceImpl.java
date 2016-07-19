@@ -14,6 +14,7 @@ import com.huotu.mallduobao.service.CacheService;
 import com.huotu.mallduobao.service.PayService;
 import com.huotu.mallduobao.service.RaidersCoreService;
 import com.huotu.mallduobao.service.UserNumberService;
+import com.huotu.mallduobao.service.VerificationService;
 import com.huotu.mallduobao.utils.CommonEnum;
 import com.huotu.mallduobao.utils.SysRegex;
 import net.htmlparser.jericho.Element;
@@ -423,6 +424,18 @@ public class RaidersCoreServiceImpl implements RaidersCoreService {
         delivery.setIsCommit(false);
         deliveryRepository.save(delivery);
 
+        //发送中奖通知短信
+        if(user != null){
+            try{
+                YimeiVerificationService yimeiVerificationService = new YimeiVerificationService();
+                VerificationCode verificationCode = new VerificationCode();
+                verificationCode.setCode(issue.getGoods().getTitle());
+                verificationCode.setMobile(user.getMobile());
+                yimeiVerificationService.doSend(VerificationService.VerificationProject.lottery, verificationCode);
+            }catch (Exception e){
+               log.info("send lottery message error");
+            }
+        }
 
 //        if (user != null) {
 //            try {

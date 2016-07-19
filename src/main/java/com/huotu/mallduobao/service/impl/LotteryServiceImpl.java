@@ -115,6 +115,7 @@ public class LotteryServiceImpl implements LotteryService {
             webIssueListModel.setGoodsTitle(issue.getGoods() != null ? issue.getGoods().getTitle() : null);
             webIssueListModel.setLuckyNumber(issue.getLuckyNumber());
             webIssueListModel.setAwardingUser(issue.getAwardingUser() != null ? issue.getAwardingUser().getUsername() : null);
+            webIssueListModel.setAwardingUserMobile(issue.getAwardingUser() != null ? issue.getAwardingUser().getMobile() : null);
             list.add(webIssueListModel);
         }
         webPersonnalIssueListModel.setList(list);

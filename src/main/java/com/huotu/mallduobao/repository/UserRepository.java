@@ -34,4 +34,5 @@ public interface UserRepository extends JpaRepository<User, Long>, ClassicsRepos
      */
     User findByWeixinOpenId(String weixinOpenId);
 
+    User findByMobileAndMerchantId(String mobile, Long customerId);
 }

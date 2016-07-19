@@ -51,7 +51,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getMainDomain() {
-        return env.getProperty("duobao.maindomain", " 51flashmall.com");
+        return env.getProperty("duobao.maindomain", "51flashmall.com");
     }
 
 
@@ -74,5 +74,11 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     public String getHuobanplusOpenApiRoot() {
         return env.getProperty("com.huotu.huobanplus.open.api.root", "http://api.open.fancat.cn:8081");
     }
+
+    @Override
+    public String getHuobanplusCustomerApiAppsecrect() {
+        return env.getProperty("com.huotu.huobanplus.customer.api.appsecrect","1165a8d240b29af3f418b8d10599d0dc");
+    }
+
 
 }

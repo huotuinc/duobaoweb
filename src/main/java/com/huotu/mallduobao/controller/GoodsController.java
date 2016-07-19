@@ -2,9 +2,7 @@ package com.huotu.mallduobao.controller;
 
 import com.huotu.common.base.CookieHelper;
 import com.huotu.mallduobao.model.BuyListModelAjax;
-import com.huotu.mallduobao.repository.GoodsRepository;
 import com.huotu.mallduobao.service.GoodsService;
-import com.huotu.mallduobao.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ public class GoodsController {
 
     @Autowired
     private GoodsService goodsService;
-
 
     /**
      * 跳转到商品活动的首页

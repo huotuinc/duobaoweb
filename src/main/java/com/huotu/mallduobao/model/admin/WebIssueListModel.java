@@ -23,6 +23,12 @@ public class WebIssueListModel {
     private String awardingUser;
 
     /**
+     * 中奖用户手机
+     */
+    private String awardingUserMobile;
+
+
+    /**
      * 所属的商品
      */
     private String goodsTitle;
