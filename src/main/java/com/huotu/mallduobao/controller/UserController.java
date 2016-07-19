@@ -94,11 +94,7 @@ public class UserController {
         log.info("redirectUrl:" + redirectUrl);
         log.info("userid=" + userid + ",wxheadimg="+ wxheadimg + ",wxnickname=" + wxnickname);
         User user = userService.registerAppUser(customerId, openId, getIp(request), userid, wxheadimg, wxnickname);
-
-        System.out.println("=====================================================");
-        System.out.println("====================appAccredit===================");
-        System.out.println("=====================================================");
-
+        
         Cookie custId=new Cookie("customerId",customerId);
         custId.setMaxAge(60*60*24*365*5); //单位是秒 todo 正式上线的时候时间设置长一点 5年
         custId.setPath("/");
