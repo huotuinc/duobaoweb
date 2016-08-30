@@ -50,7 +50,7 @@ public class PayCallBackController {
         String orderNo = request.getParameter("orderNo");
         float money = Float.parseFloat(request.getParameter("totalfee"));
         String outOrderNo = request.getParameter("outtradeno");
-        log.info("进入支付提示接口orderNo："+orderNo+";totalfee:"+money+";outOrderNo"+outOrderNo+";tradeno:"+tradeno);
+        log.debug("进入支付提示接口orderNo："+orderNo+";totalfee:"+money+";outOrderNo"+outOrderNo+";tradeno:"+tradeno);
         PayResult payResultModel=new PayResult();
         PayResultModel payResult = payService.solveWeixinPayResult(orderNo, money, outOrderNo);
 

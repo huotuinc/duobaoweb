@@ -71,4 +71,27 @@ public interface CommonConfigService {
 
     String getHuobanplusCustomerApiAppsecrect();
 
+    /**
+     * app交互密钥
+     * @return
+     */
+    String getAppSecret();
+
+    /**
+     * 创蓝消息服务地址
+     * @return
+     */
+    String getCLMessageServerUrl();
+
+    /**
+     * 创蓝消息账号
+     * @return
+     */
+    String getCLMessageAccount();
+
+    /**
+     * 创蓝消息密码
+     * @return
+     */
+    String getCLMessagePassword();
 }

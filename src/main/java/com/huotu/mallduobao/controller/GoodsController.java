@@ -143,10 +143,10 @@ public class GoodsController {
     @RequestMapping("/default")
     public String getDefault(HttpServletResponse response, HttpServletRequest request) throws Exception {
         Object theValue = request.getSession(true).getAttribute("totest");
-        log.info("curent The Value "+theValue);
+        log.debug("curent The Value "+theValue);
         if (theValue==null){
             request.getSession(true).setAttribute("totest",System.currentTimeMillis());
-            log.info("update curent The Value ");
+            log.debug("update curent The Value ");
         }
         CookieHelper.set(response, "test", "1", request.getLocalName(), request.getContextPath(), 60000);
         return "/html/default";

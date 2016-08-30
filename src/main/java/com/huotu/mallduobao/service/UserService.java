@@ -19,10 +19,11 @@ public interface UserService {
 
     /**
      * 由于未登陆直接返回首页
+     * @param requestUrl 请求的url
      * @param customerId
      * @return
      */
-    String getIndexUrl(HttpServletRequest request,Long customerId) throws UnsupportedEncodingException;
+    String getWebRegisterUrl(String requestUrl, Long customerId) throws UnsupportedEncodingException;
 
     /**
      * 由于未登陆直接返回首页
@@ -31,7 +32,7 @@ public interface UserService {
      */
     String getAppIndexUrl(HttpServletRequest request,Long customerId, String openId) throws UnsupportedEncodingException;
 
-    String getReturnUrl(HttpServletRequest request, Long customerId) throws UnsupportedEncodingException;
+    String getReturnUrl(Long goodsId, Long customerId) throws UnsupportedEncodingException;
 
 
 
@@ -42,8 +43,9 @@ public interface UserService {
      */
     User registerUser(AuthEntity authEntity,String customerId,String ip) throws IOException, URISyntaxException;
 
-    User registerAppUser(String customerId,String openId, String ip, String userId, String wxheadimg, String wxnickname) throws IOException,URISyntaxException;
+//    User registerAppUser(String customerId,String openId, String ip, String userId, String wxheadimg, String wxnickname) throws IOException,URISyntaxException;
 
+    User registerAppUser(String openId, String ip);
 
     /**
      * 获取公用model
@@ -66,14 +68,14 @@ public interface UserService {
      * @param sign
      * @return
      */
-    boolean checkOpenid(String openId, String sign);
+    boolean webAuth(String openId, String sign);
 
     /**
      * 得到用户认证的地址
      * @param common
      * @return
      */
-    String getWeixinAuthUrl(HttpServletRequest request,WebPublicModel common) throws IOException;
+    String getWeixinAuthUrl(String requestUrl,WebPublicModel common) throws IOException;
 
 
     /**

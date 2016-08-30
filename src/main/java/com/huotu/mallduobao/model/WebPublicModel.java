@@ -42,4 +42,14 @@ public class WebPublicModel {
      * 校验openid的sign
      */
     private String sign;
+
+    /***
+     *
+     */
+    private String unionId;
+
+    /***
+     * 商城UserId
+     */
+    private Long mallUserId;
 }

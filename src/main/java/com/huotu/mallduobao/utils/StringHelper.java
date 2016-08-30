@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 public class StringHelper extends com.huotu.common.base.StringHelper {
 
-    private static final String SECRET = "08afd6f9ae0c6017d105b4ce580de885";
+
 
 
     /**
@@ -75,7 +75,7 @@ public class StringHelper extends com.huotu.common.base.StringHelper {
      * @param userAgent 字符串
      * @return
      */
-    public static String[] getRequestAppInfo(String userAgent) {
+    public static String[] getAppHeaderInfo(String userAgent) {
         if (StringUtils.isEmpty(userAgent)) {
             return null;
         }
@@ -88,22 +88,7 @@ public class StringHelper extends com.huotu.common.base.StringHelper {
         return builder.toString().split(":");
     }
 
-    /**
-     * 判断签名是否正确
-     *
-     * @param data
-     * @return
-     */
-    public static boolean isTrueSign(String[] data) throws UnsupportedEncodingException {
-        for (String s : data) {
-            if (StringUtils.isEmpty(s)) {
-                return false;
-            }
-        }
-        String s = data[1] + data[2] + data[3] + SECRET;
-        String sign = DigestUtils.md5DigestAsHex(s.getBytes("UTF-8")).toLowerCase();
-        return sign.equals(data[0]);
-    }
+
 
 
 

@@ -33,7 +33,6 @@ public class CommonConfigServiceImpl implements CommonConfigService {
     }//http://mallduobao.51flashmall.com:8091,http://192.168.1.41:8080/duobaoweb
 
 
-
     @Override
     public String getResourcesHome() {
         return env.getProperty("huotu.resourcesHome", (String) null);
@@ -77,7 +76,27 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getHuobanplusCustomerApiAppsecrect() {
-        return env.getProperty("com.huotu.huobanplus.customer.api.appsecrect","1165a8d240b29af3f418b8d10599d0dc");
+        return env.getProperty("com.huotu.huobanplus.customer.api.appsecrect", "1165a8d240b29af3f418b8d10599d0dc");
+    }
+
+    @Override
+    public String getAppSecret() {
+        return env.getProperty("appsecret", "08afd6f9ae0c6017d105b4ce580de885");
+    }
+
+    @Override
+    public String getCLMessageServerUrl() {
+        return env.getProperty("CLMessageServerUrl", "http://222.73.117.156/msg/HttpBatchSendSM");
+    }
+
+    @Override
+    public String getCLMessageAccount() {
+        return env.getProperty("CLMessageAccount", "huotukeji");
+    }
+
+    @Override
+    public String getCLMessagePassword() {
+        return env.getProperty("CLMessagePassword", "Txb123456");
     }
 
 

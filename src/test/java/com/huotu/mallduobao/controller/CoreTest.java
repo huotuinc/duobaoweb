@@ -8,6 +8,7 @@ import com.huotu.mallduobao.entity.Issue;
 import com.huotu.mallduobao.entity.User;
 import com.huotu.mallduobao.repository.*;
 import com.huotu.mallduobao.service.CacheService;
+import com.huotu.mallduobao.service.CommonConfigService;
 import com.huotu.mallduobao.service.RaidersCoreService;
 import com.huotu.huobanplus.sdk.base.BaseClientSpringConfig;
 import org.apache.commons.logging.Log;
@@ -21,7 +22,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 /**
@@ -32,7 +36,7 @@ import java.util.UUID;
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class, MVCConfig.class, BaseClientSpringConfig.class})//
-@ActiveProfiles("development")
+@ActiveProfiles("test")
 @Transactional
 public class CoreTest extends BaseTest {
 
@@ -67,6 +71,8 @@ public class CoreTest extends BaseTest {
     private User currentUser;
     private Issue currentIssue;
 
+    @Autowired
+    private CommonConfigService commonConfigService;
 
     @Test
     public void drawLottery() throws Exception {
@@ -102,15 +108,38 @@ public class CoreTest extends BaseTest {
         //进行抽奖
         raidersCoreService.drawLottery();
         issue = issueRepository.findOne(currentIssue.getId());
-        log.info("中奖号码为" + issue.getLuckyNumber().toString());
-        log.info("中奖用户为" + issue.getAwardingUser().getId());
+        log.debug("中奖号码为" + issue.getLuckyNumber().toString());
+        log.debug("中奖用户为" + issue.getAwardingUser().getId());
     }
 
     @Test
-    public void t()
-    {
-        System.out.println(UUID.randomUUID().toString().replace("-",""));
-        System.out.println(UUID.randomUUID().toString().replace("-",""));
+    public void t() throws UnsupportedEncodingException {
+        System.out.println(UUID.randomUUID().toString().replace("-", ""));
+        System.out.println(UUID.randomUUID().toString().replace("-", ""));
+        String x = "7e3f64c86f7815dba954750bbdd4e999:1175951:oSDLLwqB-nMOXlpjJ2DZf0igBRNs:oRSVjs0yiOSAtGzoDtQAO6rmA7rk";
+//        System.out.println(checkAppSign(x.split(":")));
+        int i = 1;
+        switch (i) {
+            case 1:
+                if (2 == 2) return;
+                break;
+            case 2:
+                break;
+        }
+
+        Integer b = 0;
+        return;
+    }
+
+    public boolean isTrueSign(String[] data) throws UnsupportedEncodingException {
+        for (String s : data) {
+            if (StringUtils.isEmpty(s)) {
+                return false;
+            }
+        }
+        String s = data[1] + data[2] + data[3] + commonConfigService.getAppSecret();
+        String sign = DigestUtils.md5DigestAsHex(s.getBytes("UTF-8")).toLowerCase();
+        return sign.equals(data[0]);
     }
 
 //    /**
